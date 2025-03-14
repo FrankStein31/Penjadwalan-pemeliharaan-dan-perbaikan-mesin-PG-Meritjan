@@ -5,7 +5,7 @@
 @section('contents')
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
-            <h4 class="m-0 font-weight-bold text-white">Data Mesin</h4>
+            <h4 class="m-0 font-weight-bold text-white">DATA MESIN</h4>
             <a href="{{ route('admin.mesin.create') }}" class="btn btn-white btn-sm font-weight-bold shadow-sm">
                 <i class="fas fa-plus fa-sm text-dark-50 mr-2"></i>Tambah Data
             </a>

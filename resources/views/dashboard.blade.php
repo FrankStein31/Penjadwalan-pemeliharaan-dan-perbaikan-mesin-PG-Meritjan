@@ -9,55 +9,63 @@
             lebih penting.</h5>
     </div>
     <div class="row">
-        <div class="col-md-4">
-            <div class="card card-dark bg-primary-gradient">
-                <div class="card-body pb-0">
-                    <div class="h1 fw-bold float-right">
-                        {{-- Persentase kenaikan user (contoh: +5%), bisa diganti atau dihapus --}}
-                    </div>
-                    <h2 class="mb-2">
-                        {{ $jumlahUser ?? '0' }} {{-- Tampilkan jumlah user atau 0 kalau nggak ada --}}
-                    </h2>
-                    <p>Jumlah Teknisi</p> {{-- Ganti teks jadi lebih relevan --}}
-                    <div class="pull-in sparkline-fix chart-as-background">
-                        <div id="lineChart">
-                            <canvas width="327" height="70"
-                                style="display: inline-block; width: 327px; height: 70px; vertical-align: top;"></canvas>
+        <div class="col-sm-6 col-md-4">
+            <div class="card card-stats card-round border border-white">
+                <div class="card-body ">
+                    <div class="row">
+                        <div class="col-3">
+                            <div class="icon-big text-center">
+                                <i class="flaticon-user text-white"></i>
+                            </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card card-dark bg-secondary-gradient text-white shadow-lg rounded-lg">
-                <div class="card-body pb-0">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h2 class="fw-bold mb-0">{{ $jumlahMesin ?? 0 }}</h2> {{-- Menampilkan jumlah mesin --}}
-                        <i class="fas fa-cogs fa-2x"></i>
-                    </div>
-                    <p class="mb-2">Total Mesin</p>
-                    <div class="pull-in sparkline-fix chart-as-background">
-                        <div id="lineChart2">
-                            <canvas width="327" height="70"
-                                style="display: inline-block; width: 327px; height: 70px; vertical-align: top;"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{-- <div class="col-md-4">
-                    <div class="card card-dark bg-success2">
-                        <div class="card-body pb-0">
-                            <div class="h1 fw-bold float-right">+7%</div>
-                            <h2 class="mb-2">213</h2>
-                            <p>Transactions</p>
-                            <div class="pull-in sparkline-fix chart-as-background">
-                                <div id="lineChart3"><canvas width="327" height="70" style="display: inline-block; width: 327px; height: 70px; vertical-align: top;"></canvas></div>
+                        <div class="col-9 col-stats">
+                            <div class="numbers">
+                                <p class="card-category">Jumlah Teknisi</p>
+                                <h4 class="card-title">{{ $jumlahUser ?? 0 }}</h4>
                             </div>
                         </div>
                     </div>
-                </div> --}}
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-4">
+            <div class="card card-stats card-round border border-white">
+                <div class="card-body ">
+                    <div class="row">
+                        <div class="col-3">
+                            <div class="icon-big text-center">
+                                <i class="flaticon-settings text-warning"></i>
+                            </div>
+                        </div>
+                        <div class="col-9 col-stats">
+                            <div class="numbers">
+                                <p class="card-category">Jumlah Mesin</p>
+                                <h4 class="card-title">{{ $jumlahMesin ?? 0 }}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-4">
+            <div class="card card-stats card-round border border-white">
+                <div class="card-body ">
+                    <div class="row">
+                        <div class="col-3">
+                            <div class="icon-big text-center">
+                                <i class="flaticon-success text-success"></i>
+                            </div>
+                        </div>
+                        <div class="col-9 col-stats">
+                            <div class="numbers">
+                                <p class="card-category">Jadwal Pemeliharaan Selesai</p>
+                                <h4 class="card-title">{{ $totalPemeliharaanSelesai }}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     {{-- <div class="row">
                 <div class="col-md-8">

@@ -12,7 +12,10 @@ class JadwalPemeliharaanController extends Controller
     // Tampilkan semua jadwal pemeliharaan
     public function index()
     {
-        $jadwal = JadwalPemeliharaan::with(['mesin', 'user'])->get();
+        $jadwal = JadwalPemeliharaan::with(['mesin', 'user'])
+        ->whereNot('status', 'Selesai')
+        ->get();
+
         return view('admin.pemeliharaan.index', compact('jadwal'));
     }
 

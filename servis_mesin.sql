@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 12 Mar 2025 pada 21.07
+-- Waktu pembuatan: 14 Mar 2025 pada 00.37
 -- Versi server: 10.4.28-MariaDB
 -- Versi PHP: 8.2.4
 
@@ -60,7 +60,10 @@ CREATE TABLE `jadwal_pemeliharaan` (
 --
 
 INSERT INTO `jadwal_pemeliharaan` (`id`, `mesin_id`, `user_id`, `jenis`, `tanggal`, `deskripsi`, `status`, `created_at`, `updated_at`) VALUES
-(2, 3, 1, 'incidental', '2025-02-10', 'Pemeliharaan rutin', 'Terjadwal', '2025-03-12 13:02:06', '2025-03-12 13:02:06');
+(2, 3, 1, 'incidental', '2025-02-10', 'Pemeliharaan rutin', 'Selesai', '2025-03-12 13:02:06', '2025-03-13 10:48:40'),
+(3, 3, 9, 'incidental', '2025-06-08', 'Rusak Total', 'Terjadwal', '2025-03-13 10:49:33', '2025-03-13 10:49:33'),
+(4, 3, 9, 'rutin', '2025-03-14', 'iiii', 'Selesai', '2025-03-13 15:02:05', '2025-03-13 15:02:29'),
+(5, 3, 9, 'rutin', '2025-03-12', 'Rusak', 'Terjadwal', '2025-03-13 16:35:16', '2025-03-13 16:35:16');
 
 -- --------------------------------------------------------
 
@@ -134,7 +137,9 @@ CREATE TABLE `migrations` (
 
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (1, '2019_12_14_000001_create_personal_access_tokens_table', 1),
-(2, '2025_03_06_132826_create_mesins_table', 2);
+(2, '2025_03_06_132826_create_mesins_table', 2),
+(3, '2025_03_13_195304_create_repair_assignments_table', 3),
+(4, '2025_03_13_201112_create_tugas_perbaikans_table', 4);
 
 -- --------------------------------------------------------
 
@@ -190,6 +195,22 @@ CREATE TABLE `repairs` (
 -- --------------------------------------------------------
 
 --
+-- Struktur dari tabel `repair_assignments`
+--
+
+CREATE TABLE `repair_assignments` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `machine_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `assigned_at` datetime NOT NULL,
+  `status` enum('dijadwalkan','sedang dikerjakan','selesai') NOT NULL DEFAULT 'dijadwalkan',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Struktur dari tabel `screenings`
 --
 
@@ -215,6 +236,23 @@ CREATE TABLE `spare_parts` (
   `stock` int(11) DEFAULT 0,
   `last_updated` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `tugas_perbaikan`
+--
+
+CREATE TABLE `tugas_perbaikan` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `mesin_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `tanggal_penugasan` date NOT NULL,
+  `status` varchar(255) NOT NULL DEFAULT 'Diterima',
+  `catatan` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -313,6 +351,14 @@ ALTER TABLE `repairs`
   ADD KEY `technician_id` (`technician_id`);
 
 --
+-- Indeks untuk tabel `repair_assignments`
+--
+ALTER TABLE `repair_assignments`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `repair_assignments_machine_id_foreign` (`machine_id`),
+  ADD KEY `repair_assignments_user_id_foreign` (`user_id`);
+
+--
 -- Indeks untuk tabel `screenings`
 --
 ALTER TABLE `screenings`
@@ -325,6 +371,14 @@ ALTER TABLE `screenings`
 --
 ALTER TABLE `spare_parts`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indeks untuk tabel `tugas_perbaikan`
+--
+ALTER TABLE `tugas_perbaikan`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `tugas_perbaikan_mesin_id_foreign` (`mesin_id`),
+  ADD KEY `tugas_perbaikan_user_id_foreign` (`user_id`);
 
 --
 -- Indeks untuk tabel `users`
@@ -346,7 +400,7 @@ ALTER TABLE `damage_reports`
 -- AUTO_INCREMENT untuk tabel `jadwal_pemeliharaan`
 --
 ALTER TABLE `jadwal_pemeliharaan`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT untuk tabel `machines`
@@ -370,7 +424,7 @@ ALTER TABLE `mesins`
 -- AUTO_INCREMENT untuk tabel `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT untuk tabel `notifications`
@@ -391,6 +445,12 @@ ALTER TABLE `repairs`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT untuk tabel `repair_assignments`
+--
+ALTER TABLE `repair_assignments`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT untuk tabel `screenings`
 --
 ALTER TABLE `screenings`
@@ -400,6 +460,12 @@ ALTER TABLE `screenings`
 -- AUTO_INCREMENT untuk tabel `spare_parts`
 --
 ALTER TABLE `spare_parts`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT untuk tabel `tugas_perbaikan`
+--
+ALTER TABLE `tugas_perbaikan`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
@@ -440,11 +506,25 @@ ALTER TABLE `repairs`
   ADD CONSTRAINT `repairs_ibfk_2` FOREIGN KEY (`technician_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
+-- Ketidakleluasaan untuk tabel `repair_assignments`
+--
+ALTER TABLE `repair_assignments`
+  ADD CONSTRAINT `repair_assignments_machine_id_foreign` FOREIGN KEY (`machine_id`) REFERENCES `machines` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `repair_assignments_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
 -- Ketidakleluasaan untuk tabel `screenings`
 --
 ALTER TABLE `screenings`
   ADD CONSTRAINT `screenings_ibfk_1` FOREIGN KEY (`schedule_id`) REFERENCES `maintenance_schedules` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `screenings_ibfk_2` FOREIGN KEY (`technician_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Ketidakleluasaan untuk tabel `tugas_perbaikan`
+--
+ALTER TABLE `tugas_perbaikan`
+  ADD CONSTRAINT `tugas_perbaikan_mesin_id_foreign` FOREIGN KEY (`mesin_id`) REFERENCES `mesins` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `tugas_perbaikan_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

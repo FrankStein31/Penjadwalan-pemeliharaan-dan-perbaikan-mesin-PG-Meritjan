@@ -5,10 +5,12 @@
 @section('contents')
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
-            <h4 class="m-0 font-weight-bold text-white">JADWAL PEMELIHARAAN</h4>
-            <a href="{{ route('admin.jadwal.create') }}" class="btn btn-white btn-sm font-weight-bold shadow-sm">
-                <i class="fas fa-plus fa-sm text-dark-50 mr-2"></i>Tambah Jadwal
+            <h4 class="m-0 font-weight-bold text-white">RIWAYAT LAPORAN PEMELIHARAAN DAN PERBAIKAN</h4>
+            <a href="{{ route('admin.riwayat.pdf') }}" class="btn btn-white btn-sm font-weight-bold shadow-sm">
+                <i class="fas fa-file-pdf fa-sm text-dark-50 mr-2"></i> Cetak Laporan
             </a>
+
+
         </div>
         <div class="card-body">
 
@@ -17,24 +19,18 @@
                     <thead class="thead-dark">
                         <tr>
                             <th class="text-center">No.</th>
-                            <th class="text-center">Mesin</th>
-                            <th class="text-center">Teknisi</th>
-                            <th class="text-center">Jenis</th>
-                            <th class="text-center">Tanggal</th>
-                            <th class="text-center">Deskripsi</th>
+                            <th class="text-center">Tanggal Perbaikan</th>
+                            <th class="text-center">Tanggal Selesai</th>
                             <th class="text-center">Status</th>
-                            <th class="text-center">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($jadwal as $item)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $item->mesin->nama }}</td>
-                                <td>{{ $item->user->nama }}</td>
-                                <td>{{ ucfirst($item->jenis) }}</td>
-                                <td>{{ \Carbon\Carbon::parse($item->tanggal)->format('d M Y') }}</td>
-                                <td>{{ $item->deskripsi ?? '-' }}</td>
+                                <td><a>{{ $item->user->nama }} Melakukan perbaikan mesin {{ $item->mesin->nama }} dengan jenis perbaikan {{ ucfirst($item->jenis) }} pada tanggal</a> {{ \Carbon\Carbon::parse($item->tanggal)->format('d M Y') }}</td>
+
+                                <td><a>{{ $item->user->nama }} menyelesaikan tugas pada tanggal </a>{{ \Carbon\Carbon::parse($item->updated_at)->format('d M Y') }}</td>
                                 <td>
                                     <span
                                         class="badge
@@ -44,22 +40,7 @@
                                         {{ $item->status }}
                                     </span>
                                 </td>
-                                <td class="text-center">
-                                    <a href="{{ route('admin.jadwal.edit', $item->id) }}"
-                                        class="btn btn-warning btn-sm btn-circle" data-toggle="tooltip" title="Edit">
-                                        <i class="fas fa-pencil-alt"></i>
-                                    </a>
-                                    <form action="{{ route('admin.jadwal.delete', $item->id) }}" method="POST"
-                                        style="display: inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm btn-circle"
-                                            data-toggle="tooltip" title="Hapus"
-                                            onclick="return confirm('Anda yakin ingin menghapus jadwal ini?');">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
-                                </td>
+
                             </tr>
                         @endforeach
                     </tbody>

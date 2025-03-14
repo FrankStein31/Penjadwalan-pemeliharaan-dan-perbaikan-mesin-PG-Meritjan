@@ -120,9 +120,21 @@
                 <li class="nav-item {{ request()->routeIs('admin.jadwal.index') ? 'active' : '' }}">
                     <a href="{{ route('admin.jadwal.index') }}">
                         <i class="fas fa-tools"></i>
-                        <p>Data Pemeliharaan</p>
+                        <p>Penjadwalan Perbaikan</p>
                     </a>
                 </li>
+                <li class="nav-item {{ request()->routeIs('admin.riwayat.index') ? 'active' : '' }}">
+                    <a href="{{ route('admin.riwayat.index') }}">
+                        <i class="fas fa-history"></i>
+                        <p>Riwayat Perbaikan</p>
+                    </a>
+                </li>
+                {{-- <li class="nav-item {{ request()->routeIs('admin.repair.index') ? 'active' : '' }}">
+                    <a href="{{ route('admin.repair.index') }}">
+                        <i class="fas fa-tools"></i>
+                        <p>Data Pemeliharaan</p>
+                    </a>
+                </li> --}}
                 {{-- <li class="nav-item">
                     <a href="calendar.html">
                         <i class="far fa-calendar-alt"></i>

@@ -1,12 +1,15 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+// use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\{
     MesinController,
     AuthController,
     DashboardController,
     UserController,
-    JadwalPemeliharaanController
+    JadwalPemeliharaanController,
+    RepairAssignmentController,
+    RiwayatLaporanController
 };
 use Illuminate\Routing\RouteUrlGenerator;
 
@@ -31,10 +34,10 @@ Route::get('mesin/edit/{id}', [App\Http\Controllers\MesinController::class, 'edi
 Route::put('mesin/edit/{id}', [App\Http\Controllers\MesinController::class, 'update'])->name('mesin.update');
 Route::delete('mesin/hapus/{id}', [App\Http\Controllers\MesinController::class, 'destroy'])->name('mesin.destroy');
 
-// Dashboard Routes
-Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::post('/dashboard/filter', [DashboardController::class, 'filter'])->name('dashboard.filter');
+    // Dashboard Routes
+    Route::middleware(['auth'])->group(function () {
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::post('/dashboard/filter', [DashboardController::class, 'filter'])->name('dashboard.filter');
 
     // User Routes
     Route::controller(UserController::class)->prefix('users')->group(function () {
@@ -46,6 +49,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('hapus/{id}', 'hapus')->name('users.hapus');
     });
 
+    //Jadwal Pemeliharaan Routes
     Route::prefix('jadwal-pemeliharaan')->group(function () {
         Route::get('/', [JadwalPemeliharaanController::class, 'index'])->name('admin.jadwal.index'); // Menampilkan semua jadwal
         Route::get('/tambah', [JadwalPemeliharaanController::class, 'create'])->name('admin.jadwal.create');
@@ -55,6 +59,15 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/update/{id}', [JadwalPemeliharaanController::class, 'update'])->name('admin.jadwal.update');
         Route::delete('/hapus/{id}', [JadwalPemeliharaanController::class, 'destroy'])->name('admin.jadwal.delete'); // Hapus jadwal
     });
+
+    Route::get('/repair', [RepairAssignmentController::class, 'index'])->name('admin.repair.index');
+Route::get('/repair/assign', [RepairAssignmentController::class, 'create'])->name('repair.assign');
+Route::post('/repair/assign', [RepairAssignmentController::class, 'store'])->name('repair.assign.store');
+Route::post('/repair/update-status/{id}', [RepairAssignmentController::class, 'updateStatus'])->name('repair.update.status');
+
+//R
+Route::get('/laporan', [RiwayatLaporanController::class, 'index'])->name('admin.riwayat.index');
+
+//Cetak PDF
+Route::get('/admin/riwayat/pdf', [RiwayatLaporanController::class, 'exportPDF'])->name('admin.riwayat.pdf');
 });
-
-
