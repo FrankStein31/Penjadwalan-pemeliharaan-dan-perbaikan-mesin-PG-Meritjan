@@ -16,19 +16,25 @@
                     </div>
                     <div class="card-body">
                         <div class="form-group">
-                            <label>Pilih Mesin</label>
-                            <select name="mesin_id" class="form-control" required>
-                                <option value="">Pilih Mesin</option>
-                                @foreach ($mesin as $item)
-                                    <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                            <label for="mesin_id">Pilih Mesin</label>
+                            <select name="mesin_id" id="mesin_id" class="form-control" required>
+                                <option value="">-- Pilih Mesin --</option>
+                                @foreach ($mesins as $mesin)
+                                    <option value="{{ $mesin->id }}" data-station="{{ $mesin->station ? $mesin->station->nama_station : 'Belum ditentukan' }}">
+                                        {{ $mesin->nama }} ({{ $mesin->station ? $mesin->station->nama_station : 'Belum ditentukan' }})
+                                    </option>
                                 @endforeach
                             </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Station Mesin</label>
+                            <input type="text" class="form-control" id="station_info" readonly value="Pilih mesin terlebih dahulu">
                         </div>
                         <div class="form-group">
                             <label>Pilih Teknisi</label>
                             <select name="user_id" class="form-control" required>
                                 <option value="">Pilih Teknisi</option>
-                                @foreach ($teknisi as $item)
+                                @foreach ($users as $item)
                                     <option value="{{ $item->id }}">{{ $item->nama }}</option>
                                 @endforeach
                             </select>
@@ -42,4 +48,12 @@
             </div>
         </div>
     </form>
+
+    <script>
+    document.getElementById('mesin_id').addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        const stationInfo = selectedOption.getAttribute('data-station');
+        document.getElementById('station_info').value = stationInfo || 'Belum ditentukan';
+    });
+    </script>
 @endsection

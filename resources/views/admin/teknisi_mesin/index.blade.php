@@ -16,31 +16,26 @@
                 <table class="table table-bordered table-hover border-0" id="dataTable" width="100%" cellspacing="0">
                     <thead class="thead-dark">
                         <tr>
-                            <th class="text-center">No.</th>
-                            <th class="text-center">Mesin</th>
-                            <th class="text-center">Teknisi</th>
-                            <th class="text-center">Aksi</th>
+                            <th>No</th>
+                            <th>Nama Teknisi</th>
+                            <th>Nama Mesin</th>
+                            <th>Station</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($teknisiMesin as $item)
+                        @foreach ($teknisiMesins as $tm)
                             <tr>
-                                <td class="text-center">{{ $loop->iteration }}</td>
-                                <td>{{ $item->mesin->nama }}</td>
-                                <td>{{ $item->teknisi->nama }}</td>
-                                <td class="text-center">
-                                    <a href="{{ route('teknisi_mesin.edit', $item->id) }}" class="btn btn-warning btn-sm btn-circle"
-                                        data-toggle="tooltip" title="Edit">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <form action="{{ route('teknisi_mesin.destroy', $item->id) }}" method="POST" style="display: inline;">
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $tm->user->nama }}</td>
+                                <td>{{ $tm->mesin->nama }}</td>
+                                <td>{{ $tm->mesin->station ? $tm->mesin->station->nama_station : 'Belum ditentukan' }}</td>
+                                <td>
+                                    <a href="{{ route('teknisi_mesin.edit', $tm->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                                    <form action="{{ route('teknisi_mesin.destroy', $tm->id) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm btn-circle"
-                                            data-toggle="tooltip" title="Hapus"
-                                            onclick="return confirm('Anda yakin ingin menghapus data ini?');">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus?')">Hapus</button>
                                     </form>
                                 </td>
                             </tr>

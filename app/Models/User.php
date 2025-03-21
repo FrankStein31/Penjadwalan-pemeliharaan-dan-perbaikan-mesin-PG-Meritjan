@@ -26,7 +26,8 @@ class User extends Authenticatable
         'alamat',
         'telp',
         // 'rincian_pekerjaan',
-        'status'
+        'status',
+        'station_id'
     ];
 
     /**
@@ -51,6 +52,11 @@ class User extends Authenticatable
     public function mesin()
     {
         return $this->belongsToMany(Mesin::class, 'teknisi_mesin');
+    }
+
+    public function station()
+    {
+        return $this->belongsTo(Station::class);
     }
 
 }

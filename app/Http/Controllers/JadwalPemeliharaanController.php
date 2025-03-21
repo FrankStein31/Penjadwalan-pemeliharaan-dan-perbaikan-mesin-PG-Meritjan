@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\JadwalPemeliharaan;
 use App\Models\Mesin;
 use App\Models\User;
+use App\Models\Station;
 use Illuminate\Http\Request;
 
 class JadwalPemeliharaanController extends Controller
@@ -52,7 +53,9 @@ public function markAsDibatakan($id)
     public function create()
     {
         $mesins = Mesin::all();
-        return view('admin.pemeliharaan.create', compact('mesins'));
+        $teknisis = User::where('level', 'Teknisi')->get();
+        $stations = Station::all();
+        return view('admin.pemeliharaan.create', compact('mesins', 'teknisis', 'stations'));
     }
 
     public function getTeknisiByMesin($mesin_id)
@@ -86,8 +89,9 @@ public function markAsDibatakan($id)
     {
         $jadwal = JadwalPemeliharaan::findOrFail($id);
         $mesins = Mesin::all();
-        $users = User::all();
-        return view('admin.pemeliharaan.edit', compact('jadwal', 'mesins', 'users'));
+        $teknisis = User::where('level', 'Teknisi')->get();
+        $stations = Station::all();
+        return view('admin.pemeliharaan.edit', compact('jadwal', 'mesins', 'teknisis', 'stations'));
     }
 
     // Update jadwal pemeliharaan
@@ -116,5 +120,20 @@ public function markAsDibatakan($id)
         $jadwal->delete();
 
         return redirect()->route('admin.jadwal.index')->with('success', 'Jadwal pemeliharaan berhasil dihapus!');
+    }
+
+    // Tambahkan method baru
+    public function getMesinByStation($station_id)
+    {
+        $mesins = Mesin::where('station_id', $station_id)->get();
+        return response()->json($mesins);
+    }
+
+    public function getTeknisiByStation($station_id)
+    {
+        $teknisis = User::where('level', 'Teknisi')
+                        ->where('station_id', $station_id)
+                        ->get();
+        return response()->json($teknisis);
     }
 }

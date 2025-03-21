@@ -63,6 +63,20 @@
                 </div>
                 <button type="submit" class="btn btn-success">Tambah Suku Cadang</button>
             </form>
+
+            <h5 class="mt-4">Detail Mesin:</h5>
+            <table class="table table-bordered table-hover border-0" id="dataTable" width="100%" cellspacing="0">
+                <tbody>
+                    <tr>
+                        <th width="30%">Deskripsi</th>
+                        <td width="70%">{{ $mesin->deskripsi }}</td>
+                    </tr>
+                    <tr>
+                        <th width="30%">Station</th>
+                        <td width="70%">{{ $mesin->station ? $mesin->station->nama_station : 'Belum ditentukan' }}</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 @endsection

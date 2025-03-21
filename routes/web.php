@@ -13,6 +13,7 @@ use App\Http\Controllers\{
     TeknisiMesinController,
     SparePartController,
     ScreeningController,
+    StationController,
 };
 use Illuminate\Routing\RouteUrlGenerator;
 
@@ -51,7 +52,14 @@ Route::post('mesin/{id}/add-spare-part', [MesinController::class, 'addSparePart'
 Route::put('mesin/{mesin_id}/update-spare-part/{spare_part_id}', [MesinController::class, 'updateSparePart'])->name('mesin.update_spare_part');
 Route::delete('mesin/{mesin_id}/remove-spare-part/{spare_part_id}', [MesinController::class, 'removeSparePart'])->name('mesin.remove_spare_part');
 
-
+Route::prefix('stations')->name('stations.')->middleware(['auth'])->group(function() {
+    Route::get('/', [StationController::class, 'index'])->name('index');
+    Route::get('/tambah', [StationController::class, 'create'])->name('create');
+    Route::post('/', [StationController::class, 'store'])->name('store');
+    Route::get('/edit/{station}', [StationController::class, 'edit'])->name('edit');
+    Route::put('/{station}', [StationController::class, 'update'])->name('update');
+    Route::delete('/{station}', [StationController::class, 'destroy'])->name('destroy');
+});
 
 // Mesin Routes
 Route::get('/mesin', [MesinController::class, 'index'])->name('mesin.index');
@@ -117,3 +125,7 @@ Route::middleware(['auth'])->group(function () {
     //Cetak PDF
     Route::get('/admin/riwayat/pdf', [RiwayatLaporanController::class, 'exportPDF'])->name('admin.riwayat.pdf');
 });
+
+// Tambahkan route baru
+Route::get('/admin/getMesinByStation/{station_id}', [JadwalPemeliharaanController::class, 'getMesinByStation']);
+Route::get('/admin/getTeknisiByStation/{station_id}', [JadwalPemeliharaanController::class, 'getTeknisiByStation']);

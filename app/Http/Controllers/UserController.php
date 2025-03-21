@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Station;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -17,7 +18,8 @@ class UserController extends Controller
 
     public function tambah()
     {
-        return view('users.tambah');
+        $stations = Station::all();
+        return view('users.tambah', compact('stations'));
     }
 
     public function simpan(Request $request)
@@ -33,6 +35,7 @@ class UserController extends Controller
             'telp' => 'required',
             // 'rincian_pekerjaan' => 'nullable',
             'status' => 'required',
+            'station_id' => 'nullable|exists:stations,id',
         ]);
 
         Log::info('Validation passed');
@@ -46,6 +49,7 @@ class UserController extends Controller
             'telp' => $request->telp,
             // 'rincian_pekerjaan' => $request->rincian_pekerjaan,
             'status' => $request->status,
+            'station_id' => $request->station_id,
         ];
 
         User::create($data);
@@ -57,27 +61,37 @@ class UserController extends Controller
 
     public function edit($id)
     {
-        $users = User::findOrFail($id);
-        return view('users.edit', ['users' => $users]);
+        $user = User::findOrFail($id);
+        $stations = Station::all();
+        return view('users.edit', compact('user', 'stations'));
     }
 
-    public function update($id, Request $request)
+    public function update(Request $request, $id)
     {
-        $data = [
-            'user_id' => $request->user_id,
-            'nama' => $request->nama,
-            'level' => $request->level,
-            'alamat' => $request->alamat,
-            'telp' => $request->telp,
-            // 'rincian_pekerjaan' => $request->rincian_pekerjaan,
-            'status' => $request->status,
-        ];
+        $request->validate([
+            'user_id' => 'required|unique:users,user_id',
+            'nama' => 'required',
+            'level' => 'required',
+            'alamat' => 'required',
+            'telp' => 'required',
+            'status' => 'required',
+            'station_id' => 'nullable|exists:stations,id',
+        ]);
 
+        $user = User::findOrFail($id);
+        
+        $user->user_id = $request->user_id;
+        $user->nama = $request->nama;
+        $user->level = $request->level;
+        $user->alamat = $request->alamat;
+        $user->telp = $request->telp;
+        $user->station_id = $request->station_id;
+        
         if ($request->filled('password')) {
-            $data['password'] = Hash::make($request->password);
+            $user->password = Hash::make($request->password);
         }
 
-        User::find($id)->update($data);
+        $user->save();
 
         return redirect()->route('users')->with('success', 'Data berhasil diupdate');
     }
@@ -86,5 +100,11 @@ class UserController extends Controller
     {
         User::find($id)->delete();
         return redirect()->route('users')->with('success', 'Data berhasil dihapus');
+    }
+
+    public function create()
+    {
+        $stations = Station::all();
+        return view('admin.users.create', compact('stations'));
     }
 }

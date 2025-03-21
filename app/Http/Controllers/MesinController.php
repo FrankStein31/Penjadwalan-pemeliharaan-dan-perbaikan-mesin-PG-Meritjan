@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Mesin;
 use App\Models\SparePart;
+use App\Models\Station;
 
 class MesinController extends Controller
 {
@@ -18,44 +19,45 @@ class MesinController extends Controller
     // Tampilkan form tambah data mesin
     public function create()
     {
-        $mesins = Mesin::all();
-        return view('admin.mesin.create', compact('mesins'));
+        $stations = Station::all();
+        return view('admin.mesin.create', compact('stations'));
     }
 
     // Simpan data mesin baru
     public function store(Request $request)
     {
         $request->validate([
-            'nama' => 'required|string|max:255',
-            'jenis' => 'required|string|max:255',
-            'tahun' => 'required|integer',
-            'deskripsi' => 'nullable|string',
+            'nama' => 'required',
+            'jenis' => 'required',
+            'tahun' => 'required|numeric',
+            'station_id' => 'nullable|exists:stations,id',
         ]);
 
         Mesin::create($request->all());
-        return redirect()->route('mesin.index')->with('success', 'Data mesin berhasil ditambahkan!');
+        return redirect()->route('mesin.index')->with('success', 'Mesin berhasil ditambahkan');
     }
 
     // Tampilkan form edit data mesin
     public function edit($id)
     {
         $mesin = Mesin::findOrFail($id);
-        return view('admin.mesin.edit', compact('mesin'));
+        $stations = Station::all();
+        return view('admin.mesin.edit', compact('mesin', 'stations'));
     }
 
     // Update data mesin
     public function update(Request $request, $id)
     {
         $request->validate([
-            'nama' => 'required|string|max:255',
-            'jenis' => 'required|string|max:255',
-            'tahun' => 'required|integer',
-            'deskripsi' => 'nullable|string',
+            'nama' => 'required',
+            'jenis' => 'required',
+            'tahun' => 'required|numeric',
+            'station_id' => 'nullable|exists:stations,id',
         ]);
 
         $mesin = Mesin::findOrFail($id);
         $mesin->update($request->all());
-        return redirect()->route('mesin.index')->with('success', 'Data mesin berhasil diperbarui!');
+        return redirect()->route('mesin.index')->with('success', 'Mesin berhasil diperbarui');
     }
 
     // Hapus data mesin

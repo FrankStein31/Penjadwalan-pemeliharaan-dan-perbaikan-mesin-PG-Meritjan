@@ -111,6 +111,12 @@
                     </span>
                     <h4 class="text-section">Manajemen Mesin</h4>
                 </li>
+                <li class="nav-item {{ request()->routeIs('stations') ? 'active' : '' }}">
+                    <a href="{{ route('stations.index') }}">
+                        <i class="fas fa-industry"></i>
+                        <p>Data Station</p>
+                    </a>
+                </li>
                 <li class="nav-item {{ request()->routeIs('mesin') ? 'active' : '' }}">
                     <a href="{{ route('mesin.index') }}">
                         <i class="fas fa-gears"></i>

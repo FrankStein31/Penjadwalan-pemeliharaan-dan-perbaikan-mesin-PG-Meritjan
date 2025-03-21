@@ -36,14 +36,23 @@
 
                 <div class="form-group">
                     <label for="deskripsi">Deskripsi</label>
-                    <textarea name="deskripsi" id="deskripsi" class="form-control @error('deskripsi') is-invalid @enderror" rows="3">{{ old('deskripsi') }}</textarea>
-                    @error('deskripsi')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+                    <textarea name="deskripsi" id="deskripsi" rows="3" class="form-control">{{ old('deskripsi') }}</textarea>
                 </div>
 
                 <div class="form-group">
-                    <button type="submit" class="btn btn-success">Simpan</button>
+                    <label for="station_id">Station</label>
+                    <select name="station_id" id="station_id" class="form-control">
+                        <option value="">Pilih Station</option>
+                        @foreach($stations as $station)
+                            <option value="{{ $station->id }}" {{ old('station_id') == $station->id ? 'selected' : '' }}>
+                                {{ $station->nama_station }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Simpan</button>
                     <a href="{{ route('mesin.index') }}" class="btn btn-secondary">Batal</a>
                 </div>
             </form>

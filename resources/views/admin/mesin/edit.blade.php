@@ -33,14 +33,24 @@
                             <input type="number" name="tahun" class="form-control" value="{{ $mesin->tahun }}" required>
                         </div>
                         <div class="form-group">
-                            <label>Deskripsi</label>
-                            <textarea name="deskripsi" class="form-control">{{ $mesin->deskripsi }}</textarea>
-                            <br>
+                            <label for="deskripsi">Deskripsi</label>
+                            <textarea name="deskripsi" id="deskripsi" rows="3" class="form-control">{{ $mesin->deskripsi }}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="station_id">Station</label>
+                            <select name="station_id" id="station_id" class="form-control">
+                                <option value="">Pilih Station</option>
+                                @foreach($stations as $station)
+                                    <option value="{{ $station->id }}" {{ $mesin->station_id == $station->id ? 'selected' : '' }}>
+                                        {{ $station->nama_station }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
                     <div class="card-footer">
                         <a href="{{ route('mesin.index') }}" class="btn btn-secondary">Kembali</a>
-                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <button type="submit" class="btn btn-primary">Update</button>
                     </div>
                 </div>
             </div>

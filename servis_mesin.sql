@@ -1,657 +1,414 @@
--- phpMyAdmin SQL Dump
--- version 5.2.1
--- https://www.phpmyadmin.net/
---
--- Host: 127.0.0.1
--- Waktu pembuatan: 21 Mar 2025 pada 00.56
--- Versi server: 10.4.28-MariaDB
--- Versi PHP: 8.2.4
+/*
+SQLyog Enterprise v13.1.1 (64 bit)
+MySQL - 8.0.30 : Database - servis_mesin
+*********************************************************************
+*/
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
+/*!40101 SET NAMES utf8 */;
 
+/*!40101 SET SQL_MODE=''*/;
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`servis_mesin` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 
---
--- Database: `servis_mobil`
---
+USE `servis_mesin`;
 
--- --------------------------------------------------------
+/*Table structure for table `damage_reports` */
 
---
--- Struktur dari tabel `damage_reports`
---
+DROP TABLE IF EXISTS `damage_reports`;
 
 CREATE TABLE `damage_reports` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `repair_id` bigint(20) UNSIGNED NOT NULL,
-  `technician_id` bigint(20) UNSIGNED NOT NULL,
-  `photo` varchar(255) DEFAULT NULL,
-  `description` text NOT NULL,
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `repair_id` bigint unsigned NOT NULL,
+  `technician_id` bigint unsigned NOT NULL,
+  `photo` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `description` text COLLATE utf8mb4_general_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `repair_id` (`repair_id`),
+  KEY `technician_id` (`technician_id`),
+  CONSTRAINT `damage_reports_ibfk_1` FOREIGN KEY (`repair_id`) REFERENCES `repairs` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `damage_reports_ibfk_2` FOREIGN KEY (`technician_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
+/*Data for the table `damage_reports` */
 
---
--- Struktur dari tabel `jadwal_pemeliharaan`
---
+/*Table structure for table `jadwal_pemeliharaan` */
+
+DROP TABLE IF EXISTS `jadwal_pemeliharaan`;
 
 CREATE TABLE `jadwal_pemeliharaan` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `mesin_id` bigint(20) UNSIGNED NOT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
-  `jenis` enum('rutin','incidental') NOT NULL,
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `mesin_id` bigint unsigned NOT NULL,
+  `user_id` bigint unsigned NOT NULL,
+  `jenis` enum('rutin','incidental') COLLATE utf8mb4_unicode_ci NOT NULL,
   `tanggal` date NOT NULL,
-  `deskripsi` text DEFAULT NULL,
-  `status` enum('Terjadwal','Selesai','Dibatalkan') NOT NULL DEFAULT 'Terjadwal',
+  `deskripsi` text COLLATE utf8mb4_unicode_ci,
+  `status` enum('Terjadwal','Selesai','Dibatalkan') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Terjadwal',
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data untuk tabel `jadwal_pemeliharaan`
---
+/*Data for the table `jadwal_pemeliharaan` */
 
-INSERT INTO `jadwal_pemeliharaan` (`id`, `mesin_id`, `user_id`, `jenis`, `tanggal`, `deskripsi`, `status`, `created_at`, `updated_at`) VALUES
-(8, 3, 9, 'incidental', '2025-03-19', 'Rusak Gear', 'Selesai', '2025-03-18 11:38:21', '2025-03-19 15:09:55'),
-(9, 10, 12, 'rutin', '2025-03-20', 'Rusak Total', 'Selesai', '2025-03-19 15:01:37', '2025-03-19 15:15:24'),
-(10, 10, 12, 'incidental', '2025-03-20', 'Rusak Gear', 'Selesai', '2025-03-19 15:19:29', '2025-03-19 15:46:42'),
-(11, 10, 12, 'rutin', '2025-03-20', 'Rusak Sebagian', 'Selesai', '2025-03-19 15:19:59', '2025-03-19 15:36:05'),
-(12, 10, 12, 'rutin', '2025-03-20', 'Rusak', 'Selesai', '2025-03-19 15:50:17', '2025-03-19 15:50:33'),
-(13, 10, 12, 'rutin', '2025-03-20', 'Rusak', 'Selesai', '2025-03-19 22:56:37', '2025-03-19 22:56:48'),
-(14, 10, 12, 'rutin', '2025-03-20', 'Rusak', 'Terjadwal', '2025-03-19 22:57:51', '2025-03-19 22:57:51');
+insert  into `jadwal_pemeliharaan`(`id`,`mesin_id`,`user_id`,`jenis`,`tanggal`,`deskripsi`,`status`,`created_at`,`updated_at`) values 
+(8,3,9,'incidental','2025-03-19','Rusak Gear','Selesai','2025-03-18 18:38:21','2025-03-19 22:09:55'),
+(9,10,12,'rutin','2025-03-20','Rusak Total','Selesai','2025-03-19 22:01:37','2025-03-19 22:15:24'),
+(10,10,12,'incidental','2025-03-20','Rusak Gear','Selesai','2025-03-19 22:19:29','2025-03-19 22:46:42'),
+(11,10,12,'rutin','2025-03-20','Rusak Sebagian','Selesai','2025-03-19 22:19:59','2025-03-19 22:36:05'),
+(12,10,12,'rutin','2025-03-20','Rusak','Selesai','2025-03-19 22:50:17','2025-03-19 22:50:33'),
+(13,10,12,'rutin','2025-03-20','Rusak','Selesai','2025-03-20 05:56:37','2025-03-20 05:56:48'),
+(14,10,12,'rutin','2025-03-20','Rusak','Terjadwal','2025-03-20 05:57:51','2025-03-20 05:57:51');
 
--- --------------------------------------------------------
+/*Table structure for table `machines` */
 
---
--- Struktur dari tabel `machines`
---
+DROP TABLE IF EXISTS `machines`;
 
 CREATE TABLE `machines` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `serial_number` varchar(255) NOT NULL,
-  `location` varchar(255) NOT NULL,
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `serial_number` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `location` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `serial_number` (`serial_number`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
+/*Data for the table `machines` */
 
---
--- Struktur dari tabel `maintenance_schedules`
---
+/*Table structure for table `maintenance_schedules` */
+
+DROP TABLE IF EXISTS `maintenance_schedules`;
 
 CREATE TABLE `maintenance_schedules` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `machine_id` bigint(20) UNSIGNED NOT NULL,
-  `technician_id` bigint(20) UNSIGNED NOT NULL,
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `machine_id` bigint unsigned NOT NULL,
+  `technician_id` bigint unsigned NOT NULL,
   `schedule_date` date NOT NULL,
-  `status` enum('scheduled','completed','pending') DEFAULT 'scheduled',
+  `status` enum('scheduled','completed','pending') COLLATE utf8mb4_general_ci DEFAULT 'scheduled',
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `machine_id` (`machine_id`),
+  KEY `technician_id` (`technician_id`),
+  CONSTRAINT `maintenance_schedules_ibfk_1` FOREIGN KEY (`machine_id`) REFERENCES `machines` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `maintenance_schedules_ibfk_2` FOREIGN KEY (`technician_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
+/*Data for the table `maintenance_schedules` */
 
---
--- Struktur dari tabel `mesins`
---
+/*Table structure for table `mesin_spare_part` */
 
-CREATE TABLE `mesins` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `nama` varchar(255) NOT NULL,
-  `jenis` varchar(255) NOT NULL,
-  `tahun` int(11) NOT NULL,
-  `deskripsi` text DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data untuk tabel `mesins`
---
-
-INSERT INTO `mesins` (`id`, `nama`, `jenis`, `tahun`, `deskripsi`, `created_at`, `updated_at`) VALUES
-(3, 'Cane Crusher', 'Mesin Penggiling Tebu', 2018, 'Menghancurkan tebu untuk mengekstrak nira (cairan tebu).', '2025-03-06 09:38:17', '2025-03-17 06:47:31'),
-(10, 'Milling Tandem', 'Mesin Pemeras Tebu', 2013, 'Memeras tebu lebih lanjut untuk mendapatkan hasil maksimal.', '2025-03-17 06:48:17', '2025-03-17 06:48:17'),
-(11, 'Juice Heater', 'Mesin Pemeras Nira', 2011, 'Meningkatkan suhu nira untuk proses pemurnian.', '2025-03-17 06:49:42', '2025-03-18 09:56:13');
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `mesin_spare_part`
---
+DROP TABLE IF EXISTS `mesin_spare_part`;
 
 CREATE TABLE `mesin_spare_part` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `mesin_id` bigint(20) UNSIGNED NOT NULL,
-  `spare_part_id` bigint(20) UNSIGNED NOT NULL,
-  `jumlah` int(11) NOT NULL DEFAULT 1,
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `mesin_id` bigint unsigned NOT NULL,
+  `spare_part_id` bigint unsigned NOT NULL,
+  `jumlah` int NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `mesin_spare_part_mesin_id_foreign` (`mesin_id`),
+  KEY `mesin_spare_part_spare_part_id_foreign` (`spare_part_id`),
+  CONSTRAINT `mesin_spare_part_mesin_id_foreign` FOREIGN KEY (`mesin_id`) REFERENCES `mesins` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `mesin_spare_part_spare_part_id_foreign` FOREIGN KEY (`spare_part_id`) REFERENCES `spare_parts` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data untuk tabel `mesin_spare_part`
---
+/*Data for the table `mesin_spare_part` */
 
-INSERT INTO `mesin_spare_part` (`id`, `mesin_id`, `spare_part_id`, `jumlah`, `created_at`, `updated_at`) VALUES
-(2, 10, 3, 10, '2025-03-18 09:07:33', '2025-03-18 09:07:33');
+insert  into `mesin_spare_part`(`id`,`mesin_id`,`spare_part_id`,`jumlah`,`created_at`,`updated_at`) values 
+(2,10,3,10,'2025-03-18 16:07:33','2025-03-18 16:07:33');
 
--- --------------------------------------------------------
+/*Table structure for table `mesins` */
 
---
--- Struktur dari tabel `migrations`
---
+DROP TABLE IF EXISTS `mesins`;
+
+CREATE TABLE `mesins` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `nama` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `jenis` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tahun` int NOT NULL,
+  `deskripsi` text COLLATE utf8mb4_unicode_ci,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `station_id` bigint unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `mesins_station_id_foreign` (`station_id`),
+  CONSTRAINT `mesins_station_id_foreign` FOREIGN KEY (`station_id`) REFERENCES `stations` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+/*Data for the table `mesins` */
+
+insert  into `mesins`(`id`,`nama`,`jenis`,`tahun`,`deskripsi`,`created_at`,`updated_at`,`station_id`) values 
+(3,'Cane Crusher','Mesin Penggiling Tebu',2018,'Menghancurkan tebu untuk mengekstrak nira (cairan tebu).','2025-03-06 16:38:17','2025-03-21 10:34:13',1),
+(10,'Milling Tandem','Mesin Pemeras Tebu',2013,'Memeras tebu lebih lanjut untuk mendapatkan hasil maksimal.','2025-03-17 13:48:17','2025-03-17 13:48:17',NULL),
+(11,'Juice Heater','Mesin Pemeras Nira',2011,'Meningkatkan suhu nira untuk proses pemurnian.','2025-03-17 13:49:42','2025-03-18 16:56:13',NULL);
+
+/*Table structure for table `migrations` */
+
+DROP TABLE IF EXISTS `migrations`;
 
 CREATE TABLE `migrations` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `migration` varchar(255) NOT NULL,
-  `batch` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `batch` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data untuk tabel `migrations`
---
+/*Data for the table `migrations` */
 
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
-(1, '2019_12_14_000001_create_personal_access_tokens_table', 1),
-(2, '2025_03_06_132826_create_mesins_table', 2),
-(3, '2025_03_13_195304_create_repair_assignments_table', 3),
-(4, '2025_03_13_201112_create_tugas_perbaikans_table', 4),
-(5, '2025_03_18_134928_create_spare_parts_table', 5),
-(6, '2025_03_18_134930_create_mesin_spare_part_table', 6),
-(7, '2025_03_18_201834_create_screenings_table', 7);
+insert  into `migrations`(`id`,`migration`,`batch`) values 
+(1,'2019_12_14_000001_create_personal_access_tokens_table',1),
+(2,'2025_03_06_132826_create_mesins_table',2),
+(3,'2025_03_13_195304_create_repair_assignments_table',3),
+(4,'2025_03_13_201112_create_tugas_perbaikans_table',4),
+(5,'2025_03_18_134928_create_spare_parts_table',5),
+(6,'2025_03_18_134930_create_mesin_spare_part_table',6),
+(7,'2025_03_18_201834_create_screenings_table',7),
+(8,'2025_03_20_165644_create_stations_table',8),
+(9,'2025_03_20_172842_add_station_id_to_mesins_table',8),
+(10,'2025_03_20_174818_add_station_id_to_users_table',8);
 
--- --------------------------------------------------------
+/*Table structure for table `notifications` */
 
---
--- Struktur dari tabel `notifications`
---
+DROP TABLE IF EXISTS `notifications`;
 
 CREATE TABLE `notifications` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
-  `message` text NOT NULL,
-  `is_read` tinyint(1) DEFAULT 0,
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint unsigned NOT NULL,
+  `message` text COLLATE utf8mb4_general_ci NOT NULL,
+  `is_read` tinyint(1) DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `notifications_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
+/*Data for the table `notifications` */
 
---
--- Struktur dari tabel `personal_access_tokens`
---
+/*Table structure for table `personal_access_tokens` */
+
+DROP TABLE IF EXISTS `personal_access_tokens`;
 
 CREATE TABLE `personal_access_tokens` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `tokenable_type` varchar(255) NOT NULL,
-  `tokenable_id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `token` varchar(64) NOT NULL,
-  `abilities` text DEFAULT NULL,
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `tokenable_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tokenable_id` bigint unsigned NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `abilities` text COLLATE utf8mb4_unicode_ci,
   `last_used_at` timestamp NULL DEFAULT NULL,
   `expires_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `personal_access_tokens_token_unique` (`token`),
+  KEY `personal_access_tokens_tokenable_type_tokenable_id_index` (`tokenable_type`,`tokenable_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- --------------------------------------------------------
+/*Data for the table `personal_access_tokens` */
 
---
--- Struktur dari tabel `repairs`
---
+/*Table structure for table `repair_assignments` */
 
-CREATE TABLE `repairs` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `machine_id` bigint(20) UNSIGNED NOT NULL,
-  `technician_id` bigint(20) UNSIGNED NOT NULL,
-  `description` text NOT NULL,
-  `repair_date` timestamp NULL DEFAULT NULL,
-  `status` enum('pending','in_progress','completed') DEFAULT 'pending',
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `repair_assignments`
---
+DROP TABLE IF EXISTS `repair_assignments`;
 
 CREATE TABLE `repair_assignments` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `machine_id` bigint(20) UNSIGNED NOT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `machine_id` bigint unsigned NOT NULL,
+  `user_id` bigint unsigned NOT NULL,
   `assigned_at` datetime NOT NULL,
-  `status` enum('dijadwalkan','sedang dikerjakan','selesai') NOT NULL DEFAULT 'dijadwalkan',
+  `status` enum('dijadwalkan','sedang dikerjakan','selesai') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'dijadwalkan',
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `repair_assignments_machine_id_foreign` (`machine_id`),
+  KEY `repair_assignments_user_id_foreign` (`user_id`),
+  CONSTRAINT `repair_assignments_machine_id_foreign` FOREIGN KEY (`machine_id`) REFERENCES `machines` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `repair_assignments_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- --------------------------------------------------------
+/*Data for the table `repair_assignments` */
 
---
--- Struktur dari tabel `screenings`
---
+/*Table structure for table `repairs` */
+
+DROP TABLE IF EXISTS `repairs`;
+
+CREATE TABLE `repairs` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `machine_id` bigint unsigned NOT NULL,
+  `technician_id` bigint unsigned NOT NULL,
+  `description` text COLLATE utf8mb4_general_ci NOT NULL,
+  `repair_date` timestamp NULL DEFAULT NULL,
+  `status` enum('pending','in_progress','completed') COLLATE utf8mb4_general_ci DEFAULT 'pending',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `machine_id` (`machine_id`),
+  KEY `technician_id` (`technician_id`),
+  CONSTRAINT `repairs_ibfk_1` FOREIGN KEY (`machine_id`) REFERENCES `machines` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `repairs_ibfk_2` FOREIGN KEY (`technician_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+/*Data for the table `repairs` */
+
+/*Table structure for table `screenings` */
+
+DROP TABLE IF EXISTS `screenings`;
 
 CREATE TABLE `screenings` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `mesin_id` bigint(20) UNSIGNED NOT NULL,
-  `teknisi_id` bigint(20) UNSIGNED NOT NULL,
-  `admin_id` bigint(20) UNSIGNED NOT NULL,
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `mesin_id` bigint unsigned NOT NULL,
+  `teknisi_id` bigint unsigned NOT NULL,
+  `admin_id` bigint unsigned NOT NULL,
   `tanggal_pemeriksaan` date NOT NULL,
-  `status_operasional` enum('Normal','Tidak Normal') NOT NULL,
-  `kode_error` varchar(255) DEFAULT NULL,
-  `suara_anomali` tinyint(1) NOT NULL DEFAULT 0,
-  `getaran_berlebih` tinyint(1) NOT NULL DEFAULT 0,
-  `kebocoran` tinyint(1) NOT NULL DEFAULT 0,
+  `status_operasional` enum('Normal','Tidak Normal') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kode_error` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `suara_anomali` tinyint(1) NOT NULL DEFAULT '0',
+  `getaran_berlebih` tinyint(1) NOT NULL DEFAULT '0',
+  `kebocoran` tinyint(1) NOT NULL DEFAULT '0',
   `terakhir_perawatan` date DEFAULT NULL,
-  `tindakan_rekomendasi` enum('Lanjut Operasi','Perbaikan','Penggantian Komponen') NOT NULL,
-  `catatan` text DEFAULT NULL,
-  `jawaban` text DEFAULT NULL,
+  `tindakan_rekomendasi` enum('Lanjut Operasi','Perbaikan','Penggantian Komponen') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `catatan` text COLLATE utf8mb4_unicode_ci,
+  `jawaban` text COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `screenings_mesin_id_foreign` (`mesin_id`),
+  KEY `screenings_teknisi_id_foreign` (`teknisi_id`),
+  KEY `screenings_admin_id_foreign` (`admin_id`),
+  CONSTRAINT `screenings_admin_id_foreign` FOREIGN KEY (`admin_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `screenings_mesin_id_foreign` FOREIGN KEY (`mesin_id`) REFERENCES `mesins` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `screenings_teknisi_id_foreign` FOREIGN KEY (`teknisi_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data untuk tabel `screenings`
---
+/*Data for the table `screenings` */
 
-INSERT INTO `screenings` (`id`, `mesin_id`, `teknisi_id`, `admin_id`, `tanggal_pemeriksaan`, `status_operasional`, `kode_error`, `suara_anomali`, `getaran_berlebih`, `kebocoran`, `terakhir_perawatan`, `tindakan_rekomendasi`, `catatan`, `jawaban`, `created_at`, `updated_at`) VALUES
-(1, 10, 9, 1, '2025-03-19', 'Tidak Normal', '205', 0, 0, 0, '2025-03-17', 'Penggantian Komponen', 'Apakah kerusakannya parah?', '', '2025-03-18 14:08:00', '2025-03-18 14:24:21'),
-(2, 10, 9, 1, '2025-03-21', 'Tidak Normal', '45', 1, 1, 1, '2025-03-04', 'Perbaikan', 'Apa?', 'pp', '2025-03-20 22:13:02', '2025-03-20 23:04:28'),
-(3, 10, 12, 1, '2025-03-21', 'Normal', '21', 0, 1, 1, '2025-03-20', 'Lanjut Operasi', 'Apakah ada kerusakan lebih?', 'Sudah diperbaiki', '2025-03-20 23:25:28', '2025-03-20 23:53:32');
+insert  into `screenings`(`id`,`mesin_id`,`teknisi_id`,`admin_id`,`tanggal_pemeriksaan`,`status_operasional`,`kode_error`,`suara_anomali`,`getaran_berlebih`,`kebocoran`,`terakhir_perawatan`,`tindakan_rekomendasi`,`catatan`,`jawaban`,`created_at`,`updated_at`) values 
+(1,10,9,1,'2025-03-19','Tidak Normal','205',0,0,0,'2025-03-17','Penggantian Komponen','Apakah kerusakannya parah?','','2025-03-18 21:08:00','2025-03-18 21:24:21'),
+(2,10,9,1,'2025-03-21','Tidak Normal','45',1,1,1,'2025-03-04','Perbaikan','Apa?','pp','2025-03-21 05:13:02','2025-03-21 06:04:28'),
+(3,10,12,1,'2025-03-21','Normal','21',0,1,1,'2025-03-20','Lanjut Operasi','Apakah ada kerusakan lebih?','Sudah diperbaiki','2025-03-21 06:25:28','2025-03-21 06:53:32');
 
--- --------------------------------------------------------
+/*Table structure for table `spare_parts` */
 
---
--- Struktur dari tabel `spare_parts`
---
+DROP TABLE IF EXISTS `spare_parts`;
 
 CREATE TABLE `spare_parts` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `kode_part` varchar(255) NOT NULL,
-  `nama` varchar(255) NOT NULL,
-  `jenis` varchar(255) NOT NULL,
-  `stok` int(11) NOT NULL,
-  `deskripsi` text DEFAULT NULL,
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `kode_part` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `jenis` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `stok` int NOT NULL,
+  `deskripsi` text COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `spare_parts_kode_part_unique` (`kode_part`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data untuk tabel `spare_parts`
---
+/*Data for the table `spare_parts` */
 
-INSERT INTO `spare_parts` (`id`, `kode_part`, `nama`, `jenis`, `stok`, `deskripsi`, `created_at`, `updated_at`) VALUES
-(3, '001', 'Roll gilingan', 'mekanik', 10, 'Komponen utama yang menghancurkan tebu.', '2025-03-18 09:06:52', '2025-03-18 09:06:52');
+insert  into `spare_parts`(`id`,`kode_part`,`nama`,`jenis`,`stok`,`deskripsi`,`created_at`,`updated_at`) values 
+(3,'001','Roll gilingan','mekanik',10,'Komponen utama yang menghancurkan tebu.','2025-03-18 16:06:52','2025-03-18 16:06:52');
 
--- --------------------------------------------------------
+/*Table structure for table `stations` */
 
---
--- Struktur dari tabel `teknisi_mesin`
---
+DROP TABLE IF EXISTS `stations`;
+
+CREATE TABLE `stations` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `nama_station` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+/*Data for the table `stations` */
+
+insert  into `stations`(`id`,`nama_station`,`created_at`,`updated_at`) values 
+(1,'aaaa','2025-03-21 10:33:46','2025-03-21 10:33:46'),
+(2,'bbbb','2025-03-21 10:33:57','2025-03-21 10:33:57');
+
+/*Table structure for table `teknisi_mesin` */
+
+DROP TABLE IF EXISTS `teknisi_mesin`;
 
 CREATE TABLE `teknisi_mesin` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
-  `mesin_id` bigint(20) UNSIGNED NOT NULL,
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint unsigned NOT NULL,
+  `mesin_id` bigint unsigned NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `teknisi_mesin_user_id_foreign` (`user_id`),
+  CONSTRAINT `teknisi_mesin_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data untuk tabel `teknisi_mesin`
---
+/*Data for the table `teknisi_mesin` */
 
-INSERT INTO `teknisi_mesin` (`id`, `user_id`, `mesin_id`, `created_at`, `updated_at`) VALUES
-(2, 9, 3, '2025-03-17 07:02:37', '2025-03-17 07:02:37'),
-(3, 12, 10, '2025-03-17 07:02:47', '2025-03-17 07:02:47');
+insert  into `teknisi_mesin`(`id`,`user_id`,`mesin_id`,`created_at`,`updated_at`) values 
+(2,9,3,'2025-03-17 14:02:37','2025-03-17 14:02:37'),
+(3,12,10,'2025-03-17 14:02:47','2025-03-17 14:02:47');
 
--- --------------------------------------------------------
+/*Table structure for table `tugas_perbaikan` */
 
---
--- Struktur dari tabel `tugas_perbaikan`
---
+DROP TABLE IF EXISTS `tugas_perbaikan`;
 
 CREATE TABLE `tugas_perbaikan` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `mesin_id` bigint(20) UNSIGNED NOT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `mesin_id` bigint unsigned NOT NULL,
+  `user_id` bigint unsigned NOT NULL,
   `tanggal_penugasan` date NOT NULL,
-  `status` varchar(255) NOT NULL DEFAULT 'Diterima',
-  `catatan` text DEFAULT NULL,
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Diterima',
+  `catatan` text COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `tugas_perbaikan_mesin_id_foreign` (`mesin_id`),
+  KEY `tugas_perbaikan_user_id_foreign` (`user_id`),
+  CONSTRAINT `tugas_perbaikan_mesin_id_foreign` FOREIGN KEY (`mesin_id`) REFERENCES `mesins` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `tugas_perbaikan_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- --------------------------------------------------------
+/*Data for the table `tugas_perbaikan` */
 
---
--- Struktur dari tabel `users`
---
+/*Table structure for table `users` */
+
+DROP TABLE IF EXISTS `users`;
 
 CREATE TABLE `users` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `user_id` varchar(255) NOT NULL,
-  `nama` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `level` varchar(255) NOT NULL,
-  `alamat` varchar(255) NOT NULL,
-  `telp` varchar(255) NOT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `level` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `alamat` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `telp` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `station_id` bigint unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `users_station_id_foreign` (`station_id`),
+  CONSTRAINT `users_station_id_foreign` FOREIGN KEY (`station_id`) REFERENCES `stations` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data untuk tabel `users`
---
+/*Data for the table `users` */
 
-INSERT INTO `users` (`id`, `user_id`, `nama`, `password`, `level`, `alamat`, `telp`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'adm1', 'Endra', '$2y$10$UYrVzq.P/bgKfAY5aon4suc5AyZm5lQVZav3siAcAZAMMy.iWSmx2', 'Administrator', 'Kediri', '082335022640', 1, NULL, '2025-03-10 12:13:18'),
-(9, 'teknisi1', 'Stenlie', '$2y$10$cxgNE8rd5HKi7iRRupJYHeYfWcq9xzoIfNwMW2WH6CdBE75O8/37m', 'Teknisi', 'Malang', '052314758596', 1, '2025-02-19 04:35:41', '2025-03-10 12:14:30'),
-(12, 'teknisi2', 'Nana', '$2y$10$nEiaR7bCMxEZeaNu6Jx18O350KIT3HanRxJrEdExFywhIT6Kr2SH2', 'Teknisi', 'Gurah', '085645214125', 1, '2025-03-17 07:02:22', '2025-03-18 06:31:36'),
-(13, 'manajer1', 'Hafidz', '$2y$10$pxxV7VDE3dcrAtV/fRsLX.fW9ToJ62JHi9BqpC/LIlw8yvIC0bhXC', 'Manajer Teknisi', 'Kebomas', '089612684096', 1, '2025-03-18 06:29:46', '2025-03-18 06:29:46');
+insert  into `users`(`id`,`user_id`,`nama`,`password`,`level`,`alamat`,`telp`,`status`,`created_at`,`updated_at`,`station_id`) values 
+(1,'adm1','Endra','$2y$10$UYrVzq.P/bgKfAY5aon4suc5AyZm5lQVZav3siAcAZAMMy.iWSmx2','Administrator','Kediri','082335022640',1,NULL,'2025-03-10 19:13:18',NULL),
+(9,'teknisi1','teknisi1','$2y$10$cxgNE8rd5HKi7iRRupJYHeYfWcq9xzoIfNwMW2WH6CdBE75O8/37m','Teknisi','Malang','052314758596',1,'2025-02-19 11:35:41','2025-03-10 19:14:30',NULL),
+(12,'teknisi2','teknisi2','$2y$10$nEiaR7bCMxEZeaNu6Jx18O350KIT3HanRxJrEdExFywhIT6Kr2SH2','Teknisi','Gurah','085645214125',1,'2025-03-17 14:02:22','2025-03-18 13:31:36',NULL),
+(13,'manajer1','manajer','$2y$10$pxxV7VDE3dcrAtV/fRsLX.fW9ToJ62JHi9BqpC/LIlw8yvIC0bhXC','Manajer Teknisi','Kebomas','089612684096',1,'2025-03-18 13:29:46','2025-03-18 13:29:46',NULL);
 
---
--- Indexes for dumped tables
---
-
---
--- Indeks untuk tabel `damage_reports`
---
-ALTER TABLE `damage_reports`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `repair_id` (`repair_id`),
-  ADD KEY `technician_id` (`technician_id`);
-
---
--- Indeks untuk tabel `jadwal_pemeliharaan`
---
-ALTER TABLE `jadwal_pemeliharaan`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indeks untuk tabel `machines`
---
-ALTER TABLE `machines`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `serial_number` (`serial_number`);
-
---
--- Indeks untuk tabel `maintenance_schedules`
---
-ALTER TABLE `maintenance_schedules`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `machine_id` (`machine_id`),
-  ADD KEY `technician_id` (`technician_id`);
-
---
--- Indeks untuk tabel `mesins`
---
-ALTER TABLE `mesins`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indeks untuk tabel `mesin_spare_part`
---
-ALTER TABLE `mesin_spare_part`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `mesin_spare_part_mesin_id_foreign` (`mesin_id`),
-  ADD KEY `mesin_spare_part_spare_part_id_foreign` (`spare_part_id`);
-
---
--- Indeks untuk tabel `migrations`
---
-ALTER TABLE `migrations`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indeks untuk tabel `notifications`
---
-ALTER TABLE `notifications`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`);
-
---
--- Indeks untuk tabel `personal_access_tokens`
---
-ALTER TABLE `personal_access_tokens`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `personal_access_tokens_token_unique` (`token`),
-  ADD KEY `personal_access_tokens_tokenable_type_tokenable_id_index` (`tokenable_type`,`tokenable_id`);
-
---
--- Indeks untuk tabel `repairs`
---
-ALTER TABLE `repairs`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `machine_id` (`machine_id`),
-  ADD KEY `technician_id` (`technician_id`);
-
---
--- Indeks untuk tabel `repair_assignments`
---
-ALTER TABLE `repair_assignments`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `repair_assignments_machine_id_foreign` (`machine_id`),
-  ADD KEY `repair_assignments_user_id_foreign` (`user_id`);
-
---
--- Indeks untuk tabel `screenings`
---
-ALTER TABLE `screenings`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `screenings_mesin_id_foreign` (`mesin_id`),
-  ADD KEY `screenings_teknisi_id_foreign` (`teknisi_id`),
-  ADD KEY `screenings_admin_id_foreign` (`admin_id`);
-
---
--- Indeks untuk tabel `spare_parts`
---
-ALTER TABLE `spare_parts`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `spare_parts_kode_part_unique` (`kode_part`);
-
---
--- Indeks untuk tabel `teknisi_mesin`
---
-ALTER TABLE `teknisi_mesin`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `teknisi_mesin_user_id_foreign` (`user_id`);
-
---
--- Indeks untuk tabel `tugas_perbaikan`
---
-ALTER TABLE `tugas_perbaikan`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `tugas_perbaikan_mesin_id_foreign` (`mesin_id`),
-  ADD KEY `tugas_perbaikan_user_id_foreign` (`user_id`);
-
---
--- Indeks untuk tabel `users`
---
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`);
-
---
--- AUTO_INCREMENT untuk tabel yang dibuang
---
-
---
--- AUTO_INCREMENT untuk tabel `damage_reports`
---
-ALTER TABLE `damage_reports`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT untuk tabel `jadwal_pemeliharaan`
---
-ALTER TABLE `jadwal_pemeliharaan`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
-
---
--- AUTO_INCREMENT untuk tabel `machines`
---
-ALTER TABLE `machines`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT untuk tabel `maintenance_schedules`
---
-ALTER TABLE `maintenance_schedules`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT untuk tabel `mesins`
---
-ALTER TABLE `mesins`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
-
---
--- AUTO_INCREMENT untuk tabel `mesin_spare_part`
---
-ALTER TABLE `mesin_spare_part`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT untuk tabel `migrations`
---
-ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
-
---
--- AUTO_INCREMENT untuk tabel `notifications`
---
-ALTER TABLE `notifications`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT untuk tabel `personal_access_tokens`
---
-ALTER TABLE `personal_access_tokens`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT untuk tabel `repairs`
---
-ALTER TABLE `repairs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT untuk tabel `repair_assignments`
---
-ALTER TABLE `repair_assignments`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT untuk tabel `screenings`
---
-ALTER TABLE `screenings`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT untuk tabel `spare_parts`
---
-ALTER TABLE `spare_parts`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT untuk tabel `teknisi_mesin`
---
-ALTER TABLE `teknisi_mesin`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT untuk tabel `tugas_perbaikan`
---
-ALTER TABLE `tugas_perbaikan`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT untuk tabel `users`
---
-ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
-
---
--- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
---
-
---
--- Ketidakleluasaan untuk tabel `damage_reports`
---
-ALTER TABLE `damage_reports`
-  ADD CONSTRAINT `damage_reports_ibfk_1` FOREIGN KEY (`repair_id`) REFERENCES `repairs` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `damage_reports_ibfk_2` FOREIGN KEY (`technician_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
-
---
--- Ketidakleluasaan untuk tabel `maintenance_schedules`
---
-ALTER TABLE `maintenance_schedules`
-  ADD CONSTRAINT `maintenance_schedules_ibfk_1` FOREIGN KEY (`machine_id`) REFERENCES `machines` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `maintenance_schedules_ibfk_2` FOREIGN KEY (`technician_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
-
---
--- Ketidakleluasaan untuk tabel `mesin_spare_part`
---
-ALTER TABLE `mesin_spare_part`
-  ADD CONSTRAINT `mesin_spare_part_mesin_id_foreign` FOREIGN KEY (`mesin_id`) REFERENCES `mesins` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `mesin_spare_part_spare_part_id_foreign` FOREIGN KEY (`spare_part_id`) REFERENCES `spare_parts` (`id`) ON DELETE CASCADE;
-
---
--- Ketidakleluasaan untuk tabel `notifications`
---
-ALTER TABLE `notifications`
-  ADD CONSTRAINT `notifications_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Ketidakleluasaan untuk tabel `repairs`
---
-ALTER TABLE `repairs`
-  ADD CONSTRAINT `repairs_ibfk_1` FOREIGN KEY (`machine_id`) REFERENCES `machines` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `repairs_ibfk_2` FOREIGN KEY (`technician_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
-
---
--- Ketidakleluasaan untuk tabel `repair_assignments`
---
-ALTER TABLE `repair_assignments`
-  ADD CONSTRAINT `repair_assignments_machine_id_foreign` FOREIGN KEY (`machine_id`) REFERENCES `machines` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `repair_assignments_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
-
---
--- Ketidakleluasaan untuk tabel `screenings`
---
-ALTER TABLE `screenings`
-  ADD CONSTRAINT `screenings_admin_id_foreign` FOREIGN KEY (`admin_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `screenings_mesin_id_foreign` FOREIGN KEY (`mesin_id`) REFERENCES `mesins` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `screenings_teknisi_id_foreign` FOREIGN KEY (`teknisi_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
-
---
--- Ketidakleluasaan untuk tabel `teknisi_mesin`
---
-ALTER TABLE `teknisi_mesin`
-  ADD CONSTRAINT `teknisi_mesin_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
-
---
--- Ketidakleluasaan untuk tabel `tugas_perbaikan`
---
-ALTER TABLE `tugas_perbaikan`
-  ADD CONSTRAINT `tugas_perbaikan_mesin_id_foreign` FOREIGN KEY (`mesin_id`) REFERENCES `mesins` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `tugas_perbaikan_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
-COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;

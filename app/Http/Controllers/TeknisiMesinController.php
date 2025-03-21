@@ -6,64 +6,64 @@ use Illuminate\Http\Request;
 use App\Models\TeknisiMesin;
 use App\Models\User;
 use App\Models\Mesin;
+use App\Models\Station;
 
 class TeknisiMesinController extends Controller
 {
     public function index()
     {
-        $teknisiMesin = TeknisiMesin::with('teknisi', 'mesin')->get();
-        return view('admin.teknisi_mesin.index', compact('teknisiMesin'));
+        $teknisiMesins = TeknisiMesin::with(['user', 'mesin.station'])->get();
+        return view('admin.teknisi_mesin.index', compact('teknisiMesins'));
     }
 
     public function create()
     {
-        $teknisi = User::where('level', 'Teknisi')->get();
-        $mesin = Mesin::all();
-        return view('admin.teknisi_mesin.create', compact('teknisi', 'mesin'));
+        $users = User::where('level', 'Teknisi')->get();
+        $mesins = Mesin::with('station')->get();
+        $stations = Station::all();
+        return view('admin.teknisi_mesin.create', compact('users', 'mesins', 'stations'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'mesin_id' => 'required|exists:mesins,id',
             'user_id' => 'required|exists:users,id',
+            'mesin_id' => 'required|exists:mesins,id',
         ]);
 
-        TeknisiMesin::create([
-            'mesin_id' => $request->mesin_id,
-            'user_id' => $request->user_id,
-        ]);
+        TeknisiMesin::create($request->all());
 
-        return redirect()->route('teknisi_mesin.index')->with('success', 'Data berhasil ditambahkan!');
+        return redirect()->route('teknisi_mesin.index')
+            ->with('success', 'Teknisi Mesin berhasil ditambahkan');
     }
 
     public function edit($id)
     {
         $teknisiMesin = TeknisiMesin::findOrFail($id);
-        $teknisi = User::where('level', 'Teknisi')->get();
-        $mesin = Mesin::all();
-        return view('admin.teknisi_mesin.edit', compact('teknisiMesin', 'teknisi', 'mesin'));
+        $users = User::where('level', 'Teknisi')->get();
+        $mesins = Mesin::with('station')->get();
+        $stations = Station::all();
+        return view('admin.teknisi_mesin.edit', compact('teknisiMesin', 'users', 'mesins', 'stations'));
     }
 
     public function update(Request $request, $id)
     {
         $request->validate([
-            'mesin_id' => 'required|exists:mesins,id',
             'user_id' => 'required|exists:users,id',
+            'mesin_id' => 'required|exists:mesins,id',
         ]);
 
         $teknisiMesin = TeknisiMesin::findOrFail($id);
-        $teknisiMesin->update([
-            'mesin_id' => $request->mesin_id,
-            'user_id' => $request->user_id,
-        ]);
+        $teknisiMesin->update($request->all());
 
-        return redirect()->route('teknisi_mesin.index')->with('success', 'Data berhasil diperbarui!');
+        return redirect()->route('teknisi_mesin.index')
+            ->with('success', 'Teknisi Mesin berhasil diperbarui');
     }
 
     public function destroy($id)
     {
         TeknisiMesin::findOrFail($id)->delete();
-        return redirect()->route('teknisi_mesin.index')->with('success', 'Data berhasil dihapus!');
+        return redirect()->route('teknisi_mesin.index')
+            ->with('success', 'Teknisi Mesin berhasil dihapus');
     }
 }

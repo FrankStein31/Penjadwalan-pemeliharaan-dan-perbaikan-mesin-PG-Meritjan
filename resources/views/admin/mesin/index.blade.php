@@ -23,7 +23,7 @@
                             <th class="text-center">Nama</th>
                             <th class="text-center">Jenis</th>
                             <th class="text-center">Tahun</th>
-                            <th class="text-center">Deskripsi</th>
+                            <th class="text-center">Station</th>
                             @if(auth()->user()->level === 'Administrator')
                             <th class="text-center">Aksi</th>
                             @endif
@@ -37,7 +37,7 @@
                                 <td>{{ $mesin->nama }}</td>
                                 <td>{{ $mesin->jenis }}</td>
                                 <td>{{ $mesin->tahun }}</td>
-                                <td>{{ $mesin->deskripsi }}</td>
+                                <td>{{ $mesin->station ? $mesin->station->nama_station : 'Belum ditentukan' }}</td>
                                 @if(auth()->user()->level === 'Administrator')
                                 <td class="text-center">
                                     <a href="{{ route('mesin.show', $mesin->id) }}"
