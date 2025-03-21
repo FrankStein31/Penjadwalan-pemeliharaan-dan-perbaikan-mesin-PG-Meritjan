@@ -22,9 +22,9 @@ class JadwalPemeliharaanController extends Controller
     // Tampilkan form tambah jadwal pemeliharaan
     public function create()
     {
-        $mesins = Mesin::all();
-        $users = User::all();
-        return view('admin.pemeliharaan.create', compact('mesins', 'users'));
+        $mesins = Mesin::with('station')->get(); // Pastikan mesin memiliki station
+    $users = User::where('level', 'teknisi')->get(); // Hanya teknisi
+    return view('admin.pemeliharaan.create', compact('mesins', 'users'));
     }
 
     // Simpan jadwal pemeliharaan baru
@@ -80,4 +80,19 @@ class JadwalPemeliharaanController extends Controller
 
         return redirect()->route('admin.jadwal.index')->with('success', 'Jadwal pemeliharaan berhasil dihapus!');
     }
+
+    public function getTeknisiByMesin(Request $request)
+    {
+    $mesin = Mesin::with('station')->find($request->mesin_id);
+
+    if (!$mesin || !$mesin->station) {
+        return response()->json(['message' => 'Mesin atau station tidak ditemukan'], 404);
+    }
+
+    $teknisis = User::where('station_id', $mesin->station->id)->get();
+
+    return response()->json($teknisis);
+    }
+
+
 }

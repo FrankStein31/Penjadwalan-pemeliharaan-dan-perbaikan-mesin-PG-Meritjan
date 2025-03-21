@@ -9,7 +9,8 @@ use App\Http\Controllers\{
     UserController,
     JadwalPemeliharaanController,
     RepairAssignmentController,
-    RiwayatLaporanController
+    RiwayatLaporanController,
+    StationController
 };
 use Illuminate\Routing\RouteUrlGenerator;
 
@@ -58,6 +59,8 @@ Route::delete('mesin/hapus/{id}', [App\Http\Controllers\MesinController::class, 
         Route::get('/edit/{id}', [JadwalPemeliharaanController::class, 'edit'])->name('admin.jadwal.edit');
         Route::put('/update/{id}', [JadwalPemeliharaanController::class, 'update'])->name('admin.jadwal.update');
         Route::delete('/hapus/{id}', [JadwalPemeliharaanController::class, 'destroy'])->name('admin.jadwal.delete'); // Hapus jadwal
+        Route::get('/get-teknisi-by-station', [JadwalPemeliharaanController::class, 'getTeknisiByMesin'])->name('get.teknisi.by.station');
+
     });
 
     Route::get('/repair', [RepairAssignmentController::class, 'index'])->name('admin.repair.index');
@@ -71,3 +74,9 @@ Route::get('/laporan', [RiwayatLaporanController::class, 'index'])->name('admin.
 //Cetak PDF
 Route::get('/admin/riwayat/pdf', [RiwayatLaporanController::class, 'exportPDF'])->name('admin.riwayat.pdf');
 });
+
+Route::resource('stations', StationController::class);
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('stations', StationController::class);
+});
+

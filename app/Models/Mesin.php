@@ -13,6 +13,11 @@ class Mesin extends Model
         'nama',
         'jenis',
         'tahun',
-        'deskripsi'
+        'deskripsi',
+        'station_id'
     ];
+    public function station()
+    {
+        return $this->belongsTo(Station::class);
+    }
 }

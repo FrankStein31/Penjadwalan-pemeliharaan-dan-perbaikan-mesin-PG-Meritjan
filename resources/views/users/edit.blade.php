@@ -42,6 +42,17 @@
                         </select>
                     </div>
                     <div class="form-group">
+                        <label for="station_id">Station</label>
+                        <select class="form-control" id="station_id" name="station_id" required>
+                            <option value="" disabled selected>Pilih Station</option>
+                            @foreach ($stations as $station)
+                            <option value="{{ $station->id }}" {{ $users->station_id == $station->id ? 'selected' : '' }}>
+                                    {{ $station->nama_station }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label for="alamat">Alamat</label>
                         <input type="text" class="form-control" id="alamat" name="alamat" value="{{ old('alamat', $users->alamat) }}" required>
                     </div>

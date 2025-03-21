@@ -20,6 +20,7 @@
                             <th class="text-center">No.</th>
                             <th class="text-center">Nama</th>
                             <th class="text-center">Jenis</th>
+                            <th class="text-center">Station</th>
                             <th class="text-center">Tahun</th>
                             <th class="text-center">Deskripsi</th>
                             <th class="text-center">Aksi</th>
@@ -32,6 +33,7 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $mesin->nama }}</td>
                                 <td>{{ $mesin->jenis }}</td>
+                                <td>{{ $mesin->station ? $mesin->station->nama_station : '-' }}</td>
                                 <td>{{ $mesin->tahun }}</td>
                                 <td>{{ $mesin->deskripsi }}</td>
                                 <td class="text-center">

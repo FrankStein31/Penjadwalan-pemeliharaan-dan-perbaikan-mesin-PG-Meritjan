@@ -111,6 +111,12 @@
                     </span>
                     <h4 class="text-section">Manajemen Mesin</h4>
                 </li>
+                <li class="nav-item {{ request()->routeIs('admin.stations.index') ? 'active' : '' }}">
+                    <a href="{{ route('admin.stations.index') }}">
+                        <i class="fas fa-location"></i>
+                        <p>Station</p>
+                    </a>
+                </li>
                 <li class="nav-item {{ request()->routeIs('mesin') ? 'active' : '' }}">
                     <a href="{{ route('mesin') }}">
                         <i class="fas fa-gears"></i>
@@ -129,6 +135,8 @@
                         <p>Riwayat Perbaikan</p>
                     </a>
                 </li>
+                
+
                 {{-- <li class="nav-item {{ request()->routeIs('admin.repair.index') ? 'active' : '' }}">
                     <a href="{{ route('admin.repair.index') }}">
                         <i class="fas fa-tools"></i>

@@ -16,7 +16,7 @@
                     <label for="mesin_id">Mesin</label>
                     <select name="mesin_id" id="mesin_id" class="form-control" required>
                         @foreach($mesins as $mesin)
-                            <option value="{{ $mesin->id }}" {{ $mesin->id == $jadwal->mesin_id ? 'selected' : '' }}>
+                            <option value="{{ $mesin->id }}" data-station="{{ $mesin->station_id }}" {{ $mesin->id == $jadwal->mesin_id ? 'selected' : '' }}>
                                 {{ $mesin->nama }}
                             </option>
                         @endforeach
@@ -28,7 +28,9 @@
                     <select name="user_id" id="user_id" class="form-control" required>
                         <option value="">Pilih Teknisi</option>
                         @foreach($users as $user)
-                            <option value="{{ $user->id }}">{{ $user->nama }}</option>
+                            <option value="{{ $user->id }}" data-station="{{ $user->station_id }}" {{ $user->id == $jadwal->user_id ? 'selected' : '' }}>
+                                {{ $user->nama }}
+                            </option>
                         @endforeach
                     </select>
                 </div>
@@ -67,4 +69,28 @@
             </form>
         </div>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const mesinSelect = document.getElementById("mesin_id");
+            const teknisiSelect = document.getElementById("user_id");
+            
+            function filterTeknisi() {
+                const selectedMesin = mesinSelect.options[mesinSelect.selectedIndex];
+                const selectedStation = selectedMesin.getAttribute("data-station");
+                
+                Array.from(teknisiSelect.options).forEach(option => {
+                    if (option.value === "") {
+                        option.style.display = "block";
+                    } else {
+                        const teknisiStation = option.getAttribute("data-station");
+                        option.style.display = teknisiStation === selectedStation ? "block" : "none";
+                    }
+                });
+            }
+            
+            mesinSelect.addEventListener("change", filterTeknisi);
+            filterTeknisi(); // Jalankan saat halaman pertama kali dimuat
+        });
+    </script>
 @endsection

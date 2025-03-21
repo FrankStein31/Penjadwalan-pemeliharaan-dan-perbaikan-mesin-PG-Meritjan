@@ -29,6 +29,17 @@
                             <input type="text" name="jenis" class="form-control" value="{{ $mesin->jenis }}" required>
                         </div>
                         <div class="form-group">
+                        <label>Station</label>
+                        <select name="station_id" class="form-control" required>
+                            <option value="">-- Pilih Station --</option>
+                            @foreach($stations as $station)
+                                <option value="{{ $station->id }}" {{ $mesin->station_id == $station->id ? 'selected' : '' }}>
+                                    {{ $station->nama_station }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                        <div class="form-group">
                             <label>Tahun</label>
                             <input type="number" name="tahun" class="form-control" value="{{ $mesin->tahun }}" required>
                         </div>

@@ -65,3 +65,32 @@
         </div>
     </div>
 @endsection
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#mesin_id').change(function () {
+            var mesinId = $(this).val();
+            $('#user_id').html('<option value="">Memuat teknisi...</option>');
+
+            if (mesinId) {
+                $.ajax({
+                    url: "{{ route('get.teknisi.by.station') }}",
+                    type: "GET",
+                    data: { mesin_id: mesinId },
+                    success: function (data) {
+                        $('#user_id').html('<option value="">Pilih Teknisi</option>');
+                        $.each(data, function (index, teknisi) {
+                            $('#user_id').append('<option value="' + teknisi.id + '">' + teknisi.nama + '</option>');
+                        });
+                    },
+                    error: function () {
+                        $('#user_id').html('<option value="">Teknisi tidak ditemukan</option>');
+                    }
+                });
+            } else {
+                $('#user_id').html('<option value="">Pilih Teknisi</option>');
+            }
+        });
+    });
+</script>
+
