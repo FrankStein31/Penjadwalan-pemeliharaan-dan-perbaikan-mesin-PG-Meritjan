@@ -17,11 +17,11 @@
         <div class="col-12">
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Edit Data Teknisi</h6>
+                    <h4 class="m-0 font-weight-bold text-white">Edit Data Pengguna</h4>
                 </div>
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="user_id">User ID</label>
+                        <label for="user_id">Username</label>
                         <input type="text" class="form-control" id="user_id" name="user_id" value="{{ old('user_id', $users->user_id) }}" required>
                     </div>
                     <div class="form-group">
@@ -37,8 +37,9 @@
                         <label for="level">Level</label>
                         <select class="form-control" id="level" name="level" required>
                             <option value="" disabled>Pilih Level</option>
-                            <option value="Ketua Pondok Pesantren" {{ old('level', $users->level) == 'Ketua Pondok Pesantren' ? 'selected' : '' }}>Teknisi</option>
+                            <option value="Teknisi" {{ old('level', $users->level) == 'Teknisi' ? 'selected' : '' }}>Teknisi</option>
                             <option value="Administrator" {{ old('level', $users->level) == 'Administrator' ? 'selected' : '' }}>Administrator</option>
+                            <option value="Manajer Teknisi" {{ old('level', $users->level) == 'Manajer Teknisi' ? 'selected' : '' }}>Manajer Teknisi</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -49,10 +50,10 @@
                         <label for="telp">Telp</label>
                         <input type="text" class="form-control" id="telp" name="telp" value="{{ old('telp', $users->telp) }}" required>
                     </div>
-                    <div class="form-group">
+                    {{-- <div class="form-group">
                         <label for="rincian_pekerjaan">Rincian Pekerjaan</label>
                         <input type="text" class="form-control" id="rincian_pekerjaan" name="rincian_pekerjaan" value="{{ old('rincian_pekerjaan', $users->rincian_pekerjaan) }}" required>
-                    </div>
+                    </div> --}}
                     <div class="form-group">
                         <label for="status">Status</label>
                         <select class="form-control" id="status" name="status" required>

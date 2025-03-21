@@ -10,7 +10,7 @@ class JadwalPemeliharaan extends Model
     use HasFactory;
 
     protected $table = 'jadwal_pemeliharaan';
-
+    public $timestamps = true;
     protected $fillable = [
         'mesin_id',
         'user_id',

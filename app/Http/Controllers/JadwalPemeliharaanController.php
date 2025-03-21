@@ -18,13 +18,50 @@ class JadwalPemeliharaanController extends Controller
 
         return view('admin.pemeliharaan.index', compact('jadwal'));
     }
+    public function indexteknisi()
+{
+    $jadwal = JadwalPemeliharaan::with(['mesin', 'user'])
+        ->where('user_id', auth()->id()) // Filter hanya untuk user yang sedang login
+        ->whereNot('status', 'Selesai')
+        ->get();
+
+    return view('admin.pemeliharaan.index', compact('jadwal'));
+}
+public function markAsSelesai($id)
+{
+    $jadwal = JadwalPemeliharaan::findOrFail($id);
+    $jadwal->update([
+        'status' => 'Selesai',
+        'updated_at' => now()
+    ]);
+
+    return redirect()->back()->with('success', 'Jadwal berhasil diselesaikan.');
+}
+public function markAsDibatakan($id)
+{
+    $jadwal = JadwalPemeliharaan::findOrFail($id);
+    $jadwal->update([
+        'status' => 'Dibatalkan',
+        'updated_at' => now() // Memperbarui timestamp ke waktu saat ini
+    ]);
+    return redirect()->back()->with('success', 'Jadwal berhasil dibatalkan.');
+}
+
 
     // Tampilkan form tambah jadwal pemeliharaan
     public function create()
     {
         $mesins = Mesin::all();
-        $users = User::all();
-        return view('admin.pemeliharaan.create', compact('mesins', 'users'));
+        return view('admin.pemeliharaan.create', compact('mesins'));
+    }
+
+    public function getTeknisiByMesin($mesin_id)
+    {
+        $teknisi = User::whereHas('mesin', function ($query) use ($mesin_id) {
+            $query->where('mesin_id', $mesin_id);
+        })->get();
+
+        return response()->json($teknisi);
     }
 
     // Simpan jadwal pemeliharaan baru

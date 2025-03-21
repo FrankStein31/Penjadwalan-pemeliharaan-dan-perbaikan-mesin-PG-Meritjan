@@ -1,54 +1,62 @@
 @extends('layouts.app')
 
-@section('title', '')
+@section('title', 'Data Screening Mesin')
 
 @section('contents')
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
-            <h4 class="m-0 font-weight-bold text-white">DATA MESIN</h4>
-            @if(auth()->user()->level === 'Administrator')
-            <a href="{{ route('mesin.create') }}" class="btn btn-white btn-sm font-weight-bold shadow-sm">
-                <i class="fas fa-plus fa-sm text-dark-50 mr-2"></i>Tambah Data
+            <h4 class="m-0 font-weight-bold text-white">DATA SCREENING MESIN</h4>
+            <a href="{{ route('screenings.create') }}" class="btn btn-white btn-sm font-weight-bold shadow-sm">
+                <i class="fas fa-plus fa-sm text-dark-50 mr-2"></i>Tambah Screening
             </a>
-            @endif
         </div>
         <div class="card-body">
-
+            @if(session('success'))
+                <div class="alert alert-success">{{ session('success') }}</div>
+            @endif
 
             <div class="table-responsive">
                 <table class="table table-bordered table-hover border-0" id="dataTable" width="100%" cellspacing="0">
                     <thead class="thead-dark">
                         <tr>
                             <th class="text-center">No.</th>
-                            <th class="text-center">Nama</th>
-                            <th class="text-center">Jenis</th>
-                            <th class="text-center">Tahun</th>
-                            <th class="text-center">Deskripsi</th>
-                            @if(auth()->user()->level === 'Administrator')
+                            <th class="text-center">Mesin</th>
+                            <th class="text-center">Teknisi</th>
+                            <th class="text-center">Admin</th>
+                            <th class="text-center">Tanggal</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Kode Error</th>
+                            <th class="text-center">Terakhir Perawatan</th>
+                            <th class="text-center">Tindakan</th>
                             <th class="text-center">Aksi</th>
-                            @endif
                         </tr>
-
                     </thead>
                     <tbody>
-                        @foreach ($mesins as $mesin)
+                        @foreach ($screenings as $index => $screening)
                             <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $mesin->nama }}</td>
-                                <td>{{ $mesin->jenis }}</td>
-                                <td>{{ $mesin->tahun }}</td>
-                                <td>{{ $mesin->deskripsi }}</td>
-                                @if(auth()->user()->level === 'Administrator')
+                                <td class="text-center">{{ $loop->iteration }}</td>
+                                <td>{{ $screening->mesin->nama }}</td>
+                                <td>{{ $screening->teknisi->nama }}</td>
+                                <td>{{ $screening->admin->nama }}</td>
+                                <td class="text-center">{{ \Carbon\Carbon::parse($screening->tanggal_pemeriksaan)->format('d-m-Y') }}</td>
                                 <td class="text-center">
-                                    <a href="{{ route('mesin.show', $mesin->id) }}"
+                                    <span class="badge badge-{{ $screening->status_operasional == 'Normal' ? 'success' : 'danger' }}">
+                                        {{ $screening->status_operasional }}
+                                    </span>
+                                </td>
+                                <td class="text-center">{{ $screening->kode_error ?? '-' }}</td>
+                                <td class="text-center">{{ $screening->terakhir_perawatan ? \Carbon\Carbon::parse($screening->terakhir_perawatan)->format('d-m-Y') : '-' }}</td>
+                                <td class="text-center">{{ $screening->tindakan_rekomendasi }}</td>
+                                <td class="text-center">
+                                    <a href="{{ route('screenings.show', $screening->id) }}"
                                         class="btn btn-info btn-sm btn-circle" data-toggle="tooltip" title="Detail">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    <a href="{{ route('mesin.edit', $mesin->id) }}"
+                                    <a href="{{ route('screenings.edit', $screening->id) }}"
                                         class="btn btn-warning btn-sm btn-circle" data-toggle="tooltip" title="Edit">
                                         <i class="fas fa-pencil-alt"></i>
                                     </a>
-                                    <form action="{{ route('mesin.destroy', $mesin->id) }}" method="POST" style="display: inline;">
+                                    <form action="{{ route('screenings.destroy', $screening->id) }}" method="POST" style="display: inline;">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm btn-circle" data-toggle="tooltip" title="Hapus"
@@ -57,10 +65,8 @@
                                         </button>
                                     </form>
                                 </td>
-                                @endif
-                                                            </tr>
+                            </tr>
                         @endforeach
-
                     </tbody>
                 </table>
             </div>
@@ -81,7 +87,7 @@
                 "pageLength": 10,
                 "lengthChange": false,
                 "language": {
-                    "search": "Cari Mesin:",
+                    "search": "Cari Screening:",
                     "paginate": {
                         "first": "Pertama",
                         "last": "Terakhir",

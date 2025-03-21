@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\Mesin;
 use Illuminate\Http\Request;
+use App\Models\Mesin;
+use App\Models\SparePart;
 
 class MesinController extends Controller
 {
@@ -18,7 +18,8 @@ class MesinController extends Controller
     // Tampilkan form tambah data mesin
     public function create()
     {
-        return view('admin.mesin.create');
+        $mesins = Mesin::all();
+        return view('admin.mesin.create', compact('mesins'));
     }
 
     // Simpan data mesin baru
@@ -32,8 +33,7 @@ class MesinController extends Controller
         ]);
 
         Mesin::create($request->all());
-        // Redirect ke halaman daftar mesin setelah tambah data berhasil
-        return redirect()->route('mesin')->with('success', 'Data mesin berhasil ditambahkan!');
+        return redirect()->route('mesin.index')->with('success', 'Data mesin berhasil ditambahkan!');
     }
 
     // Tampilkan form edit data mesin
@@ -55,8 +55,7 @@ class MesinController extends Controller
 
         $mesin = Mesin::findOrFail($id);
         $mesin->update($request->all());
-        // Redirect ke halaman daftar mesin setelah update berhasil
-        return redirect()->route('mesin')->with('success', 'Data mesin berhasil diperbarui!');
+        return redirect()->route('mesin.index')->with('success', 'Data mesin berhasil diperbarui!');
     }
 
     // Hapus data mesin
@@ -64,7 +63,42 @@ class MesinController extends Controller
     {
         $mesin = Mesin::findOrFail($id);
         $mesin->delete();
-        // Redirect ke halaman daftar mesin setelah hapus berhasil
-        return redirect()->route('mesin')->with('success', 'Data mesin berhasil dihapus!');
+        return redirect()->route('mesin.index')->with('success', 'Data mesin berhasil dihapus!');
+    }
+
+    // Tampilkan detail mesin beserta spare part yang digunakan
+    public function show($id)
+    {
+        $mesin = Mesin::with('spareParts')->findOrFail($id);
+        $spareParts = SparePart::all();
+
+        return view('admin.mesin.show', compact('mesin', 'spareParts'));
+    }
+
+    // Tambahkan spare part ke mesin
+    public function addSparePart(Request $request, $id)
+    {
+        $mesin = Mesin::findOrFail($id);
+        $mesin->spareParts()->attach($request->spare_part_id, ['jumlah' => $request->jumlah]);
+
+        return redirect()->route('mesin.show', $id)->with('success', 'Spare part berhasil ditambahkan!');
+    }
+
+    // Perbarui jumlah spare part yang digunakan oleh mesin
+    public function updateSparePart(Request $request, $mesin_id, $spare_part_id)
+    {
+        $mesin = Mesin::findOrFail($mesin_id);
+        $mesin->spareParts()->updateExistingPivot($spare_part_id, ['jumlah' => $request->jumlah]);
+
+        return redirect()->route('mesin.show', $mesin_id)->with('success', 'Jumlah spare part diperbarui!');
+    }
+
+    // Hapus spare part dari mesin
+    public function removeSparePart($mesin_id, $spare_part_id)
+    {
+        $mesin = Mesin::findOrFail($mesin_id);
+        $mesin->spareParts()->detach($spare_part_id);
+
+        return redirect()->route('mesin.show', $mesin_id)->with('success', 'Spare part dihapus dari mesin!');
     }
 }

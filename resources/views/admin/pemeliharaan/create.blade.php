@@ -11,22 +11,19 @@
             <form action="{{ route('admin.jadwal.store') }}" method="POST">
                 @csrf
                 <div class="form-group">
-                    <label for="mesin_id">Mesin</label>
-                    <select name="mesin_id" id="mesin_id" class="form-control" required>
+                    <label for="mesin_id">Pilih Mesin</label>
+                    <select id="mesin_id" name="mesin_id" class="form-control" required>
                         <option value="">Pilih Mesin</option>
-                        @foreach($mesins as $mesin)
+                        @foreach ($mesins as $mesin)
                             <option value="{{ $mesin->id }}">{{ $mesin->nama }}</option>
                         @endforeach
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="user_id">Teknisi</label>
-                    <select name="user_id" id="user_id" class="form-control" required>
+                    <label for="user_id">Pilih Teknisi</label>
+                    <select id="user_id" name="user_id" class="form-control" required>
                         <option value="">Pilih Teknisi</option>
-                        @foreach($users as $user)
-                            <option value="{{ $user->id }}">{{ $user->nama }}</option>
-                        @endforeach
                     </select>
                 </div>
 
@@ -59,9 +56,32 @@
 
                 <div class="form-group">
                     <button type="submit" class="btn btn-success">Simpan</button>
-                    <a href="" class="btn btn-secondary">Batal</a>
+                    <a href="{{ route('admin.jadwal.index') }}" class="btn btn-secondary">Batal</a>
                 </div>
             </form>
         </div>
     </div>
+
+    <script>
+    document.getElementById('mesin_id').addEventListener('change', function () {
+        var mesin_id = this.value;
+        var teknisiSelect = document.getElementById('user_id');
+        teknisiSelect.innerHTML = '<option value="">Pilih Teknisi</option>'; // Reset dropdown
+
+        if (mesin_id) {
+            fetch('/admin/getTeknisiByMesin/' + mesin_id)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length > 0) {
+                        data.forEach(teknisi => {
+                            teknisiSelect.innerHTML += `<option value="${teknisi.id}">${teknisi.nama}</option>`;
+                        });
+                    } else {
+                        teknisiSelect.innerHTML += '<option value="">Tidak ada teknisi tersedia</option>';
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    });
+    </script>
 @endsection

@@ -6,9 +6,11 @@
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
             <h4 class="m-0 font-weight-bold text-white">JADWAL PEMELIHARAAN</h4>
+            @if(auth()->user()->level === 'Administrator')
             <a href="{{ route('admin.jadwal.create') }}" class="btn btn-white btn-sm font-weight-bold shadow-sm">
                 <i class="fas fa-plus fa-sm text-dark-50 mr-2"></i>Tambah Jadwal
             </a>
+            @endif
         </div>
         <div class="card-body">
 
@@ -45,6 +47,25 @@
                                     </span>
                                 </td>
                                 <td class="text-center">
+                                    @if(auth()->user()->level === 'Teknisi')
+                                    <form action="{{ route('admin.jadwal.selesai', $item->id) }}" method="POST" style="display: inline;">
+                                        @csrf
+                                        @method('PUT')
+                                        <button type="submit" class="btn btn-success btn-sm btn-circle"
+                                            onclick="return confirm('Apakah Anda yakin ingin menyelesaikan jadwal ini?');">
+                                            Selesai
+                                        </button>
+                                    </form>
+                                    <form action="{{ route('admin.jadwal.dibatalkan', $item->id) }}" method="POST" style="display: inline;">
+                                        @csrf
+                                        @method('PUT')
+                                        <button type="submit" class="btn btn-danger btn-sm btn-circle"
+                                            onclick="return confirm('Apakah Anda yakin ingin membatalkan jadwal ini?');">
+                                            Dibatalkan
+                                        </button>
+                                    </form>
+                                    @endif
+                                    @if(auth()->user()->level === 'Administrator')
                                     <a href="{{ route('admin.jadwal.edit', $item->id) }}"
                                         class="btn btn-warning btn-sm btn-circle" data-toggle="tooltip" title="Edit">
                                         <i class="fas fa-pencil-alt"></i>
@@ -59,6 +80,7 @@
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach

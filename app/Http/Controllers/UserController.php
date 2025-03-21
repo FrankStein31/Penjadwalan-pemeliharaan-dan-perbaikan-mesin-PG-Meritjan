@@ -31,7 +31,7 @@ class UserController extends Controller
             'level' => 'required',
             'alamat' => 'required',
             'telp' => 'required',
-            'rincian_pekerjaan' => 'nullable',
+            // 'rincian_pekerjaan' => 'nullable',
             'status' => 'required',
         ]);
 
@@ -44,7 +44,7 @@ class UserController extends Controller
             'level' => $request->level,
             'alamat' => $request->alamat,
             'telp' => $request->telp,
-            'rincian_pekerjaan' => $request->rincian_pekerjaan,
+            // 'rincian_pekerjaan' => $request->rincian_pekerjaan,
             'status' => $request->status,
         ];
 
@@ -69,7 +69,7 @@ class UserController extends Controller
             'level' => $request->level,
             'alamat' => $request->alamat,
             'telp' => $request->telp,
-            'rincian_pekerjaan' => $request->rincian_pekerjaan,
+            // 'rincian_pekerjaan' => $request->rincian_pekerjaan,
             'status' => $request->status,
         ];
 

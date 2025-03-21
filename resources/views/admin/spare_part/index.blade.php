@@ -1,66 +1,65 @@
 @extends('layouts.app')
 
-@section('title', '')
+@section('title', 'Daftar Spare Part')
 
 @section('contents')
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
-            <h4 class="m-0 font-weight-bold text-white">DATA MESIN</h4>
-            @if(auth()->user()->level === 'Administrator')
-            <a href="{{ route('mesin.create') }}" class="btn btn-white btn-sm font-weight-bold shadow-sm">
-                <i class="fas fa-plus fa-sm text-dark-50 mr-2"></i>Tambah Data
+            <h4 class="m-0 font-weight-bold text-white">DAFTAR SUKU CADANG</h4>
+            <a href="{{ route('admin.spare_part.create') }}" class="btn btn-white btn-sm font-weight-bold shadow-sm">
+                <i class="fas fa-plus fa-sm text-dark-50 mr-2"></i>Tambah Suku Cadang
             </a>
-            @endif
         </div>
         <div class="card-body">
-
-
             <div class="table-responsive">
                 <table class="table table-bordered table-hover border-0" id="dataTable" width="100%" cellspacing="0">
                     <thead class="thead-dark">
                         <tr>
                             <th class="text-center">No.</th>
-                            <th class="text-center">Nama</th>
+                            <th class="text-center">Kode Suku Cadang</th>
+                            <th class="text-center">Nama Suku Cadang</th>
                             <th class="text-center">Jenis</th>
-                            <th class="text-center">Tahun</th>
+                            <th class="text-center">Stok</th>
                             <th class="text-center">Deskripsi</th>
-                            @if(auth()->user()->level === 'Administrator')
                             <th class="text-center">Aksi</th>
-                            @endif
                         </tr>
-
                     </thead>
                     <tbody>
-                        @foreach ($mesins as $mesin)
+                        @foreach ($spareParts as $item)
                             <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $mesin->nama }}</td>
-                                <td>{{ $mesin->jenis }}</td>
-                                <td>{{ $mesin->tahun }}</td>
-                                <td>{{ $mesin->deskripsi }}</td>
-                                @if(auth()->user()->level === 'Administrator')
+                                <td class="text-center">{{ $loop->iteration }}</td>
+                                <td class="text-center">{{ $item->kode_part }}</td>
+                                <td>{{ $item->nama }}</td>
+                                <td>{{ ucfirst($item->jenis) }}</td>
                                 <td class="text-center">
-                                    <a href="{{ route('mesin.show', $mesin->id) }}"
-                                        class="btn btn-info btn-sm btn-circle" data-toggle="tooltip" title="Detail">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    <a href="{{ route('mesin.edit', $mesin->id) }}"
-                                        class="btn btn-warning btn-sm btn-circle" data-toggle="tooltip" title="Edit">
+                                    <span
+                                        class="badge
+                                        @if ($item->stok > 10) badge-success
+                                        @elseif($item->stok > 0) badge-warning
+                                        @else badge-danger @endif">
+                                        {{ $item->stok }}
+                                    </span>
+                                </td>
+                                <td>{{ $item->deskripsi ?? '-' }}</td>
+                                <td class="text-center">
+                                    <a href="{{ route('spare_part.edit', $item->id) }}"
+                                        class="btn btn-warning btn-sm btn-circle data-toggle="tooltip" title="Edit">
+
                                         <i class="fas fa-pencil-alt"></i>
                                     </a>
-                                    <form action="{{ route('mesin.destroy', $mesin->id) }}" method="POST" style="display: inline;">
+                                    <form action="{{ route('spare_part.destroy', $item->id) }}" method="POST"
+                                        style="display: inline;">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm btn-circle" data-toggle="tooltip" title="Hapus"
-                                            onclick="return confirm('Anda yakin ingin menghapus data ini?');">
+                                        <button type="submit" class="btn btn-danger btn-sm btn-circle"
+                                            data-toggle="tooltip" title="Hapus"
+                                            onclick="return confirm('Anda yakin ingin menghapus spare part ini?');">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>
                                 </td>
-                                @endif
-                                                            </tr>
+                            </tr>
                         @endforeach
-
                     </tbody>
                 </table>
             </div>
@@ -81,7 +80,7 @@
                 "pageLength": 10,
                 "lengthChange": false,
                 "language": {
-                    "search": "Cari Mesin:",
+                    "search": "Cari Spare Part:",
                     "paginate": {
                         "first": "Pertama",
                         "last": "Terakhir",

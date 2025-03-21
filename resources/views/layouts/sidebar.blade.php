@@ -38,7 +38,7 @@
             </div>
             <ul class="nav nav-primary">
                 <li class="nav-item ">
-                    <a  href="{{ route('dashboard') }}" class="collapsed" >
+                    <a href="{{ route('dashboard') }}" class="collapsed">
                         <i class="fas fa-home"></i>
                         <p>Dashboard</p>
                         {{-- <span class="caret"></span> --}}
@@ -102,7 +102,7 @@
                 <li class="nav-item {{ request()->routeIs('users') ? 'active' : '' }}">
                     <a href="{{ route('users') }}">
                         <i class="fas fa-users-cog"></i>
-                        <p>Data Teknisi</p>
+                        <p>Data Pengguna</p>
                     </a>
                 </li>
                 <li class="nav-section">
@@ -112,9 +112,21 @@
                     <h4 class="text-section">Manajemen Mesin</h4>
                 </li>
                 <li class="nav-item {{ request()->routeIs('mesin') ? 'active' : '' }}">
-                    <a href="{{ route('mesin') }}">
+                    <a href="{{ route('mesin.index') }}">
                         <i class="fas fa-gears"></i>
                         <p>Data Mesin</p>
+                    </a>
+                </li>
+                <li class="nav-item {{ request()->routeIs('spare_part') ? 'active' : '' }}">
+                    <a href="{{ route('spare_part') }}">
+                        <i class="fas fa-wrench"></i>
+                        <p>Data Suku Cadang</p>
+                    </a>
+                </li>
+                <li class="nav-item {{ request()->routeIs('teknisi_mesin.index') ? 'active' : '' }}">
+                    <a href="{{ route('teknisi_mesin.index') }}">
+                        <i class="fas fa-hard-hat"></i>
+                        <p>Data Teknisi</p>
                     </a>
                 </li>
                 <li class="nav-item {{ request()->routeIs('admin.jadwal.index') ? 'active' : '' }}">
@@ -123,12 +135,31 @@
                         <p>Penjadwalan Perbaikan</p>
                     </a>
                 </li>
+                <li class="nav-section">
+                    <span class="sidebar-mini-icon">
+                        <i class="fa fa-ellipsis-h"></i>
+                    </span>
+                    <h4 class="text-section">Laporan Screening</h4>
+                </li>
+                <li class="nav-item {{ request()->routeIs('screenings.index') ? 'active' : '' }}">
+                    <a href="{{ route('screenings.index') }}">
+                        <i class="fas fa-tasks"></i>
+                        <p>Pertanyaan Screening</p>
+                    </a>
+                </li>
+                <li class="nav-section">
+                    <span class="sidebar-mini-icon">
+                        <i class="fa fa-ellipsis-h"></i>
+                    </span>
+                    <h4 class="text-section">Manajemen Laporan</h4>
+                </li>
                 <li class="nav-item {{ request()->routeIs('admin.riwayat.index') ? 'active' : '' }}">
                     <a href="{{ route('admin.riwayat.index') }}">
                         <i class="fas fa-history"></i>
                         <p>Riwayat Perbaikan</p>
                     </a>
                 </li>
+
                 {{-- <li class="nav-item {{ request()->routeIs('admin.repair.index') ? 'active' : '' }}">
                     <a href="{{ route('admin.repair.index') }}">
                         <i class="fas fa-tools"></i>
