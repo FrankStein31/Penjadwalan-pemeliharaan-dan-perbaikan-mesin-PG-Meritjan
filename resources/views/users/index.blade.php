@@ -30,12 +30,13 @@
                             <th class="text-center">Alamat</th>
                             <th class="text-center">Telp</th>
                             {{-- <th class="text-center">Rincian Pekerjaan</th> --}}
+                            <th class="text-center">Station</th>
                             <th class="text-center">Status</th>
                             <th class="text-center">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($data as $index => $row)
+                        @foreach ($users as $index => $row)
                             <tr>
                                 <td class="text-center">{{ $index + 1 }}</td>
                                 <td>{{ $row->user_id }}</td>
@@ -43,6 +44,7 @@
                                 <td>{{ $row->alamat }}</td>
                                 <td>{{ $row->telp }}</td>
                                 {{-- <td>{{ $row->rincian_pekerjaan }}</td> --}}
+                                <td>{{ $row->station->nama_station ?? '-' }}</td> <!-- Menampilkan station -->
                                 <td class="text-center">
                                     <span class="badge {{ $row->status == 1 ? 'badge-success' : 'badge-danger' }}">
                                         {{ $row->status == 1 ? 'Aktif' : 'Nonaktif' }}

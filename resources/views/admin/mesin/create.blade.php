@@ -47,6 +47,7 @@
                     <a href="{{ route('mesin.index') }}" class="btn btn-secondary">Batal</a>
                 </div>
             </form>
+            </form>
         </div>
     </div>
 @endsection

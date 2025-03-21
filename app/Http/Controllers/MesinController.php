@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Models\Mesin;
+use App\Models\Station;
+use Illuminate\Http\Request;
 use App\Models\SparePart;
 
 class MesinController extends Controller
@@ -11,13 +13,15 @@ class MesinController extends Controller
     // Tampilkan semua data mesin
     public function index()
     {
-        $mesins = Mesin::all();
+        $mesins = Mesin::with('station')->get(); // Ambil mesin dengan data station
         return view('admin.mesin.index', compact('mesins'));
     }
 
     // Tampilkan form tambah data mesin
     public function create()
     {
+        $stations = Station::all(); // Ambil semua station untuk dropdown
+        return view('admin.mesin.create', compact('stations'));
         $mesins = Mesin::all();
         return view('admin.mesin.create', compact('mesins'));
     }
@@ -30,9 +34,12 @@ class MesinController extends Controller
             'jenis' => 'required|string|max:255',
             'tahun' => 'required|integer',
             'deskripsi' => 'nullable|string',
+            'station_id' => 'required|exists:stations,id', // Validasi station_id
         ]);
 
         Mesin::create($request->all());
+
+        return redirect()->route('mesin')->with('success', 'Data mesin berhasil ditambahkan!');
         return redirect()->route('mesin.index')->with('success', 'Data mesin berhasil ditambahkan!');
     }
 
@@ -40,7 +47,8 @@ class MesinController extends Controller
     public function edit($id)
     {
         $mesin = Mesin::findOrFail($id);
-        return view('admin.mesin.edit', compact('mesin'));
+        $stations = Station::all(); // Ambil semua station untuk dropdown
+        return view('admin.mesin.edit', compact('mesin', 'stations'));
     }
 
     // Update data mesin
@@ -51,10 +59,13 @@ class MesinController extends Controller
             'jenis' => 'required|string|max:255',
             'tahun' => 'required|integer',
             'deskripsi' => 'nullable|string',
+            'station_id' => 'required|exists:stations,id',
         ]);
 
         $mesin = Mesin::findOrFail($id);
         $mesin->update($request->all());
+
+        return redirect()->route('mesin')->with('success', 'Data mesin berhasil diperbarui!');
         return redirect()->route('mesin.index')->with('success', 'Data mesin berhasil diperbarui!');
     }
 
@@ -63,6 +74,8 @@ class MesinController extends Controller
     {
         $mesin = Mesin::findOrFail($id);
         $mesin->delete();
+
+        return redirect()->route('mesin')->with('success', 'Data mesin berhasil dihapus!');
         return redirect()->route('mesin.index')->with('success', 'Data mesin berhasil dihapus!');
     }
 

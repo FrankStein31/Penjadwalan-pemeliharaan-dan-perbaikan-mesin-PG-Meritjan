@@ -20,6 +20,7 @@
                         <tr>
                             <th class="text-center">No.</th>
                             <th class="text-center">Mesin</th>
+                            <th class="text-center">Station</th>
                             <th class="text-center">Teknisi</th>
                             <th class="text-center">Jenis</th>
                             <th class="text-center">Tanggal</th>
@@ -33,6 +34,7 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $item->mesin->nama }}</td>
+                                <td class="text-center">{{ $item->mesin->station->nama_station ?? '-' }}</td>
                                 <td>{{ $item->user->nama }}</td>
                                 <td>{{ ucfirst($item->jenis) }}</td>
                                 <td>{{ \Carbon\Carbon::parse($item->tanggal)->format('d M Y') }}</td>

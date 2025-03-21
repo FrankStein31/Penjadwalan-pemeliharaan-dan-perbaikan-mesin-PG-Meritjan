@@ -16,16 +16,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         User::create([
-            'user_id' => 'Admin1',
-            'nama' => 'Hafidz',
-            'password' => Hash::make('1'), // Gantilah 'password' dengan password yang diinginkan
-            'level' => 'Administrator',
-            'alamat' => 'Gresik',
-            'telp' => '089612684096',
-            'created_at' => now(),
-            'updated_at' => now(),
+
         ]);
-
-
     }
 }

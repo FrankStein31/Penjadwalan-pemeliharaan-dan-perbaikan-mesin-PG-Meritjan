@@ -13,6 +13,7 @@ use App\Http\Controllers\{
     TeknisiMesinController,
     SparePartController,
     ScreeningController,
+    StationController
 };
 use Illuminate\Routing\RouteUrlGenerator;
 
@@ -103,6 +104,8 @@ Route::middleware(['auth'])->group(function () {
     ->name('admin.jadwal.dibatalkan');
         Route::get('/edit/{id}', [JadwalPemeliharaanController::class, 'edit'])->name('admin.jadwal.edit');
         Route::delete('/hapus/{id}', [JadwalPemeliharaanController::class, 'destroy'])->name('admin.jadwal.delete'); // Hapus jadwal
+        Route::get('/get-teknisi-by-station', [JadwalPemeliharaanController::class, 'getTeknisiByMesin'])->name('get.teknisi.by.station');
+
     });
 
     Route::get('/repair', [RepairAssignmentController::class, 'index'])->name('admin.repair.index');
@@ -117,3 +120,9 @@ Route::middleware(['auth'])->group(function () {
     //Cetak PDF
     Route::get('/admin/riwayat/pdf', [RiwayatLaporanController::class, 'exportPDF'])->name('admin.riwayat.pdf');
 });
+
+Route::resource('stations', StationController::class);
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('stations', StationController::class);
+});
+
