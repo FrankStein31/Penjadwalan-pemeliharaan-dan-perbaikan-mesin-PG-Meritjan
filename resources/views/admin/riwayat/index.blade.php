@@ -6,10 +6,11 @@
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
             <h4 class="m-0 font-weight-bold text-white">RIWAYAT LAPORAN PEMELIHARAAN DAN PERBAIKAN</h4>
+            @if(auth()->user()->level === 'Administrator')
             <a href="{{ route('admin.riwayat.pdf') }}" class="btn btn-white btn-sm font-weight-bold shadow-sm">
                 <i class="fas fa-file-pdf fa-sm text-dark-50 mr-2"></i> Cetak Laporan
             </a>
-
+@endif
 
         </div>
         <div class="card-body">

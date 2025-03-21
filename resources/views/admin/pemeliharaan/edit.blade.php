@@ -8,13 +8,17 @@
             <h4 class="m-0 font-weight-bold text-white">Edit Jadwal Pemeliharaan</h4>
         </div>
         <div class="card-body">
-            <form action="{{ url('jadwal-pemeliharaan/update/'.$jadwal->id) }}" method="POST">
+
+                @php
+                    $isAdmin = auth()->user()->level === 'Administrator';
+                @endphp
+            <form action="{{ route('admin.jadwal.update', $jadwal->id) }}" method="POST">
                 @csrf
                 @method('PUT')
 
                 <div class="form-group">
-                    <label for="mesin_id">Mesin</label>
-                    <select name="mesin_id" id="mesin_id" class="form-control" required>
+                    <label for="mesin_id">Pilih Mesin</label>
+                    <select name="mesin_id" id="mesin_id" class="form-control" {{ $isAdmin ? '' : 'readonly' }} required>
                         @foreach($mesins as $mesin)
                             <option value="{{ $mesin->id }}" {{ $mesin->id == $jadwal->mesin_id ? 'selected' : '' }}>
                                 {{ $mesin->nama }}
@@ -24,18 +28,15 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="user_id">Teknisi</label>
-                    <select name="user_id" id="user_id" class="form-control" required>
+                    <label for="user_id">Pilih Teknisi</label>
+                    <select name="user_id" id="user_id" class="form-control" {{ $isAdmin ? '' : 'readonly' }} required>
                         <option value="">Pilih Teknisi</option>
-                        @foreach($users as $user)
-                            <option value="{{ $user->id }}">{{ $user->nama }}</option>
-                        @endforeach
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label for="jenis">Jenis Pemeliharaan</label>
-                    <select name="jenis" id="jenis" class="form-control" required>
+                    <select name="jenis" id="jenis" class="form-control" {{ $isAdmin ? '' : 'readonly' }} required>
                         <option value="rutin" {{ $jadwal->jenis == 'rutin' ? 'selected' : '' }}>Rutin</option>
                         <option value="incidental" {{ $jadwal->jenis == 'incidental' ? 'selected' : '' }}>Incidental</option>
                     </select>
@@ -43,12 +44,12 @@
 
                 <div class="form-group">
                     <label for="tanggal">Tanggal</label>
-                    <input type="date" name="tanggal" id="tanggal" class="form-control" value="{{ $jadwal->tanggal }}" required>
+                    <input type="date" name="tanggal" id="tanggal" class="form-control" value="{{ $jadwal->tanggal }}" {{ $isAdmin ? '' : 'readonly' }} required>
                 </div>
 
                 <div class="form-group">
                     <label for="deskripsi">Deskripsi</label>
-                    <textarea name="deskripsi" id="deskripsi" class="form-control" rows="3">{{ $jadwal->deskripsi }}</textarea>
+                    <textarea name="deskripsi" id="deskripsi" class="form-control" rows="3" {{ $isAdmin ? '' : 'readonly' }}>{{ $jadwal->deskripsi }}</textarea>
                 </div>
 
                 <div class="form-group">
@@ -67,4 +68,36 @@
             </form>
         </div>
     </div>
+
+    <script>
+    function loadTeknisi(mesin_id, selectedTeknisiId = null) {
+        var teknisiSelect = document.getElementById('user_id');
+        teknisiSelect.innerHTML = '<option value="">-- Pilih Teknisi --</option>'; // Reset dropdown
+
+        if (mesin_id) {
+            fetch('/admin/getTeknisiByMesin/' + mesin_id)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length > 0) {
+                        data.forEach(teknisi => {
+                            var isSelected = selectedTeknisiId == teknisi.id ? 'selected' : '';
+                            teknisiSelect.innerHTML += `<option value="${teknisi.id}" ${isSelected}>${teknisi.nama}</option>`;
+                        });
+                    } else {
+                        teknisiSelect.innerHTML += '<option value="">Tidak ada teknisi tersedia</option>';
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    }
+
+    document.getElementById('mesin_id').addEventListener('change', function () {
+        loadTeknisi(this.value);
+    });
+
+    // Load teknisi yang sesuai saat halaman pertama kali dimuat
+    window.onload = function () {
+        loadTeknisi({{ $jadwal->mesin_id }}, {{ $jadwal->user_id }});
+    };
+    </script>
 @endsection

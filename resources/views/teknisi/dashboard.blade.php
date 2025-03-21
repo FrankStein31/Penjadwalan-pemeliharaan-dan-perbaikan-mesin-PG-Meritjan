@@ -9,7 +9,7 @@
             lebih penting.</h5>
     </div>
     <div class="row">
-        <div class="col-sm-6 col-md-4">
+        {{-- <div class="col-sm-6 col-md-4">
             <div class="card card-stats card-round border border-white">
                 <div class="card-body ">
                     <div class="row">
@@ -27,7 +27,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
         <div class="col-sm-6 col-md-4">
             <div class="card card-stats card-round border border-white">
                 <div class="card-body ">

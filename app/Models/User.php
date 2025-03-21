@@ -25,7 +25,7 @@ class User extends Authenticatable
         'level',
         'alamat',
         'telp',
-        'rincian_pekerjaan',
+        // 'rincian_pekerjaan',
         'status'
     ];
 
@@ -47,4 +47,10 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function mesin()
+    {
+        return $this->belongsToMany(Mesin::class, 'teknisi_mesin');
+    }
+
 }

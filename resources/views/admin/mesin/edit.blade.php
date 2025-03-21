@@ -39,7 +39,7 @@
                         </div>
                     </div>
                     <div class="card-footer">
-                        <a href="{{ route('mesin') }}" class="btn btn-secondary">Kembali</a>
+                        <a href="{{ route('mesin.index') }}" class="btn btn-secondary">Kembali</a>
                         <button type="submit" class="btn btn-primary">Simpan</button>
                     </div>
                 </div>

@@ -5,7 +5,7 @@
 @section('contents')
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
-            <h4 class="m-0 font-weight-bold text-white">DATA TEKNISI</h4>
+            <h4 class="m-0 font-weight-bold text-white">DATA PENGGUNA</h4>
             <a href="{{ route('users.tambah') }}" class="btn btn-white btn-sm font-weight-bold shadow-sm">
                 <i class="fas fa-plus fa-sm text-dark-50 mr-2"></i>Tambah Data
             </a>
@@ -25,11 +25,11 @@
                     <thead class="thead-dark">
                         <tr>
                             <th class="text-center">No</th>
-                            <th class="text-center">User ID</th>
+                            <th class="text-center">Username</th>
                             <th class="text-center">Nama</th>
                             <th class="text-center">Alamat</th>
                             <th class="text-center">Telp</th>
-                            <th class="text-center">Rincian Pekerjaan</th>
+                            {{-- <th class="text-center">Rincian Pekerjaan</th> --}}
                             <th class="text-center">Status</th>
                             <th class="text-center">Aksi</th>
                         </tr>
@@ -42,7 +42,7 @@
                                 <td>{{ $row->nama }}</td>
                                 <td>{{ $row->alamat }}</td>
                                 <td>{{ $row->telp }}</td>
-                                <td>{{ $row->rincian_pekerjaan }}</td>
+                                {{-- <td>{{ $row->rincian_pekerjaan }}</td> --}}
                                 <td class="text-center">
                                     <span class="badge {{ $row->status == 1 ? 'badge-success' : 'badge-danger' }}">
                                         {{ $row->status == 1 ? 'Aktif' : 'Nonaktif' }}

@@ -18,6 +18,16 @@ class RiwayatLaporanController extends Controller
 
         return view('admin.riwayat.index', compact('jadwal'));
     }
+    public function indexteknisi()
+    {
+        $jadwal = JadwalPemeliharaan::with(['mesin', 'user'])
+        ->where('user_id', auth()->id())
+        ->where('status', 'Selesai')
+        ->get();
+
+
+        return view('admin.riwayat.index', compact('jadwal'));
+    }
 
     public function exportPDF()
     {

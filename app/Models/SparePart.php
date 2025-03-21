@@ -5,26 +5,24 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Mesin extends Model
+class SparePart extends Model
 {
     use HasFactory;
-    protected $table = 'mesins';
+
+    protected $table = 'spare_parts'; // Nama tabel di database
+
     protected $fillable = [
+        'kode_part',
         'nama',
         'jenis',
-        'tahun',
+        'stok',
         'deskripsi'
-    ];
+        ];
 
-    public function teknisi()
+    public function mesins()
     {
-        return $this->belongsToMany(User::class, 'teknisi_mesin');
-    }
-    public function spareParts()
-    {
-        return $this->belongsToMany(SparePart::class, 'mesin_spare_part')
+        return $this->belongsToMany(Mesin::class, 'mesin_spare_part')
                     ->withPivot('jumlah')
                     ->withTimestamps();
     }
-
 }
