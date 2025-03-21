@@ -52,7 +52,7 @@ CREATE TABLE `jadwal_pemeliharaan` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `jadwal_pemeliharaan` */
 
@@ -63,7 +63,8 @@ insert  into `jadwal_pemeliharaan`(`id`,`mesin_id`,`user_id`,`jenis`,`tanggal`,`
 (11,10,12,'rutin','2025-03-20','Rusak Sebagian','Selesai','2025-03-19 22:19:59','2025-03-19 22:36:05'),
 (12,10,12,'rutin','2025-03-20','Rusak','Selesai','2025-03-19 22:50:17','2025-03-19 22:50:33'),
 (13,10,12,'rutin','2025-03-20','Rusak','Selesai','2025-03-20 05:56:37','2025-03-20 05:56:48'),
-(14,10,12,'rutin','2025-03-20','Rusak','Terjadwal','2025-03-20 05:57:51','2025-03-20 05:57:51');
+(14,10,12,'rutin','2025-03-20','Rusak','Terjadwal','2025-03-20 05:57:51','2025-03-20 05:57:51'),
+(15,11,14,'rutin','2025-03-21','asdas','Terjadwal','2025-03-21 11:26:24','2025-03-21 11:26:24');
 
 /*Table structure for table `machines` */
 
@@ -148,8 +149,8 @@ CREATE TABLE `mesins` (
 
 insert  into `mesins`(`id`,`nama`,`jenis`,`tahun`,`deskripsi`,`created_at`,`updated_at`,`station_id`) values 
 (3,'Cane Crusher','Mesin Penggiling Tebu',2018,'Menghancurkan tebu untuk mengekstrak nira (cairan tebu).','2025-03-06 16:38:17','2025-03-21 10:34:13',1),
-(10,'Milling Tandem','Mesin Pemeras Tebu',2013,'Memeras tebu lebih lanjut untuk mendapatkan hasil maksimal.','2025-03-17 13:48:17','2025-03-17 13:48:17',NULL),
-(11,'Juice Heater','Mesin Pemeras Nira',2011,'Meningkatkan suhu nira untuk proses pemurnian.','2025-03-17 13:49:42','2025-03-18 16:56:13',NULL);
+(10,'Milling Tandem','Mesin Pemeras Tebu',2013,'Memeras tebu lebih lanjut untuk mendapatkan hasil maksimal.','2025-03-17 13:48:17','2025-03-21 10:53:11',2),
+(11,'Juice Heater','Mesin Pemeras Nira',2011,'Meningkatkan suhu nira untuk proses pemurnian.','2025-03-17 13:49:42','2025-03-21 11:25:04',2);
 
 /*Table structure for table `migrations` */
 
@@ -333,7 +334,7 @@ CREATE TABLE `stations` (
 /*Data for the table `stations` */
 
 insert  into `stations`(`id`,`nama_station`,`created_at`,`updated_at`) values 
-(1,'aaaa','2025-03-21 10:33:46','2025-03-21 10:33:46'),
+(1,'qqqq','2025-03-21 10:33:46','2025-03-21 11:16:42'),
 (2,'bbbb','2025-03-21 10:33:57','2025-03-21 10:33:57');
 
 /*Table structure for table `teknisi_mesin` */
@@ -349,13 +350,15 @@ CREATE TABLE `teknisi_mesin` (
   PRIMARY KEY (`id`),
   KEY `teknisi_mesin_user_id_foreign` (`user_id`),
   CONSTRAINT `teknisi_mesin_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `teknisi_mesin` */
 
 insert  into `teknisi_mesin`(`id`,`user_id`,`mesin_id`,`created_at`,`updated_at`) values 
 (2,9,3,'2025-03-17 14:02:37','2025-03-17 14:02:37'),
-(3,12,10,'2025-03-17 14:02:47','2025-03-17 14:02:47');
+(3,12,10,'2025-03-17 14:02:47','2025-03-17 14:02:47'),
+(4,14,11,'2025-03-21 11:24:51','2025-03-21 11:24:51'),
+(5,15,11,'2025-03-21 11:25:16','2025-03-21 11:25:16');
 
 /*Table structure for table `tugas_perbaikan` */
 
@@ -398,7 +401,7 @@ CREATE TABLE `users` (
   PRIMARY KEY (`id`),
   KEY `users_station_id_foreign` (`station_id`),
   CONSTRAINT `users_station_id_foreign` FOREIGN KEY (`station_id`) REFERENCES `stations` (`id`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `users` */
 
@@ -406,7 +409,9 @@ insert  into `users`(`id`,`user_id`,`nama`,`password`,`level`,`alamat`,`telp`,`s
 (1,'adm1','Endra','$2y$10$UYrVzq.P/bgKfAY5aon4suc5AyZm5lQVZav3siAcAZAMMy.iWSmx2','Administrator','Kediri','082335022640',1,NULL,'2025-03-10 19:13:18',NULL),
 (9,'teknisi1','teknisi1','$2y$10$cxgNE8rd5HKi7iRRupJYHeYfWcq9xzoIfNwMW2WH6CdBE75O8/37m','Teknisi','Malang','052314758596',1,'2025-02-19 11:35:41','2025-03-10 19:14:30',NULL),
 (12,'teknisi2','teknisi2','$2y$10$nEiaR7bCMxEZeaNu6Jx18O350KIT3HanRxJrEdExFywhIT6Kr2SH2','Teknisi','Gurah','085645214125',1,'2025-03-17 14:02:22','2025-03-18 13:31:36',NULL),
-(13,'manajer1','manajer','$2y$10$pxxV7VDE3dcrAtV/fRsLX.fW9ToJ62JHi9BqpC/LIlw8yvIC0bhXC','Manajer Teknisi','Kebomas','089612684096',1,'2025-03-18 13:29:46','2025-03-18 13:29:46',NULL);
+(13,'manajer1','manajer','$2y$10$pxxV7VDE3dcrAtV/fRsLX.fW9ToJ62JHi9BqpC/LIlw8yvIC0bhXC','Manajer Teknisi','Kebomas','089612684096',1,'2025-03-18 13:29:46','2025-03-18 13:29:46',NULL),
+(14,'teknisi3','teknisi3','$2y$10$O7Zf7xMKWwsNY4mM1xSaju/TS6SpQwylc7bLU66TmwMTJcpDcA5oi','Teknisi','Medan','123',1,'2025-03-21 11:24:06','2025-03-21 11:24:06',NULL),
+(15,'teknisi4','teknisi4','$2y$10$q5jYfnQVVh2Qzz5ux.yqv.TLwLf.fZxaDM38x9zCAwm.6Utqo81g6','Teknisi','Medan','123',1,'2025-03-21 11:24:39','2025-03-21 11:24:39',NULL);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
