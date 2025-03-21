@@ -58,13 +58,25 @@ public function markAsDibatakan($id)
         return view('admin.pemeliharaan.create', compact('mesins'));
     }
 
-    public function getTeknisiByMesin($mesin_id)
-    {
-        $teknisi = User::whereHas('mesin', function ($query) use ($mesin_id) {
-            $query->where('mesin_id', $mesin_id);
-        })->get();
+    // public function getTeknisiByMesin($mesin_id)
+    // {
+    //     $teknisi = User::whereHas('mesin', function ($query) use ($mesin_id) {
+    //         $query->where('mesin_id', $mesin_id);
+    //     })->get();
 
-        return response()->json($teknisi);
+    //     return response()->json($teknisi);
+    // }
+    public function getTeknisiByMesin(Request $request)
+    {
+        $mesin = Mesin::with('station')->find($request->mesin_id);
+
+        if (!$mesin || !$mesin->station) {
+            return response()->json(['message' => 'Mesin atau station tidak ditemukan'], 404);
+        }
+
+        $teknisis = User::where('station_id', $mesin->station->id)->get();
+
+        return response()->json($teknisis);
     }
 
     // Simpan jadwal pemeliharaan baru
@@ -121,18 +133,7 @@ public function markAsDibatakan($id)
         return redirect()->route('admin.jadwal.index')->with('success', 'Jadwal pemeliharaan berhasil dihapus!');
     }
 
-    public function getTeknisiByMesin(Request $request)
-    // {
-    // $mesin = Mesin::with('station')->find($request->mesin_id);
 
-    // if (!$mesin || !$mesin->station) {
-    //     return response()->json(['message' => 'Mesin atau station tidak ditemukan'], 404);
-    // }
-
-    // $teknisis = User::where('station_id', $mesin->station->id)->get();
-
-    // return response()->json($teknisis);
-    // }
 
 
 }
