@@ -32,8 +32,8 @@
                         @foreach ($jadwal as $item)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $item->mesin->nama }}</td>
-                                <td>{{ $item->user->nama }}</td>
+                                <td>{{ $item->mesin->nama ?? '-' }}</td>
+                                <td>{{ $item->user->nama ?? '-'}}</td>
                                 <td>{{ ucfirst($item->jenis) }}</td>
                                 <td>{{ \Carbon\Carbon::parse($item->tanggal)->format('d M Y') }}</td>
                                 <td>{{ $item->deskripsi ?? '-' }}</td>

@@ -69,7 +69,7 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'user_id' => 'required|unique:users,user_id',
+            'user_id' => 'required|unique:users,user_id,' . $id . ',id',
             'nama' => 'required',
             'level' => 'required',
             'alamat' => 'required',
@@ -79,14 +79,14 @@ class UserController extends Controller
         ]);
 
         $user = User::findOrFail($id);
-        
+
         $user->user_id = $request->user_id;
         $user->nama = $request->nama;
         $user->level = $request->level;
         $user->alamat = $request->alamat;
         $user->telp = $request->telp;
         $user->station_id = $request->station_id;
-        
+
         if ($request->filled('password')) {
             $user->password = Hash::make($request->password);
         }
@@ -105,6 +105,6 @@ class UserController extends Controller
     public function create()
     {
         $stations = Station::all();
-        return view('admin.users.create', compact('stations'));
+        return view('users.tambah', compact('stations'));
     }
 }

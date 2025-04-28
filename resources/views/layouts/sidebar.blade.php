@@ -5,6 +5,7 @@
                 <div class="avatar-sm float-left mr-2">
                     <img src="../assets/img/profile.jpg" alt="..." class="avatar-img rounded-circle">
                 </div>
+
                 <div class="info">
                     <a data-toggle="collapse" href="#collapseExample" aria-expanded="true">
                         <span>
@@ -93,6 +94,7 @@
                         </ul>
                     </div> --}}
                 </li>
+                @if(auth()->user()->level === 'Administrator')
                 <li class="nav-section">
                     <span class="sidebar-mini-icon">
                         <i class="fa fa-ellipsis-h"></i>
@@ -153,6 +155,7 @@
                         <p>Pertanyaan Screening</p>
                     </a>
                 </li>
+                @endif
                 <li class="nav-section">
                     <span class="sidebar-mini-icon">
                         <i class="fa fa-ellipsis-h"></i>

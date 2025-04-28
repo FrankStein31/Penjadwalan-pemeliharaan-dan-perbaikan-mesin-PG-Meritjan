@@ -22,7 +22,11 @@ Route::middleware(['auth', 'role:Administrator'])->group(function () {
 });
 
 Route::middleware(['auth', 'role:Teknisi'])->group(function () {
-    Route::get('/teknisi/dashboard', [DashboardController::class, 'index']) ->name('teknisi.dashboard');
+    Route::get('/teknisi/dashboard', [DashboardController::class, 'index'])->name('teknisi.dashboard');
+});
+
+Route::middleware(['auth', 'role:Manajer Teknisi'])->group(function () {
+    Route::get('/teknisi/dashboard', [DashboardController::class, 'index'])->name('teknisi.dashboard');
 });
 
 // Authentication Routes
@@ -52,7 +56,7 @@ Route::post('mesin/{id}/add-spare-part', [MesinController::class, 'addSparePart'
 Route::put('mesin/{mesin_id}/update-spare-part/{spare_part_id}', [MesinController::class, 'updateSparePart'])->name('mesin.update_spare_part');
 Route::delete('mesin/{mesin_id}/remove-spare-part/{spare_part_id}', [MesinController::class, 'removeSparePart'])->name('mesin.remove_spare_part');
 
-Route::prefix('stations')->name('stations.')->middleware(['auth'])->group(function() {
+Route::prefix('stations')->name('stations.')->middleware(['auth'])->group(function () {
     Route::get('/', [StationController::class, 'index'])->name('index');
     Route::get('/tambah', [StationController::class, 'create'])->name('create');
     Route::post('/', [StationController::class, 'store'])->name('store');
@@ -65,7 +69,8 @@ Route::prefix('stations')->name('stations.')->middleware(['auth'])->group(functi
 Route::get('/mesin', [MesinController::class, 'index'])->name('mesin.index');
 
 Route::get('/create', [MesinController::class, 'create'])->name('mesin.create');
-Route::post('/mesin', [MesinController::class, 'store'])->name('mesin.store');Route::get('mesin/edit/{id}', [App\Http\Controllers\MesinController::class, 'edit'])->name('mesin.edit');
+Route::post('/mesin', [MesinController::class, 'store'])->name('mesin.store');
+Route::get('mesin/edit/{id}', [App\Http\Controllers\MesinController::class, 'edit'])->name('mesin.edit');
 Route::put('mesin/edit/{id}', [App\Http\Controllers\MesinController::class, 'update'])->name('mesin.update');
 Route::delete('mesin/hapus/{id}', [App\Http\Controllers\MesinController::class, 'destroy'])->name('mesin.destroy');
 
@@ -80,8 +85,8 @@ Route::delete('spare_part/hapus/{id}', [SparePartController::class, 'destroy'])-
 Route::resource('screenings', ScreeningController::class);
 
 Route::get('screenings-teknisi', [ScreeningController::class, 'indexteknisi'])->name('screenings.indexteknisi');
-Route::get('screenings-teknisi/edit/{screening}',[ScreeningController::class, 'editteknisi'])->name('screenings.editteknisi');
-Route::put('screenings-teknisi/edit/{screening}',[ScreeningController::class, 'updateteknisi'])->name('screenings.updateteknisi');
+Route::get('screenings-teknisi/edit/{screening}', [ScreeningController::class, 'editteknisi'])->name('screenings.editteknisi');
+Route::put('screenings-teknisi/edit/{screening}', [ScreeningController::class, 'updateteknisi'])->name('screenings.updateteknisi');
 // Dashboard Routes
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -106,9 +111,9 @@ Route::middleware(['auth'])->group(function () {
         // Route::get('/{id}', [JadwalPemeliharaanController::class, 'show'])->name('admin.jadwal.show'); // Detail jadwal
         Route::put('/update/{id}', [JadwalPemeliharaanController::class, 'update'])->name('admin.jadwal.update');
         Route::put('/admin/jadwal/{id}/selesai', [JadwalPemeliharaanController::class, 'markAsSelesai'])
-    ->name('admin.jadwal.selesai');
-    Route::put('/admin/jadwal/{id}/dibatalkan', [JadwalPemeliharaanController::class, 'markAsDibatakan'])
-    ->name('admin.jadwal.dibatalkan');
+            ->name('admin.jadwal.selesai');
+        Route::put('/admin/jadwal/{id}/dibatalkan', [JadwalPemeliharaanController::class, 'markAsDibatakan'])
+            ->name('admin.jadwal.dibatalkan');
         Route::get('/edit/{id}', [JadwalPemeliharaanController::class, 'edit'])->name('admin.jadwal.edit');
         Route::delete('/hapus/{id}', [JadwalPemeliharaanController::class, 'destroy'])->name('admin.jadwal.delete'); // Hapus jadwal
     });

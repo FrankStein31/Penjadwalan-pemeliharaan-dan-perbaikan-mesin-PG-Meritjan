@@ -3,7 +3,7 @@
 @section('title', 'Edit User')
 
 @section('contents')
-<form action="{{ route('users.tambah.update', ['id' => $users->id]) }}" method="POST">
+<form action="{{ route('users.tambah.update', ['id' => $user->id]) }}" method="POST">
     @csrf
     @method('PUT')
 
@@ -22,11 +22,11 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label for="user_id">Username</label>
-                        <input type="text" class="form-control" id="user_id" name="user_id" value="{{ old('user_id', $users->user_id) }}" required>
+                        <input type="text" class="form-control" id="user_id" name="user_id" value="{{ old('user_id', $user->user_id) }}" required>
                     </div>
                     <div class="form-group">
                         <label for="nama">Nama</label>
-                        <input type="text" class="form-control" id="nama" name="nama" value="{{ old('nama', $users->nama) }}" required>
+                        <input type="text" class="form-control" id="nama" name="nama" value="{{ old('nama', $user->nama) }}" required>
                     </div>
                     <div class="form-group">
                         <label for="password">Password</label>
@@ -37,18 +37,18 @@
                         <label for="level">Level</label>
                         <select class="form-control" id="level" name="level" required>
                             <option value="" disabled>Pilih Level</option>
-                            <option value="Teknisi" {{ old('level', $users->level) == 'Teknisi' ? 'selected' : '' }}>Teknisi</option>
-                            <option value="Administrator" {{ old('level', $users->level) == 'Administrator' ? 'selected' : '' }}>Administrator</option>
-                            <option value="Manajer Teknisi" {{ old('level', $users->level) == 'Manajer Teknisi' ? 'selected' : '' }}>Manajer Teknisi</option>
+                            <option value="Teknisi" {{ old('level', $user->level) == 'Teknisi' ? 'selected' : '' }}>Teknisi</option>
+                            <option value="Administrator" {{ old('level', $user->level) == 'Administrator' ? 'selected' : '' }}>Administrator</option>
+                            <option value="Manajer Teknisi" {{ old('level', $user->level) == 'Manajer Teknisi' ? 'selected' : '' }}>Manajer Teknisi</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="alamat">Alamat</label>
-                        <input type="text" class="form-control" id="alamat" name="alamat" value="{{ old('alamat', $users->alamat) }}" required>
+                        <input type="text" class="form-control" id="alamat" name="alamat" value="{{ old('alamat', $user->alamat) }}" required>
                     </div>
                     <div class="form-group">
                         <label for="telp">Telp</label>
-                        <input type="text" class="form-control" id="telp" name="telp" value="{{ old('telp', $users->telp) }}" required>
+                        <input type="text" class="form-control" id="telp" name="telp" value="{{ old('telp', $user->telp) }}" required>
                     </div>
                     {{-- <div class="form-group">
                         <label for="rincian_pekerjaan">Rincian Pekerjaan</label>
@@ -57,8 +57,8 @@
                     <div class="form-group">
                         <label for="status">Status</label>
                         <select class="form-control" id="status" name="status" required>
-                            <option value="1" {{ old('status', $users->status) == 1 ? 'selected' : '' }}>Aktif</option>
-                            <option value="0" {{ old('status', $users->status) == 0 ? 'selected' : '' }}>Nonaktif</option>
+                            <option value="1" {{ old('status', $user->status) == 1 ? 'selected' : '' }}>Aktif</option>
+                            <option value="0" {{ old('status', $user->status) == 0 ? 'selected' : '' }}>Nonaktif</option>
                         </select>
                     </div>
                 </div>

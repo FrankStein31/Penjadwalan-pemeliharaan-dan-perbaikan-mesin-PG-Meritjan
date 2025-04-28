@@ -14,39 +14,39 @@ class JadwalPemeliharaanController extends Controller
     public function index()
     {
         $jadwal = JadwalPemeliharaan::with(['mesin', 'user'])
-        ->whereNot('status', 'Selesai')
-        ->get();
+            ->whereNot('status', 'Selesai')
+            ->get();
 
         return view('admin.pemeliharaan.index', compact('jadwal'));
     }
     public function indexteknisi()
-{
-    $jadwal = JadwalPemeliharaan::with(['mesin', 'user'])
-        ->where('user_id', auth()->id()) // Filter hanya untuk user yang sedang login
-        ->whereNot('status', 'Selesai')
-        ->get();
+    {
+        $jadwal = JadwalPemeliharaan::with(['mesin', 'user'])
+            ->where('user_id', auth()->id()) // Filter hanya untuk user yang sedang login
+            ->whereNot('status', 'Selesai')
+            ->get();
 
-    return view('admin.pemeliharaan.index', compact('jadwal'));
-}
-public function markAsSelesai($id)
-{
-    $jadwal = JadwalPemeliharaan::findOrFail($id);
-    $jadwal->update([
-        'status' => 'Selesai',
-        'updated_at' => now()
-    ]);
+        return view('admin.pemeliharaan.index', compact('jadwal'));
+    }
+    public function markAsSelesai($id)
+    {
+        $jadwal = JadwalPemeliharaan::findOrFail($id);
+        $jadwal->update([
+            'status' => 'Selesai',
+            'updated_at' => now()
+        ]);
 
-    return redirect()->back()->with('success', 'Jadwal berhasil diselesaikan.');
-}
-public function markAsDibatakan($id)
-{
-    $jadwal = JadwalPemeliharaan::findOrFail($id);
-    $jadwal->update([
-        'status' => 'Dibatalkan',
-        'updated_at' => now() // Memperbarui timestamp ke waktu saat ini
-    ]);
-    return redirect()->back()->with('success', 'Jadwal berhasil dibatalkan.');
-}
+        return redirect()->back()->with('success', 'Jadwal berhasil diselesaikan.');
+    }
+    public function markAsDibatakan($id)
+    {
+        $jadwal = JadwalPemeliharaan::findOrFail($id);
+        $jadwal->update([
+            'status' => 'Dibatalkan',
+            'updated_at' => now() // Memperbarui timestamp ke waktu saat ini
+        ]);
+        return redirect()->back()->with('success', 'Jadwal berhasil dibatalkan.');
+    }
 
 
     // Tampilkan form tambah jadwal pemeliharaan
@@ -55,6 +55,7 @@ public function markAsDibatakan($id)
         $mesins = Mesin::all();
         $teknisis = User::where('level', 'Teknisi')->get();
         $stations = Station::all();
+
         return view('admin.pemeliharaan.create', compact('mesins', 'teknisis', 'stations'));
     }
 
@@ -70,6 +71,7 @@ public function markAsDibatakan($id)
     // Simpan jadwal pemeliharaan baru
     public function store(Request $request)
     {
+        // Validasi input
         $request->validate([
             'mesin_id' => 'required|exists:mesins,id',
             'user_id' => 'required|exists:users,id',
@@ -79,9 +81,51 @@ public function markAsDibatakan($id)
             'status' => 'in:Terjadwal,Selesai,Dibatalkan'
         ]);
 
-        JadwalPemeliharaan::create($request->all());
+        // Simpan ke database
+        $jadwal = JadwalPemeliharaan::create($request->all());
 
-        return redirect()->route('admin.jadwal.index')->with('success', 'Jadwal pemeliharaan berhasil ditambahkan!');
+        // Simpan ke database
+        $jadwal = JadwalPemeliharaan::create($request->all());
+
+        // Ambil data teknisi berdasarkan user_id yang dikirim
+        $teknisi = User::find($request->user_id);
+
+        if ($teknisi) {
+            $token = "RWQHVXjZJS2nuH698t7C"; // Token API Fonnte
+            $target = $teknisi->telp; // Pastikan nomor dalam format internasional
+            $tanggalFormatted = \Carbon\Carbon::parse($request->tanggal)->format('d-m-Y H:i');
+
+            // Hitung selisih hari dari sekarang ke tanggal perbaikan
+            $hariSisa = \Carbon\Carbon::now()->diffInDays($request->tanggal, false);
+            $pengingat = $hariSisa > 0 ? "$hariSisa hari lagi anda ada perbaikan mesin, tolong segera diselesaikan." : "Segera lakukan perbaikan mesin sesuai jadwal.";
+
+            $data = "🔧 *Jadwal Pemeliharaan Baru!!!*\n\n"
+                . "👤 Nama: {$teknisi->nama}\n"
+                . "📅 Tanggal: $tanggalFormatted\n"
+                . "📍 Mesin: " . $jadwal->mesin->nama . "\n"
+                . "📝 Jenis: " . ucfirst($jadwal->jenis) . "\n"
+                . "🧾 Deskripsi: " . ($request->deskripsi ?? '-') . "\n\n"
+                . "📣 *Pengingat:* $pengingat";
+
+            // Kirim melalui Fonnte
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => 'https://api.fonnte.com/send',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => array(
+                    'target' => $target,
+                    'message' => $data,
+                ),
+                CURLOPT_HTTPHEADER => array(
+                    "Authorization: $token"
+                ),
+            ));
+            curl_exec($curl);
+            curl_close($curl);
+        }
+
+        return redirect()->route('admin.jadwal.index')->with('success', 'Jadwal pemeliharaan berhasil ditambahkan dan notifikasi dikirim!');
     }
 
     // Tampilkan form edit jadwal pemeliharaan
@@ -132,8 +176,8 @@ public function markAsDibatakan($id)
     public function getTeknisiByStation($station_id)
     {
         $teknisis = User::where('level', 'Teknisi')
-                        ->where('station_id', $station_id)
-                        ->get();
+            ->where('station_id', $station_id)
+            ->get();
         return response()->json($teknisis);
     }
 }

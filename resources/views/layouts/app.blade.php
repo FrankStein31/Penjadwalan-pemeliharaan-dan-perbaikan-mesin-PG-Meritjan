@@ -74,7 +74,7 @@
             @include('layouts.navbar')
         </div>
 
-        @if (auth()->user()->level === 'Administrator')
+        @if (auth()->user()->level === 'Administrator'|| auth()->user()->level === 'Manajer Teknisi')
             @include('layouts.sidebar')
         @elseif(auth()->user()->level === 'Teknisi')
             @include('layouts.sidebar-teknisi')

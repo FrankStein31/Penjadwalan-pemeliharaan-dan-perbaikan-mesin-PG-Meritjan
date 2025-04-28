@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,8 +9,15 @@
     <script src="{{ asset('assets/js/plugin/webfont/webfont.min.js') }}"></script>
     <script>
         WebFont.load({
-            google: {"families":["Poppins:300,400,500,600,700", "Montserrat:400,700"]},
-            custom: {"families":["Flaticon", "Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands", "simple-line-icons"], urls: ['../assets/css/fonts.min.css']},
+            google: {
+                "families": ["Poppins:300,400,500,600,700", "Montserrat:400,700"]
+            },
+            custom: {
+                "families": ["Flaticon", "Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands",
+                    "simple-line-icons"
+                ],
+                urls: ['../assets/css/fonts.min.css']
+            },
             active: function() {
                 sessionStorage.fonts = true;
             }
@@ -153,7 +161,7 @@
             border-radius: 4px;
         }
 
-        .custom-checkbox .custom-control-input:checked ~ .custom-control-label::before {
+        .custom-checkbox .custom-control-input:checked~.custom-control-label::before {
             background-color: #2989d8;
         }
 
@@ -215,8 +223,15 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .fadeIn {
@@ -224,6 +239,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="login-container">
         <div class="login-card animated fadeIn">
@@ -234,13 +250,13 @@
                 <form action="{{ route('login.aksi') }}" method="POST" class="user">
                     @csrf
                     @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
                     @endif
 
                     <div class="form-group">
@@ -251,7 +267,8 @@
                     <div class="form-group">
                         <label for="password">Password</label>
                         <div class="position-relative">
-                            <input name="password" type="password" class="form-control" placeholder="Masukkan password Anda">
+                            <input name="password" type="password" class="form-control"
+                                placeholder="Masukkan password Anda">
                             <div class="show-password">
                                 <i class="icon-eye"></i>
                             </div>
@@ -271,21 +288,13 @@
                     </div>
 
                     <div class="login-divider">
-                        <span></span>
-                        <p>atau</p>
-                        <span></span>
-                    </div>
-
-                    <div class="social-login">
-                        <a href="#" class="social-btn google"><i class="fab fa-google"></i></a>
-                        <a href="#" class="social-btn facebook"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="social-btn twitter"><i class="fab fa-twitter"></i></a>
                     </div>
                 </form>
             </div>
 
             <div class="login-footer">
-                <p>Belum memiliki akun? <a class="text-create-account" href="{{ route('register') }}">Daftar Sekarang</a></p>
+                <p>Belum memiliki akun? <a class="text-create-account" href="{{ route('register') }}">Daftar
+                        Sekarang</a></p>
             </div>
         </div>
     </div>
@@ -324,4 +333,5 @@
         });
     </script>
 </body>
+
 </html>

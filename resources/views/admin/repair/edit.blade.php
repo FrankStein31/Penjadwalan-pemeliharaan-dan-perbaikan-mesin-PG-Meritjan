@@ -65,7 +65,7 @@
 
                 <div class="form-group">
                     <button type="submit" class="btn btn-success">Simpan Perubahan</button>
-                    <a href="{{ route('repair.index') }}" class="btn btn-secondary">Batal</a>
+                    <a href="{{ route('admin.repair.index') }}" class="btn btn-secondary">Batal</a>
                 </div>
             </form>
         </div>
