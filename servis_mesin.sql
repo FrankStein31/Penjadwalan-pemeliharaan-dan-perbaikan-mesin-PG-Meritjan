@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 28 Apr 2025 pada 00.56
+-- Waktu pembuatan: 16 Bulan Mei 2025 pada 00.09
 -- Versi server: 10.4.28-MariaDB
 -- Versi PHP: 8.2.4
 
@@ -75,8 +75,37 @@ INSERT INTO `jadwal_pemeliharaan` (`id`, `mesin_id`, `user_id`, `jenis`, `tangga
 (21, 3, 9, 'rutin', '2025-04-30', 'Perbaikan rutin bulanan', 'Terjadwal', '2025-04-24 12:25:02', '2025-04-24 12:25:02'),
 (22, 3, 9, 'rutin', '2025-04-30', 'Perbaikan rutin bulanan', 'Terjadwal', '2025-04-24 12:29:33', '2025-04-24 12:29:33'),
 (23, 3, 9, 'rutin', '2025-04-30', 'Perbaikan rutin', 'Selesai', '2025-04-24 12:29:33', '2025-04-24 13:02:19'),
-(24, 10, 12, 'incidental', '2025-04-29', 'Perbaikan Gear Mesin', 'Terjadwal', '2025-04-24 12:54:41', '2025-04-24 12:54:41'),
-(25, 10, 12, 'incidental', '2025-04-29', 'Perbaikan Gear Mesin', 'Terjadwal', '2025-04-24 12:54:41', '2025-04-24 12:54:41');
+(28, 10, 12, 'incidental', '2025-05-30', 'Rusak', 'Terjadwal', '2025-05-15 21:27:00', '2025-05-15 21:27:00'),
+(32, 10, 12, 'rutin', '2025-06-15', 'Rusak', 'Terjadwal', '2025-05-15 21:32:04', '2025-05-15 21:32:04'),
+(33, 10, 12, 'rutin', '2025-06-15', 'Rusak', 'Terjadwal', '2025-05-15 21:32:04', '2025-05-15 21:32:04'),
+(34, 10, 12, 'rutin', '2025-06-16', 'Rusak', 'Terjadwal', '2025-05-15 21:36:37', '2025-05-15 21:36:37'),
+(35, 10, 12, 'rutin', '2025-05-30', 'Rusak', 'Terjadwal', '2025-05-15 21:39:46', '2025-05-15 21:39:46'),
+(36, 10, 12, 'rutin', '2025-05-30', 'Rusak', 'Terjadwal', '2025-05-15 21:39:46', '2025-05-15 21:39:46');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `laporanincidental`
+--
+
+CREATE TABLE `laporanincidental` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `mesin_id` bigint(20) UNSIGNED NOT NULL,
+  `station_id` bigint(20) UNSIGNED NOT NULL,
+  `description` text NOT NULL,
+  `photo_path` varchar(255) DEFAULT NULL,
+  `requires_spare_part` tinyint(1) NOT NULL DEFAULT 0,
+  `spare_part_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `laporanincidental`
+--
+
+INSERT INTO `laporanincidental` (`id`, `mesin_id`, `station_id`, `description`, `photo_path`, `requires_spare_part`, `spare_part_id`, `created_at`, `updated_at`) VALUES
+(7, 11, 2, 'Rusak Gear', 'laporan-insidental/5rvXsRQqYCNe4sVV5wZ9ZAv3aLB4AEVtPgt0bmE5.jpg', 1, NULL, '2025-05-15 17:35:32', '2025-05-15 19:19:50');
 
 -- --------------------------------------------------------
 
@@ -183,7 +212,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (7, '2025_03_18_201834_create_screenings_table', 7),
 (8, '2025_03_20_165644_create_stations_table', 8),
 (9, '2025_03_20_172842_add_station_id_to_mesins_table', 8),
-(10, '2025_03_20_174818_add_station_id_to_users_table', 8);
+(10, '2025_03_20_174818_add_station_id_to_users_table', 8),
+(16, '2025_05_16_023403_create_table_pasca_giling', 9);
 
 -- --------------------------------------------------------
 
@@ -199,6 +229,31 @@ CREATE TABLE `notifications` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `pasca_gilings`
+--
+
+CREATE TABLE `pasca_gilings` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `station_id` bigint(20) UNSIGNED NOT NULL,
+  `mesin_id` bigint(20) UNSIGNED NOT NULL,
+  `tanggal_mulai` date NOT NULL,
+  `tanggal_selesai` date DEFAULT NULL,
+  `deskripsi` text DEFAULT NULL,
+  `status` enum('Terjadwal','Selesai','Dibatalkan') NOT NULL DEFAULT 'Terjadwal',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `pasca_gilings`
+--
+
+INSERT INTO `pasca_gilings` (`id`, `station_id`, `mesin_id`, `tanggal_mulai`, `tanggal_selesai`, `deskripsi`, `status`, `created_at`, `updated_at`) VALUES
+(2, 1, 3, '2025-05-16', '2025-05-30', 'Giling', 'Terjadwal', '2025-05-15 21:08:52', '2025-05-15 21:08:52');
 
 -- --------------------------------------------------------
 
@@ -397,7 +452,7 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id`, `user_id`, `nama`, `password`, `level`, `alamat`, `telp`, `status`, `created_at`, `updated_at`, `station_id`) VALUES
 (1, 'adm1', 'Endra', '$2y$10$UYrVzq.P/bgKfAY5aon4suc5AyZm5lQVZav3siAcAZAMMy.iWSmx2', 'Administrator', 'Kediri', '082335022640', 1, NULL, '2025-03-10 12:13:18', 1),
 (9, 'teknisi1', 'Frengki', '$2y$10$cxgNE8rd5HKi7iRRupJYHeYfWcq9xzoIfNwMW2WH6CdBE75O8/37m', 'Teknisi', 'Pare', '628883866931', 1, '2025-02-19 04:35:41', '2025-04-24 12:29:09', 1),
-(12, 'teknisi2', 'Vitas Sayang Nana', '$2y$10$nEiaR7bCMxEZeaNu6Jx18O350KIT3HanRxJrEdExFywhIT6Kr2SH2', 'Teknisi', 'Gabru', '6287754532633', 1, '2025-03-17 07:02:22', '2025-04-24 12:54:01', NULL),
+(12, 'teknisi2', 'Hafidz', '$2y$10$nEiaR7bCMxEZeaNu6Jx18O350KIT3HanRxJrEdExFywhIT6Kr2SH2', 'Teknisi', 'Kebomas, Gresik', '62881036554563', 1, '2025-03-17 07:02:22', '2025-05-15 21:23:37', NULL),
 (13, 'manajer1', 'manajer', '$2y$10$pxxV7VDE3dcrAtV/fRsLX.fW9ToJ62JHi9BqpC/LIlw8yvIC0bhXC', 'Manajer Teknisi', 'Kebomas', '089612684096', 1, '2025-03-18 06:29:46', '2025-03-18 06:29:46', NULL);
 
 --
@@ -417,6 +472,15 @@ ALTER TABLE `damage_reports`
 --
 ALTER TABLE `jadwal_pemeliharaan`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indeks untuk tabel `laporanincidental`
+--
+ALTER TABLE `laporanincidental`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `laporanincidental_mesin_id_foreign` (`mesin_id`),
+  ADD KEY `laporanincidental_station_id_foreign` (`station_id`),
+  ADD KEY `laporanincidental_spare_part_id_foreign` (`spare_part_id`);
 
 --
 -- Indeks untuk tabel `machines`
@@ -460,6 +524,14 @@ ALTER TABLE `migrations`
 ALTER TABLE `notifications`
   ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`);
+
+--
+-- Indeks untuk tabel `pasca_gilings`
+--
+ALTER TABLE `pasca_gilings`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `pasca_gilings_station_id_foreign` (`station_id`),
+  ADD KEY `pasca_gilings_mesin_id_foreign` (`mesin_id`);
 
 --
 -- Indeks untuk tabel `personal_access_tokens`
@@ -543,7 +615,13 @@ ALTER TABLE `damage_reports`
 -- AUTO_INCREMENT untuk tabel `jadwal_pemeliharaan`
 --
 ALTER TABLE `jadwal_pemeliharaan`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+
+--
+-- AUTO_INCREMENT untuk tabel `laporanincidental`
+--
+ALTER TABLE `laporanincidental`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT untuk tabel `machines`
@@ -573,13 +651,19 @@ ALTER TABLE `mesin_spare_part`
 -- AUTO_INCREMENT untuk tabel `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT untuk tabel `notifications`
 --
 ALTER TABLE `notifications`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT untuk tabel `pasca_gilings`
+--
+ALTER TABLE `pasca_gilings`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT untuk tabel `personal_access_tokens`
@@ -647,6 +731,14 @@ ALTER TABLE `damage_reports`
   ADD CONSTRAINT `damage_reports_ibfk_2` FOREIGN KEY (`technician_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
+-- Ketidakleluasaan untuk tabel `laporanincidental`
+--
+ALTER TABLE `laporanincidental`
+  ADD CONSTRAINT `laporanincidental_mesin_id_foreign` FOREIGN KEY (`mesin_id`) REFERENCES `mesins` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `laporanincidental_spare_part_id_foreign` FOREIGN KEY (`spare_part_id`) REFERENCES `spare_parts` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `laporanincidental_station_id_foreign` FOREIGN KEY (`station_id`) REFERENCES `stations` (`id`) ON DELETE CASCADE;
+
+--
 -- Ketidakleluasaan untuk tabel `maintenance_schedules`
 --
 ALTER TABLE `maintenance_schedules`
@@ -671,6 +763,13 @@ ALTER TABLE `mesin_spare_part`
 --
 ALTER TABLE `notifications`
   ADD CONSTRAINT `notifications_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Ketidakleluasaan untuk tabel `pasca_gilings`
+--
+ALTER TABLE `pasca_gilings`
+  ADD CONSTRAINT `pasca_gilings_mesin_id_foreign` FOREIGN KEY (`mesin_id`) REFERENCES `mesins` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `pasca_gilings_station_id_foreign` FOREIGN KEY (`station_id`) REFERENCES `stations` (`id`) ON DELETE CASCADE;
 
 --
 -- Ketidakleluasaan untuk tabel `repairs`

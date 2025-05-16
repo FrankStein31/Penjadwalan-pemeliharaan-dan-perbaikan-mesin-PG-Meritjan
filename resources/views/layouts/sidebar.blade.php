@@ -143,6 +143,11 @@
                         <p>Penjadwalan Perbaikan</p>
                     </a>
                 </li>
+                <li class="nav-item {{ request()->routeIs('pasca-giling.index') ? 'active' : '' }}">
+                    <a href="{{ route('pasca-giling.index') }}">
+                        <i class="fas fa-calendar-alt"></i>
+                        <p>Jadwal Pasca Giling</p>
+                    </a>
                 <li class="nav-section">
                     <span class="sidebar-mini-icon">
                         <i class="fa fa-ellipsis-h"></i>
@@ -153,6 +158,12 @@
                     <a href="{{ route('screenings.index') }}">
                         <i class="fas fa-tasks"></i>
                         <p>Pertanyaan Screening</p>
+                    </a>
+                </li>
+                <li class="nav-item {{ request()->routeIs('screenings.index') ? 'active' : '' }}">
+                    <a href="{{ route('laporan-insidental.index') }}">
+                        <i class="fas fa-bug"></i>
+                        <p>Laporan Incidental</p>
                     </a>
                 </li>
                 @endif

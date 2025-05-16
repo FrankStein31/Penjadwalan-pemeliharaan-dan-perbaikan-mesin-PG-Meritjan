@@ -14,6 +14,8 @@ use App\Http\Controllers\{
     SparePartController,
     ScreeningController,
     StationController,
+    LaporanIncidentalController,
+    PascaGilingController
 };
 use Illuminate\Routing\RouteUrlGenerator;
 
@@ -73,6 +75,25 @@ Route::post('/mesin', [MesinController::class, 'store'])->name('mesin.store');
 Route::get('mesin/edit/{id}', [App\Http\Controllers\MesinController::class, 'edit'])->name('mesin.edit');
 Route::put('mesin/edit/{id}', [App\Http\Controllers\MesinController::class, 'update'])->name('mesin.update');
 Route::delete('mesin/hapus/{id}', [App\Http\Controllers\MesinController::class, 'destroy'])->name('mesin.destroy');
+
+// Laporan Insidental Routes
+Route::get('laporan-insidental', [LaporanIncidentalController::class, 'index'])->name('laporan-insidental.index');
+Route::get('laporan-insidental/tambah', [LaporanIncidentalController::class, 'create'])->name('laporan-insidental.create');
+Route::post('laporan-insidental/store', [LaporanIncidentalController::class, 'store'])->name('laporan-insidental.store');
+Route::get('laporan-insidental/edit/{id}', [LaporanIncidentalController::class, 'edit'])->name('laporan-insidental.edit');
+Route::put('laporan-insidental/edit/{id}', [LaporanIncidentalController::class, 'update'])->name('laporan-insidental.update');
+Route::delete('laporan-insidental/hapus/{id}', [LaporanIncidentalController::class, 'destroy'])->name('laporan-insidental.destroy');
+Route::get('laporan-insidental/show/{id}', [LaporanIncidentalController::class, 'show'])->name('laporan-insidental.show');
+Route::get('/teknisi/getMesinByStation/{station_id}', [MesinController::class, 'getMesinByStation']);
+
+//Pasca Giling Routes
+Route::get('pasca-giling', [PascaGilingController::class, 'index'])->name('pasca-giling.index');
+Route::get('pasca-giling/create', [PascaGilingController::class, 'create'])->name('pasca-giling.create');
+Route::post('pasca-giling', [PascaGilingController::class, 'store'])->name('pasca-giling.store');
+Route::get('pasca-giling/{id}/edit', [PascaGilingController::class, 'edit'])->name('pasca-giling.edit');
+Route::put('pasca-giling/{id}', [PascaGilingController::class, 'update'])->name('pasca-giling.update');
+Route::delete('pasca-giling/{id}', [PascaGilingController::class, 'destroy'])->name('pasca-giling.destroy');
+Route::get('pasca-giling/{id}', [PascaGilingController::class, 'show'])->name('pasca-giling.show');
 
 // Spare Part Routes
 Route::get('spare_part', [SparePartController::class, 'index'])->name('spare_part');

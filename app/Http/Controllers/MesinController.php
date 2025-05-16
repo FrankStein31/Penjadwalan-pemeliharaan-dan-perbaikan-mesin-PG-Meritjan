@@ -86,6 +86,12 @@ class MesinController extends Controller
         return redirect()->route('mesin.show', $id)->with('success', 'Spare part berhasil ditambahkan!');
     }
 
+    public function getMesinByStation($station_id)
+    {
+        $mesins = Mesin::where('station_id', $station_id)->get();
+        return response()->json($mesins);
+    }
+
     // Perbarui jumlah spare part yang digunakan oleh mesin
     public function updateSparePart(Request $request, $mesin_id, $spare_part_id)
     {

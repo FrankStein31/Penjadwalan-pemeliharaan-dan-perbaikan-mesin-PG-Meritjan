@@ -79,10 +79,19 @@
                     <h4 class="text-section">Laporan Screening</h4>
                 </li>
 
+
+
                 <li class="nav-item {{ request()->routeIs('screenings.index') ? 'active' : '' }}">
                     <a href="{{ route('screenings.indexteknisi') }}">
                         <i class="fas fa-tasks"></i>
                         <p>Pertanyaan Screening</p>
+                    </a>
+                </li>
+
+                <li class="nav-item {{ request()->routeIs('screenings.index') ? 'active' : '' }}">
+                    <a href="{{ route('laporan-insidental.index') }}">
+                        <i class="fas fa-bug"></i>
+                        <p>Laporan Incidental</p>
                     </a>
                 </li>
 
