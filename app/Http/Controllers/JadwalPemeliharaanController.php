@@ -6,6 +6,7 @@ use App\Models\JadwalPemeliharaan;
 use App\Models\Mesin;
 use App\Models\User;
 use App\Models\Station;
+use App\Models\Pertanyaan;
 use Illuminate\Http\Request;
 
 class JadwalPemeliharaanController extends Controller
@@ -13,12 +14,15 @@ class JadwalPemeliharaanController extends Controller
     // Tampilkan semua jadwal pemeliharaan
     public function index()
     {
-        $jadwal = JadwalPemeliharaan::with(['mesin', 'user'])
+        $jadwal = JadwalPemeliharaan::with(['mesin', 'user', 'screening'])
             ->whereNot('status', 'Selesai')
             ->get();
 
-        return view('admin.pemeliharaan.index', compact('jadwal'));
+        $pertanyaan = Pertanyaan::all();
+
+        return view('admin.pemeliharaan.index', compact('jadwal','pertanyaan'));
     }
+
     public function indexteknisi()
     {
         $jadwal = JadwalPemeliharaan::with(['mesin', 'user'])
@@ -47,7 +51,6 @@ class JadwalPemeliharaanController extends Controller
         ]);
         return redirect()->back()->with('success', 'Jadwal berhasil dibatalkan.');
     }
-
 
     // Tampilkan form tambah jadwal pemeliharaan
     public function create()
@@ -78,7 +81,8 @@ class JadwalPemeliharaanController extends Controller
             'jenis' => 'required|in:rutin,incidental',
             'tanggal' => 'required|date',
             'deskripsi' => 'nullable|string',
-            'status' => 'in:Terjadwal,Selesai,Dibatalkan'
+            'status' => 'in:Terjadwal,Selesai,Dibatalkan',
+            'pertanyaan' => 'required|string',
         ]);
 
         // Simpan ke database

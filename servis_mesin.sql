@@ -189,7 +189,7 @@ CREATE TABLE `migrations` (
   `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `batch` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `migrations` */
 
@@ -203,7 +203,8 @@ insert  into `migrations`(`id`,`migration`,`batch`) values
 (7,'2025_03_18_201834_create_screenings_table',7),
 (8,'2025_03_20_165644_create_stations_table',8),
 (9,'2025_03_20_172842_add_station_id_to_mesins_table',8),
-(10,'2025_03_20_174818_add_station_id_to_users_table',8);
+(10,'2025_03_20_174818_add_station_id_to_users_table',8),
+(17,'2025_05_23_004430_add_jadwal_id_to_screenings_table',9);
 
 /*Table structure for table `notifications` */
 
@@ -271,6 +272,29 @@ CREATE TABLE `personal_access_tokens` (
 
 /*Data for the table `personal_access_tokens` */
 
+/*Table structure for table `pertanyaan` */
+
+DROP TABLE IF EXISTS `pertanyaan`;
+
+CREATE TABLE `pertanyaan` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `jadwal_pemeliharaan_id` bigint unsigned NOT NULL,
+  `getaran` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `suara` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `pelumasan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `bocor` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kerusakan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tindakan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+/*Data for the table `pertanyaan` */
+
+insert  into `pertanyaan`(`id`,`jadwal_pemeliharaan_id`,`getaran`,`suara`,`pelumasan`,`bocor`,`kerusakan`,`tindakan`,`created_at`,`updated_at`) values 
+(1,14,'Ya','Ya','Ya','Ya','Ya','Pergantian Komponen','2025-05-23 10:01:27','2025-05-23 10:01:27');
+
 /*Table structure for table `repair_assignments` */
 
 DROP TABLE IF EXISTS `repair_assignments`;
@@ -320,6 +344,7 @@ DROP TABLE IF EXISTS `screenings`;
 
 CREATE TABLE `screenings` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `jadwal_id` bigint unsigned DEFAULT NULL,
   `mesin_id` bigint unsigned NOT NULL,
   `teknisi_id` bigint unsigned NOT NULL,
   `admin_id` bigint unsigned NOT NULL,
@@ -339,17 +364,19 @@ CREATE TABLE `screenings` (
   KEY `screenings_mesin_id_foreign` (`mesin_id`),
   KEY `screenings_teknisi_id_foreign` (`teknisi_id`),
   KEY `screenings_admin_id_foreign` (`admin_id`),
+  KEY `screenings_jadwal_id_foreign` (`jadwal_id`),
   CONSTRAINT `screenings_admin_id_foreign` FOREIGN KEY (`admin_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `screenings_jadwal_id_foreign` FOREIGN KEY (`jadwal_id`) REFERENCES `jadwal_pemeliharaan` (`id`) ON DELETE CASCADE,
   CONSTRAINT `screenings_mesin_id_foreign` FOREIGN KEY (`mesin_id`) REFERENCES `mesins` (`id`) ON DELETE CASCADE,
   CONSTRAINT `screenings_teknisi_id_foreign` FOREIGN KEY (`teknisi_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `screenings` */
 
-insert  into `screenings`(`id`,`mesin_id`,`teknisi_id`,`admin_id`,`tanggal_pemeriksaan`,`status_operasional`,`kode_error`,`suara_anomali`,`getaran_berlebih`,`kebocoran`,`terakhir_perawatan`,`tindakan_rekomendasi`,`catatan`,`jawaban`,`created_at`,`updated_at`) values 
-(1,10,9,1,'2025-03-19','Tidak Normal','205',0,0,0,'2025-03-17','Penggantian Komponen','Apakah kerusakannya parah?','','2025-03-18 21:08:00','2025-03-18 21:24:21'),
-(2,10,9,1,'2025-03-21','Tidak Normal','45',1,1,1,'2025-03-04','Perbaikan','Apa?','pp','2025-03-21 05:13:02','2025-03-21 06:04:28'),
-(3,10,12,1,'2025-03-21','Normal','21',0,1,1,'2025-03-20','Lanjut Operasi','Apakah ada kerusakan lebih?','Sudah diperbaiki','2025-03-21 06:25:28','2025-03-21 06:53:32');
+insert  into `screenings`(`id`,`jadwal_id`,`mesin_id`,`teknisi_id`,`admin_id`,`tanggal_pemeriksaan`,`status_operasional`,`kode_error`,`suara_anomali`,`getaran_berlebih`,`kebocoran`,`terakhir_perawatan`,`tindakan_rekomendasi`,`catatan`,`jawaban`,`created_at`,`updated_at`) values 
+(1,NULL,10,9,1,'2025-03-19','Tidak Normal','205',0,0,0,'2025-03-17','Penggantian Komponen','Apakah kerusakannya parah?','','2025-03-18 21:08:00','2025-03-18 21:24:21'),
+(2,NULL,10,9,1,'2025-03-21','Tidak Normal','45',1,1,1,'2025-03-04','Perbaikan','Apa?','pp','2025-03-21 05:13:02','2025-03-21 06:04:28'),
+(3,NULL,10,12,1,'2025-03-21','Normal','21',0,1,1,'2025-03-20','Lanjut Operasi','Apakah ada kerusakan lebih?','Sudah diperbaiki','2025-03-21 06:25:28','2025-03-21 06:53:32');
 
 /*Table structure for table `spare_parts` */
 

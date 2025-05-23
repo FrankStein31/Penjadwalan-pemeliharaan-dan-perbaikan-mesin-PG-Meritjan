@@ -2,149 +2,48 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pertanyaan;
+use App\Models\JadwalPemeliharaan;
 use Illuminate\Http\Request;
 use App\Models\Screening;
-use App\Models\Mesin;
-use App\Models\User;
 
 class ScreeningController extends Controller
 {
-    /**
-     * Menampilkan daftar screening.
-     */
-    public function index()
+    // Simpan hasil screening
+    //buat kan public function create untuk menampilkan form screening
+    public function create($jadwalId)
     {
-        $screenings = Screening::with(['mesin', 'teknisi', 'admin'])->get();
-        return view('admin.screenings.index', compact('screenings'));
+        $jadwal = JadwalPemeliharaan::findOrFail($jadwalId);
+        return view('admin.pertanyaan.create', compact('jadwal'));
     }
-    public function indexteknisi()
-    {
-        $screenings = Screening::with(['mesin', 'teknisi', 'admin'])
-        ->where('teknisi_id', auth()->id())
-        ->get();
-        return view('admin.screenings.indexteknisi', compact('screenings'));
-    }
-
-    /**
-     * Menampilkan form tambah screening.
-     */
-    public function create()
-    {
-        $mesins = Mesin::all();
-        $teknisis = User::where('level', 'Teknisi')->get();
-        $admins = User::where('level', 'Administrator')->get();
-
-        return view('admin.screenings.create', compact('mesins', 'teknisis', 'admins'));
-    }
-
-    /**
-     * Menyimpan data screening baru.
-     */
     public function store(Request $request)
     {
         $request->validate([
-            'mesin_id' => 'required|exists:mesins,id',
-            'teknisi_id' => 'required|exists:users,id',
-            'admin_id' => 'required|exists:users,id',
-            'tanggal_pemeriksaan' => 'required|date',
-            'status_operasional' => 'required|in:Normal,Tidak Normal',
-            'kode_error' => 'nullable|string',
-            'suara_anomali' => 'boolean',
-            'getaran_berlebih' => 'boolean',
-            'kebocoran' => 'boolean',
-            'terakhir_perawatan' => 'nullable|date',
-            'tindakan_rekomendasi' => 'required|in:Lanjut Operasi,Perbaikan,Penggantian Komponen',
-            'catatan' => 'nullable|string',
-            'jawaban' => 'null|string',
+            'jadwal_pemeliharaan_id' => 'required|exists:jadwal_pemeliharaan,id', // pastikan relasi valid
+            'getaran' => 'required|in:Ya,Tidak',
+            'suara' => 'required|in:Ya,Tidak',
+            'pelumasan' => 'required|in:Ya,Tidak',
+            'bocor' => 'required|in:Ya,Tidak',
+            'kerusakan' => 'required|in:Ya,Tidak',
+            'tindakan' => 'required|in:Lanjut Operasi,Perbaikan,Pergantian Komponen',
         ]);
 
-        Screening::create($request->all());
+        Pertanyaan::create($request->all());
 
-        return redirect()->route('screenings.index')->with('success', 'Screening berhasil ditambahkan.');
+        return redirect()->back()->with('success', 'Form screening berhasil disimpan!');
     }
 
-    /**
-     * Menampilkan detail screening.
-     */
-    public function show(Screening $screening)
+    // (Opsional) Menampilkan hasil screening tertentu
+    public function show($jadwal_id)
     {
-        return view('admin.screenings.show', compact('screening'));
+        $screening = Pertanyaan::where('jadwal_id', $jadwal_id)->firstOrFail();
+
+        return view('pertanyaan.show', compact('screening'));
     }
 
-    /**
-     * Menampilkan form edit screening.
-     */
-    public function edit(Screening $screening)
+    public function jawaban($id)
     {
-        $mesins = Mesin::all();
-        $teknisis = User::where('level', 'Teknisi')->get();
-        $admins = User::where('level', 'Administrator')->get();
-
-        return view('admin.screenings.edit', compact('screening', 'mesins', 'teknisis', 'admins'));
-    }
-    public function editteknisi(Screening $screening)
-    {
-        $mesins = Mesin::all();
-        $teknisis = User::where('level', 'Teknisi')->get();
-        $admins = User::where('level', 'Administrator')->get();
-
-        return view('admin.screenings.editteknisi', compact('screening', 'mesins', 'teknisis', 'admins'));
-    }
-
-    /**
-     * Menyimpan perubahan pada screening.
-     */
-    public function update(Request $request, Screening $screening)
-    {
-        $request->validate([
-            'mesin_id' => 'required|exists:mesins,id',
-            'teknisi_id' => 'required|exists:users,id',
-            'admin_id' => 'required|exists:users,id',
-            'tanggal_pemeriksaan' => 'required|date',
-            'status_operasional' => 'required|in:Normal,Tidak Normal',
-            'kode_error' => 'nullable|string',
-            'suara_anomali' => 'boolean',
-            'getaran_berlebih' => 'boolean',
-            'kebocoran' => 'boolean',
-            'terakhir_perawatan' => 'nullable|date',
-            'tindakan_rekomendasi' => 'required|in:Lanjut Operasi,Perbaikan,Penggantian Komponen',
-            'catatan' => 'nullable|string',
-            'jawaban' => 'nullable|string'
-        ]);
-
-        $screening->update($request->all());
-
-        return redirect()->route('screenings.index')->with('success', 'Screening berhasil diperbarui.');
-    }
-    public function updateteknisi(Request $request, Screening $screening)
-    {
-        $request->validate([
-            'mesin_id' => 'required|exists:mesins,id',
-            'teknisi_id' => 'required|exists:users,id',
-            'admin_id' => 'required|exists:users,id',
-            'tanggal_pemeriksaan' => 'required|date',
-            'status_operasional' => 'required|in:Normal,Tidak Normal',
-            'kode_error' => 'nullable|string',
-            'suara_anomali' => 'boolean',
-            'getaran_berlebih' => 'boolean',
-            'kebocoran' => 'boolean',
-            'terakhir_perawatan' => 'nullable|date',
-            'tindakan_rekomendasi' => 'required|in:Lanjut Operasi,Perbaikan,Penggantian Komponen',
-            'catatan' => 'nullable|string',
-            'jawaban' => 'nullable|string'
-        ]);
-
-        $screening->update($request->all());
-
-        return redirect()->route('screenings.indexteknisi')->with('success', 'Screening berhasil diperbarui.');
-    }
-
-    /**
-     * Menghapus screening.
-     */
-    public function destroy(Screening $screening)
-    {
-        $screening->delete();
-        return redirect()->route('screenings.index')->with('success', 'Screening berhasil dihapus.');
+        $pertanyaan = JadwalPemeliharaan::join("pertanyaan", "jadwal_pemeliharaan.id", "=", "pertanyaan.jadwal_pemeliharaan_id")->where("jadwal_pemeliharaan.id", "=", $id)->get(); // atau sesuaikan field relasinya
+        return view('admin.pertanyaan.jawaban', compact('pertanyaan'));
     }
 }

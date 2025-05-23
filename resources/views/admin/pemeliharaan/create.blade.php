@@ -10,7 +10,7 @@
         <div class="card-body">
             <form action="{{ route('admin.jadwal.store') }}" method="POST">
                 @csrf
-                
+
                 <div class="form-group">
                     <label for="station_id">Pilih Station</label>
                     <select id="station_id" class="form-control" required>
@@ -63,6 +63,19 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="pertanyaan">Pertanyaan</label>
+                    <select name="pertanyaan" id="pertanyaan" class="form-control" required>
+                        <option value="Apakah ada getaran berlebih?">Apakah ada getaran berlebih?</option>
+                        <option value="Apakah ada suara asing dari dalam mesin?">Apakah ada suara asing dari dalam mesin?
+                        </option>
+                        <option value="Apakah oli dan stempet sudah dicek dan diganti?">Apakah oli dan stempet sudah dicek
+                            dan diganti?</option>
+                        <option value="Apakah ada kebocoran?">Apakah ada kebocoran?</option>
+                        <option value="Apakah ada kerusakan lainnya?">Apakah ada kerusakan lainnya?</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
                     <button type="submit" class="btn btn-success">Simpan</button>
                     <a href="{{ route('admin.jadwal.index') }}" class="btn btn-secondary">Batal</a>
                 </div>
@@ -71,74 +84,77 @@
     </div>
 
     <script>
-    document.getElementById('station_id').addEventListener('change', function () {
-        var station_id = this.value;
-        var mesinSelect = document.getElementById('mesin_id');
-        var teknisiSelect = document.getElementById('user_id');
-        
-        // Reset dropdowns
-        mesinSelect.innerHTML = '<option value="">Pilih Mesin</option>';
-        teknisiSelect.innerHTML = '<option value="">Pilih Teknisi</option>';
-        
-        // Disable dropdowns if no station selected
-        if (!station_id) {
-            mesinSelect.disabled = true;
-            teknisiSelect.disabled = true;
-            return;
-        }
-        
-        // Get mesin by station
-        fetch('/admin/getMesinByStation/' + station_id)
-            .then(response => response.json())
-            .then(data => {
-                mesinSelect.disabled = false;
-                if (data.length > 0) {
-                    data.forEach(mesin => {
-                        mesinSelect.innerHTML += `<option value="${mesin.id}">${mesin.nama}</option>`;
-                    });
-                } else {
-                    mesinSelect.innerHTML += '<option value="">Tidak ada mesin tersedia</option>';
-                }
-            })
-            .catch(error => console.error('Error:', error));
-            
-        // Get teknisi by station
-        fetch('/admin/getTeknisiByStation/' + station_id)
-            .then(response => response.json())
-            .then(data => {
-                teknisiSelect.disabled = false;
-                if (data.length > 0) {
-                    data.forEach(teknisi => {
-                        teknisiSelect.innerHTML += `<option value="${teknisi.id}">${teknisi.nama}</option>`;
-                    });
-                } else {
-                    teknisiSelect.innerHTML += '<option value="">Tidak ada teknisi tersedia</option>';
-                }
-            })
-            .catch(error => console.error('Error:', error));
-    });
-    
-    document.getElementById('mesin_id').addEventListener('change', function () {
-        var mesin_id = this.value;
-        var teknisiSelect = document.getElementById('user_id');
-        
-        // Reset dropdown
-        teknisiSelect.innerHTML = '<option value="">Pilih Teknisi</option>';
-        
-        if (mesin_id) {
-            fetch('/admin/getTeknisiByMesin/' + mesin_id)
+        document.getElementById('station_id').addEventListener('change', function() {
+            var station_id = this.value;
+            var mesinSelect = document.getElementById('mesin_id');
+            var teknisiSelect = document.getElementById('user_id');
+
+            // Reset dropdowns
+            mesinSelect.innerHTML = '<option value="">Pilih Mesin</option>';
+            teknisiSelect.innerHTML = '<option value="">Pilih Teknisi</option>';
+
+            // Disable dropdowns if no station selected
+            if (!station_id) {
+                mesinSelect.disabled = true;
+                teknisiSelect.disabled = true;
+                return;
+            }
+
+            // Get mesin by station
+            fetch('/admin/getMesinByStation/' + station_id)
                 .then(response => response.json())
                 .then(data => {
+                    mesinSelect.disabled = false;
+                    if (data.length > 0) {
+                        data.forEach(mesin => {
+                            mesinSelect.innerHTML +=
+                                `<option value="${mesin.id}">${mesin.nama}</option>`;
+                        });
+                    } else {
+                        mesinSelect.innerHTML += '<option value="">Tidak ada mesin tersedia</option>';
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+
+            // Get teknisi by station
+            fetch('/admin/getTeknisiByStation/' + station_id)
+                .then(response => response.json())
+                .then(data => {
+                    teknisiSelect.disabled = false;
                     if (data.length > 0) {
                         data.forEach(teknisi => {
-                            teknisiSelect.innerHTML += `<option value="${teknisi.id}">${teknisi.nama}</option>`;
+                            teknisiSelect.innerHTML +=
+                                `<option value="${teknisi.id}">${teknisi.nama}</option>`;
                         });
                     } else {
                         teknisiSelect.innerHTML += '<option value="">Tidak ada teknisi tersedia</option>';
                     }
                 })
                 .catch(error => console.error('Error:', error));
-        }
-    });
+        });
+
+        document.getElementById('mesin_id').addEventListener('change', function() {
+            var mesin_id = this.value;
+            var teknisiSelect = document.getElementById('user_id');
+
+            // Reset dropdown
+            teknisiSelect.innerHTML = '<option value="">Pilih Teknisi</option>';
+
+            if (mesin_id) {
+                fetch('/admin/getTeknisiByMesin/' + mesin_id)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.length > 0) {
+                            data.forEach(teknisi => {
+                                teknisiSelect.innerHTML +=
+                                    `<option value="${teknisi.id}">${teknisi.nama}</option>`;
+                            });
+                        } else {
+                            teknisiSelect.innerHTML += '<option value="">Tidak ada teknisi tersedia</option>';
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+        });
     </script>
 @endsection

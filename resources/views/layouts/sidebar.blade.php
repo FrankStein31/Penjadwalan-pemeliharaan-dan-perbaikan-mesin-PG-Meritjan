@@ -152,14 +152,14 @@
                     <span class="sidebar-mini-icon">
                         <i class="fa fa-ellipsis-h"></i>
                     </span>
-                    <h4 class="text-section">Laporan Screening</h4>
+                    <h4 class="text-section">Laporan</h4>
                 </li>
-                <li class="nav-item {{ request()->routeIs('screenings.index') ? 'active' : '' }}">
+                {{-- <li class="nav-item {{ request()->routeIs('screenings.index') ? 'active' : '' }}">
                     <a href="{{ route('screenings.index') }}">
                         <i class="fas fa-tasks"></i>
                         <p>Pertanyaan Screening</p>
                     </a>
-                </li>
+                </li> --}}
                 <li class="nav-item {{ request()->routeIs('screenings.index') ? 'active' : '' }}">
                     <a href="{{ route('laporan-insidental.index') }}">
                         <i class="fas fa-bug"></i>

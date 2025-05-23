@@ -17,7 +17,8 @@ class JadwalPemeliharaan extends Model
         'jenis',
         'tanggal',
         'deskripsi',
-        'status'
+        'status',
+        'pertanyaan',
     ];
 
     // Relasi ke tabel mesin
@@ -25,10 +26,20 @@ class JadwalPemeliharaan extends Model
     {
         return $this->belongsTo(Mesin::class, 'mesin_id');
     }
+    public function pertanyaan()
+{
+    return $this->hasOne(Pertanyaan::class, 'jadwal_pemeliharaan_id');
+}
+
 
     // Relasi ke tabel user (teknisi)
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function screening()
+    {
+        return $this->hasOne(Screening::class, 'jadwal_id');
     }
 }

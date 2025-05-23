@@ -81,12 +81,12 @@
 
 
 
-                <li class="nav-item {{ request()->routeIs('screenings.index') ? 'active' : '' }}">
+                {{-- <li class="nav-item {{ request()->routeIs('screenings.index') ? 'active' : '' }}">
                     <a href="{{ route('screenings.indexteknisi') }}">
                         <i class="fas fa-tasks"></i>
                         <p>Pertanyaan Screening</p>
                     </a>
-                </li>
+                </li> --}}
 
                 <li class="nav-item {{ request()->routeIs('screenings.index') ? 'active' : '' }}">
                     <a href="{{ route('laporan-insidental.index') }}">

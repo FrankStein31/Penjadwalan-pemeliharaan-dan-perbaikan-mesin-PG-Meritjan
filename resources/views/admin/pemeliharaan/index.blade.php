@@ -6,10 +6,10 @@
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
             <h4 class="m-0 font-weight-bold text-white">JADWAL PEMELIHARAAN</h4>
-            @if(auth()->user()->level === 'Administrator')
-            <a href="{{ route('admin.jadwal.create') }}" class="btn btn-white btn-sm font-weight-bold shadow-sm">
-                <i class="fas fa-plus fa-sm text-dark-50 mr-2"></i>Tambah Jadwal
-            </a>
+            @if (auth()->user()->level === 'Administrator')
+                <a href="{{ route('admin.jadwal.create') }}" class="btn btn-white btn-sm font-weight-bold shadow-sm">
+                    <i class="fas fa-plus fa-sm text-dark-50 mr-2"></i>Tambah Jadwal
+                </a>
             @endif
         </div>
         <div class="card-body">
@@ -31,65 +31,89 @@
                     <tbody>
                         @foreach ($jadwal as $item)
                             <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $item->mesin->nama ?? '-' }}</td>
-                                <td>{{ $item->user->nama ?? '-'}}</td>
-                                <td>{{ ucfirst($item->jenis) }}</td>
-                                <td>{{ \Carbon\Carbon::parse($item->tanggal)->format('d M Y') }}</td>
-                                <td>{{ $item->deskripsi ?? '-' }}</td>
-                                <td>
+                                <td class="text-center">{{ $loop->iteration }}</td>
+                                <td class="text-center">{{ $item->mesin->nama ?? '-' }}</td>
+                                <td class="text-center">{{ $item->user->nama ?? '-' }}</td>
+                                <td class="text-center">{{ ucfirst($item->jenis) }}</td>
+                                <td class="text-center">{{ \Carbon\Carbon::parse($item->tanggal)->format('d M Y') }}</td>
+                                <td class="text-center">{{ $item->deskripsi ?? '-' }}</td>
+                                <td class="text-center">
                                     <span
                                         class="badge
-                                        @if ($item->status == 'Terjadwal') badge-primary
-                                        @elseif($item->status == 'Selesai') badge-success
-                                        @else badge-danger @endif">
+                    @if ($item->status == 'Terjadwal') badge-primary
+                    @elseif($item->status == 'Selesai') badge-success
+                    @else badge-danger @endif">
                                         {{ $item->status }}
                                     </span>
                                 </td>
+
+                                {{-- Kolom Aksi --}}
                                 <td class="text-center">
-                                    @if(auth()->user()->level === 'Teknisi')
-                                    <form action="{{ route('admin.jadwal.selesai', $item->id) }}" method="POST" style="display: inline;">
-                                        @csrf
-                                        @method('PUT')
-                                        <button type="submit" class="btn btn-success btn-sm btn-circle"
-                                            onclick="return confirm('Apakah Anda yakin ingin menyelesaikan jadwal ini?');">
-                                            Selesai
-                                        </button>
-                                    </form>
-                                    <form action="{{ route('admin.jadwal.dibatalkan', $item->id) }}" method="POST" style="display: inline;">
-                                        @csrf
-                                        @method('PUT')
-                                        <button type="submit" class="btn btn-danger btn-sm btn-circle"
-                                            onclick="return confirm('Apakah Anda yakin ingin membatalkan jadwal ini?');">
-                                            Dibatalkan
-                                        </button>
-                                    </form>
+                                    {{-- @if ($item->screening)
+                                        <a href="{{ route('screening.show', $item->screening->id) }}"
+                                            class="btn btn-sm btn-info">
+                                            Lihat Screening
+                                        </a>
+                                    @else
+                                        <a href="{{ route('screening.create', $item->id) }}" class="btn btn-sm btn-primary">
+                                            Tambah Screening
+                                        </a>
+                                    @endif --}}
+                                    @if (auth()->user()->level === 'Teknisi')
+                                        <a href="{{ route('screening.create', $item->id) }}" class="btn btn-sm btn-primary">
+                                            Jawab Screening
+                                        </a>
+                                        <form action="{{ route('admin.jadwal.selesai', $item->id) }}" method="POST"
+                                            style="display: inline;">
+                                            @csrf
+                                            @method('PUT')
+                                            <button type="submit" class="btn btn-success btn-sm btn-circle"
+                                                onclick="return confirm('Apakah Anda yakin ingin menyelesaikan jadwal ini?');">
+                                                Selesai
+                                            </button>
+                                        </form>
+                                        <form action="{{ route('admin.jadwal.dibatalkan', $item->id) }}" method="POST"
+                                            style="display: inline;">
+                                            @csrf
+                                            @method('PUT')
+                                            <button type="submit" class="btn btn-danger btn-sm btn-circle"
+                                                onclick="return confirm('Apakah Anda yakin ingin membatalkan jadwal ini?');">
+                                                Dibatalkan
+                                            </button>
+                                        </form>
                                     @endif
-                                    @if(auth()->user()->level === 'Administrator')
-                                    <a href="{{ route('admin.jadwal.edit', $item->id) }}"
-                                        class="btn btn-warning btn-sm btn-circle" data-toggle="tooltip" title="Edit">
-                                        <i class="fas fa-pencil-alt"></i>
-                                    </a>
-                                    <form action="{{ route('admin.jadwal.delete', $item->id) }}" method="POST"
-                                        style="display: inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm btn-circle"
-                                            data-toggle="tooltip" title="Hapus"
-                                            onclick="return confirm('Anda yakin ingin menghapus jadwal ini?');">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
+
+                                    @if (auth()->user()->level === 'Administrator')
+                                        <a href="{{ route('screening.jawaban', $item->id) }}" class="btn btn-sm btn-info">
+                                            Lihat Screening
+                                        </a>
+
+
+                                        <a href="{{ route('admin.jadwal.edit', $item->id) }}"
+                                            class="btn btn-warning btn-sm btn-circle" data-toggle="tooltip" title="Edit">
+                                            <i class="fas fa-pencil-alt"></i>
+                                        </a>
+                                        <form action="{{ route('admin.jadwal.delete', $item->id) }}" method="POST"
+                                            style="display: inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm btn-circle"
+                                                data-toggle="tooltip" title="Hapus"
+                                                onclick="return confirm('Anda yakin ingin menghapus jadwal ini?');">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
                                     @endif
                                 </td>
                             </tr>
                         @endforeach
                     </tbody>
+
                 </table>
             </div>
-
         </div>
     </div>
+
 @endsection
 
 @push('styles')

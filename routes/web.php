@@ -103,11 +103,27 @@ Route::get('spare_part/edit/{id}', [SparePartController::class, 'edit'])->name('
 Route::put('spare_part/edit/{id}', [SparePartController::class, 'update'])->name('spare_part.update');
 Route::delete('spare_part/hapus/{id}', [SparePartController::class, 'destroy'])->name('spare_part.destroy');
 
-Route::resource('screenings', ScreeningController::class);
 
-Route::get('screenings-teknisi', [ScreeningController::class, 'indexteknisi'])->name('screenings.indexteknisi');
-Route::get('screenings-teknisi/edit/{screening}', [ScreeningController::class, 'editteknisi'])->name('screenings.editteknisi');
-Route::put('screenings-teknisi/edit/{screening}', [ScreeningController::class, 'updateteknisi'])->name('screenings.updateteknisi');
+Route::get('/screening/create/{jadwal_id}', [ScreeningController::class, 'create'])->name('screening.create');
+Route::post('/screening/store', [ScreeningController::class, 'store'])->name('screening.store');
+Route::get('/screening/{jadwal_id}', [ScreeningController::class, 'show'])->name('screening.show');
+Route::get('/screening/jawaban/{id}', [ScreeningController::class, 'jawaban'])->name('screening.jawaban');
+
+
+
+// Buat resource tapi kecuali 'create'
+// Route::resource('screenings', ScreeningController::class)->except(['create']);
+
+// // Route create dengan parameter jadwalId
+// Route::get('screenings/create/{jadwalId}', [ScreeningController::class, 'create'])->name('screenings.create');
+
+// // Route lainnya tetap seperti biasa
+// Route::get('screenings-teknisi', [ScreeningController::class, 'indexteknisi'])->name('screenings.indexteknisi');
+// Route::get('screenings-teknisi/edit/{screening}', [ScreeningController::class, 'editteknisi'])->name('screenings.editteknisi');
+// Route::put('screenings-teknisi/edit/{screening}', [ScreeningController::class, 'updateteknisi'])->name('screenings.updateteknisi');
+// Route::get('screenings/{id}', [ScreeningController::class, 'show'])->name('screenings.show');
+
+
 // Dashboard Routes
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');

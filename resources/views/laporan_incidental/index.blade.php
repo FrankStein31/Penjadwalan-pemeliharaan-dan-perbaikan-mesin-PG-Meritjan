@@ -39,7 +39,7 @@
                                     @if ($item->photo_path && Storage::disk('public')->exists($item->photo_path))
                                         <a href="{{ asset('storage/' . $item->photo_path) }}" target="_blank">
                                             <img src="{{ asset('storage/' . $item->photo_path) }}" alt="Foto Bukti"
-                                                style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
+                                                style="width: 100px; height: 100px; object-fit: cover; border-radius: 5px;">
                                         </a>
                                     @else
                                         <span>-</span>
@@ -48,7 +48,7 @@
                                 <td class="text-center">
                                     @if ($item->requires_spare_part == 1)
                                         {{-- <span class="badge badge-warning">Ya</span> --}}
-                                        <span class="badge badge-warning">Ya</span>
+                                        <span class="badge badge-warning">Iya</span>
                                     @else
                                         <span class="badge badge-secondary">Tidak</span>
                                     @endif
