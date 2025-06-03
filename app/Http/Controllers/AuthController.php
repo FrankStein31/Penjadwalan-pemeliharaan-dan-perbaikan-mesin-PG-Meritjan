@@ -63,7 +63,7 @@ class AuthController extends Controller
                 'user_id' => 'Akun Anda tidak aktif. Hubungi admin untuk aktivasi.',
             ]);
         }
-
+        Auth::login($user);
         $request->session()->regenerate();
         return redirect()->route('dashboard');
     }
