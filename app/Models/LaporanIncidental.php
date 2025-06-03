@@ -15,6 +15,7 @@ class LaporanIncidental extends Model
         'description',
         'photo_path',
         'requires_spare_part',
+        'status'
     ];
 
     public function mesin()

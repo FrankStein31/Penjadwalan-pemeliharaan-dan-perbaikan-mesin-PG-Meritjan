@@ -66,45 +66,45 @@ class LaporanIncidentalController extends Controller
     }
 
     public function edit($id)
-{
-    $laporan = LaporanIncidental::findOrFail($id);
-    $stations = Station::all();
-    $mesins = Mesin::all();
-    // Kalau perlu data lain, tambahkan di sini
+    {
+        $laporan = LaporanIncidental::findOrFail($id);
+        $stations = Station::all();
+        $mesins = Mesin::all();
+        // Kalau perlu data lain, tambahkan di sini
 
-    return view('laporan_incidental.edit', compact('laporan', 'stations', 'mesins'));
-}
-
-public function update(Request $request, $id)
-{
-    $request->validate([
-        'mesin_id' => 'required|integer|exists:mesins,id',
-        'station_id' => 'required|integer|exists:stations,id',
-        'description' => 'required|string',
-        'photo_path' => 'nullable|image|max:2048',
-        'requires_spare_part' => 'nullable|boolean',
-    ]);
-
-    $laporan = LaporanIncidental::findOrFail($id);
-
-    if ($request->hasFile('photo_path')) {
-        // Hapus foto lama jika ada
-        if ($laporan->photo_path) {
-            Storage::disk('public')->delete($laporan->photo_path);
-        }
-        $path = $request->file('photo_path')->store('laporan-insidental', 'public');
-        $laporan->photo_path = $path;
+        return view('laporan_incidental.edit', compact('laporan', 'stations', 'mesins'));
     }
 
-    $laporan->mesin_id = $request->mesin_id;
-    $laporan->station_id = $request->station_id;
-    $laporan->description = $request->description;
-    $laporan->requires_spare_part = $request->requires_spare_part ?? false;
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'mesin_id' => 'required|integer|exists:mesins,id',
+            'station_id' => 'required|integer|exists:stations,id',
+            'description' => 'required|string',
+            'photo_path' => 'nullable|image|max:2048',
+            'requires_spare_part' => 'nullable|boolean',
+        ]);
 
-    $laporan->save();
+        $laporan = LaporanIncidental::findOrFail($id);
 
-    return redirect()->route('laporan-insidental.index')->with('success', 'Laporan berhasil diperbarui.');
-}
+        if ($request->hasFile('photo_path')) {
+            // Hapus foto lama jika ada
+            if ($laporan->photo_path) {
+                Storage::disk('public')->delete($laporan->photo_path);
+            }
+            $path = $request->file('photo_path')->store('laporan-insidental', 'public');
+            $laporan->photo_path = $path;
+        }
+
+        $laporan->mesin_id = $request->mesin_id;
+        $laporan->station_id = $request->station_id;
+        $laporan->description = $request->description;
+        $laporan->requires_spare_part = $request->requires_spare_part ?? false;
+
+        $laporan->save();
+
+        return redirect()->route('laporan-insidental.index')->with('success', 'Laporan berhasil diperbarui.');
+    }
 
 
     // Hapus laporan
@@ -121,4 +121,40 @@ public function update(Request $request, $id)
 
         return redirect()->route('laporan-insidental.index')->with('success', 'Laporan berhasil dihapus.');
     }
+
+    public function approve($id)
+    {
+        $laporan = LaporanIncidental::findOrFail($id);
+        $laporan->status = 'Setuju';
+        $laporan->save();
+
+        return redirect()->back()->with('success', 'Laporan telah disetujui.');
+    }
+
+    public function reject($id)
+    {
+        $laporan = LaporanIncidental::findOrFail($id);
+        $laporan->status = 'Tolak';
+        $laporan->save();
+
+        return redirect()->back()->with('success', 'Laporan telah ditolak.');
+    }
+
+    public function selesai($id)
+    {
+        $laporan = LaporanIncidental::findOrFail($id);
+        $laporan->status = 'Selesai';
+        $laporan->save();
+
+        return redirect()->back()->with('success', 'Laporan telah diselesaikan.');
+    }
+
+    public function updateStatus(Request $request, $id)
+{
+    $laporan = LaporanIncidental::findOrFail($id);
+    $laporan->status = $request->status;
+    $laporan->save();
+
+    return redirect()->back()->with('success', 'Status laporan berhasil diubah!');
+}
 }

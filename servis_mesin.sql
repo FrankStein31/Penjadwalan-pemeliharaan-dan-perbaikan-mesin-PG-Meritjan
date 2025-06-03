@@ -1,5 +1,5 @@
 /*
-SQLyog Enterprise v13.1.1 (64 bit)
+SQLyog Enterprise
 MySQL - 8.0.30 : Database - servis_mesin
 *********************************************************************
 */
@@ -49,22 +49,24 @@ CREATE TABLE `jadwal_pemeliharaan` (
   `tanggal` date NOT NULL,
   `deskripsi` text COLLATE utf8mb4_unicode_ci,
   `status` enum('Terjadwal','Selesai','Dibatalkan') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Terjadwal',
+  `pertanyaan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `jadwal_pemeliharaan` */
 
-insert  into `jadwal_pemeliharaan`(`id`,`mesin_id`,`user_id`,`jenis`,`tanggal`,`deskripsi`,`status`,`created_at`,`updated_at`) values 
-(8,3,9,'incidental','2025-03-19','Rusak Gear','Selesai','2025-03-18 18:38:21','2025-03-19 22:09:55'),
-(9,10,12,'rutin','2025-03-20','Rusak Total','Selesai','2025-03-19 22:01:37','2025-03-19 22:15:24'),
-(10,10,12,'incidental','2025-03-20','Rusak Gear','Selesai','2025-03-19 22:19:29','2025-03-19 22:46:42'),
-(11,10,12,'rutin','2025-03-20','Rusak Sebagian','Selesai','2025-03-19 22:19:59','2025-03-19 22:36:05'),
-(12,10,12,'rutin','2025-03-20','Rusak','Selesai','2025-03-19 22:50:17','2025-03-19 22:50:33'),
-(13,10,12,'rutin','2025-03-20','Rusak','Selesai','2025-03-20 05:56:37','2025-03-20 05:56:48'),
-(14,10,12,'rutin','2025-03-20','Rusak','Terjadwal','2025-03-20 05:57:51','2025-03-20 05:57:51'),
-(15,11,14,'rutin','2025-03-21','asdas','Terjadwal','2025-03-21 11:26:24','2025-03-21 11:26:24');
+insert  into `jadwal_pemeliharaan`(`id`,`mesin_id`,`user_id`,`jenis`,`tanggal`,`deskripsi`,`status`,`pertanyaan`,`created_at`,`updated_at`) values 
+(8,3,9,'incidental','2025-03-19','Rusak Gear','Selesai','','2025-03-18 18:38:21','2025-03-19 22:09:55'),
+(9,10,12,'rutin','2025-03-20','Rusak Total','Selesai','','2025-03-19 22:01:37','2025-03-19 22:15:24'),
+(10,10,12,'incidental','2025-03-20','Rusak Gear','Selesai','','2025-03-19 22:19:29','2025-03-19 22:46:42'),
+(11,10,12,'rutin','2025-03-20','Rusak Sebagian','Selesai','','2025-03-19 22:19:59','2025-03-19 22:36:05'),
+(12,10,12,'rutin','2025-03-20','Rusak','Selesai','','2025-03-19 22:50:17','2025-03-19 22:50:33'),
+(13,10,12,'rutin','2025-03-20','Rusak','Selesai','','2025-03-20 05:56:37','2025-03-20 05:56:48'),
+(23,3,9,'rutin','2025-04-30','Perbaikan rutin','Selesai','','2025-04-24 19:29:33','2025-04-24 20:02:19'),
+(38,3,9,'rutin','2025-05-25','Rusak Gearr','Terjadwal','','2025-05-22 21:00:21','2025-05-23 05:00:19'),
+(39,3,9,'rutin','2025-05-25','Rusak','Terjadwal','','2025-05-22 21:08:12','2025-05-22 21:08:12');
 
 /*Table structure for table `laporanincidental` */
 
@@ -77,6 +79,7 @@ CREATE TABLE `laporanincidental` (
   `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `photo_path` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `requires_spare_part` tinyint(1) NOT NULL DEFAULT '0',
+  `status` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT 'Dalam Peninjauan',
   `spare_part_id` bigint unsigned DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -87,12 +90,13 @@ CREATE TABLE `laporanincidental` (
   CONSTRAINT `laporanincidental_mesin_id_foreign` FOREIGN KEY (`mesin_id`) REFERENCES `mesins` (`id`) ON DELETE CASCADE,
   CONSTRAINT `laporanincidental_spare_part_id_foreign` FOREIGN KEY (`spare_part_id`) REFERENCES `spare_parts` (`id`) ON DELETE SET NULL,
   CONSTRAINT `laporanincidental_station_id_foreign` FOREIGN KEY (`station_id`) REFERENCES `stations` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `laporanincidental` */
 
-insert  into `laporanincidental`(`id`,`mesin_id`,`station_id`,`description`,`photo_path`,`requires_spare_part`,`spare_part_id`,`created_at`,`updated_at`) values 
-(7,11,2,'Rusak Gear','laporan-insidental/5rvXsRQqYCNe4sVV5wZ9ZAv3aLB4AEVtPgt0bmE5.png',1,NULL,'2025-05-16 00:35:32','2025-05-16 02:19:50');
+insert  into `laporanincidental`(`id`,`mesin_id`,`station_id`,`description`,`photo_path`,`requires_spare_part`,`status`,`spare_part_id`,`created_at`,`updated_at`) values 
+(7,11,2,'Rusak Gear','laporan-insidental/5rvXsRQqYCNe4sVV5wZ9ZAv3aLB4AEVtPgt0bmE5.jpg',1,'Selesai',NULL,'2025-05-16 00:35:32','2025-06-02 23:33:13'),
+(8,3,1,'Rusak Berat','laporan-insidental/1r4eDDiqB9UjxG23Wr1ZPL5N2XfuRW9cKJLvO0sC.png',0,'Dalam Peninjauan',NULL,'2025-06-02 23:13:15','2025-06-02 23:13:15');
 
 /*Table structure for table `machines` */
 
@@ -204,7 +208,8 @@ insert  into `migrations`(`id`,`migration`,`batch`) values
 (8,'2025_03_20_165644_create_stations_table',8),
 (9,'2025_03_20_172842_add_station_id_to_mesins_table',8),
 (10,'2025_03_20_174818_add_station_id_to_users_table',8),
-(17,'2025_05_23_004430_add_jadwal_id_to_screenings_table',9);
+(16,'2025_05_16_023403_create_table_pasca_giling',9),
+(17,'2025_05_23_004430_add_jadwal_id_to_screenings_table',10);
 
 /*Table structure for table `notifications` */
 
@@ -285,15 +290,17 @@ CREATE TABLE `pertanyaan` (
   `bocor` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `kerusakan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `tindakan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `komponen` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `pertanyaan` */
 
-insert  into `pertanyaan`(`id`,`jadwal_pemeliharaan_id`,`getaran`,`suara`,`pelumasan`,`bocor`,`kerusakan`,`tindakan`,`created_at`,`updated_at`) values 
-(1,14,'Ya','Ya','Ya','Ya','Ya','Pergantian Komponen','2025-05-23 10:01:27','2025-05-23 10:01:27');
+insert  into `pertanyaan`(`id`,`jadwal_pemeliharaan_id`,`getaran`,`suara`,`pelumasan`,`bocor`,`kerusakan`,`tindakan`,`komponen`,`created_at`,`updated_at`) values 
+(1,38,'Tidak','Tidak','Tidak','Tidak','Ya','Perbaikan',NULL,'2025-05-23 02:49:31','2025-05-23 02:49:31'),
+(2,38,'Ya','Ya','Ya','Ya','Ya','Pergantian Komponen','Roll gilingan (001)','2025-06-02 22:42:20','2025-06-02 22:42:20');
 
 /*Table structure for table `repair_assignments` */
 
@@ -337,6 +344,33 @@ CREATE TABLE `repairs` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 /*Data for the table `repairs` */
+
+/*Table structure for table `request_parts` */
+
+DROP TABLE IF EXISTS `request_parts`;
+
+CREATE TABLE `request_parts` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `teknisi_id` int NOT NULL,
+  `jumlah` int DEFAULT NULL,
+  `keterangan` text COLLATE utf8mb4_general_ci,
+  `status` varchar(255) COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'Pending',
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  `mesin_id` bigint unsigned DEFAULT NULL,
+  `spare_part_id` bigint unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_request_parts_mesin_id` (`mesin_id`),
+  KEY `fk_request_parts_spare_part_id` (`spare_part_id`),
+  CONSTRAINT `fk_request_parts_mesin_id` FOREIGN KEY (`mesin_id`) REFERENCES `mesins` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `fk_request_parts_spare_part_id` FOREIGN KEY (`spare_part_id`) REFERENCES `spare_parts` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+/*Data for the table `request_parts` */
+
+insert  into `request_parts`(`id`,`teknisi_id`,`jumlah`,`keterangan`,`status`,`created_at`,`updated_at`,`mesin_id`,`spare_part_id`) values 
+(9,9,5,'Baru','Ditolak','2025-06-02 22:40:49','2025-06-02 22:41:37',3,3),
+(10,9,6,'Lama','Disetujui','2025-06-02 22:41:30','2025-06-02 22:41:44',11,3);
 
 /*Table structure for table `screenings` */
 
@@ -415,8 +449,8 @@ CREATE TABLE `stations` (
 /*Data for the table `stations` */
 
 insert  into `stations`(`id`,`nama_station`,`created_at`,`updated_at`) values 
-(1,'qqqq','2025-03-21 10:33:46','2025-03-21 11:16:42'),
-(2,'bbbb','2025-03-21 10:33:57','2025-03-21 10:33:57');
+(1,'Station Penggilingan Awal','2025-03-21 10:33:46','2025-04-24 19:47:38'),
+(2,'Station Pemanasan Nira','2025-03-21 10:33:57','2025-04-24 19:48:19');
 
 /*Table structure for table `teknisi_mesin` */
 
@@ -437,9 +471,7 @@ CREATE TABLE `teknisi_mesin` (
 
 insert  into `teknisi_mesin`(`id`,`user_id`,`mesin_id`,`created_at`,`updated_at`) values 
 (2,9,3,'2025-03-17 14:02:37','2025-03-17 14:02:37'),
-(3,12,10,'2025-03-17 14:02:47','2025-03-17 14:02:47'),
-(4,14,11,'2025-03-21 11:24:51','2025-03-21 11:24:51'),
-(5,15,11,'2025-03-21 11:25:16','2025-03-21 11:25:16');
+(3,12,10,'2025-03-17 14:02:47','2025-03-17 14:02:47');
 
 /*Table structure for table `tugas_perbaikan` */
 
@@ -487,12 +519,10 @@ CREATE TABLE `users` (
 /*Data for the table `users` */
 
 insert  into `users`(`id`,`user_id`,`nama`,`password`,`level`,`alamat`,`telp`,`status`,`created_at`,`updated_at`,`station_id`) values 
-(1,'adm1','Endra','$2y$10$UYrVzq.P/bgKfAY5aon4suc5AyZm5lQVZav3siAcAZAMMy.iWSmx2','Administrator','Kediri','082335022640',1,NULL,'2025-03-10 19:13:18',NULL),
-(9,'teknisi1','teknisi1','$2y$10$cxgNE8rd5HKi7iRRupJYHeYfWcq9xzoIfNwMW2WH6CdBE75O8/37m','Teknisi','Malang','052314758596',1,'2025-02-19 11:35:41','2025-03-10 19:14:30',NULL),
-(12,'teknisi2','teknisi2','$2y$10$nEiaR7bCMxEZeaNu6Jx18O350KIT3HanRxJrEdExFywhIT6Kr2SH2','Teknisi','Gurah','085645214125',1,'2025-03-17 14:02:22','2025-03-18 13:31:36',NULL),
-(13,'manajer1','manajer','$2y$10$UYrVzq.P/bgKfAY5aon4suc5AyZm5lQVZav3siAcAZAMMy.iWSmx2','Manajer Teknisi','Kebomas','089612684096',1,'2025-03-18 13:29:46','2025-03-18 13:29:46',NULL),
-(14,'teknisi3','teknisi3','$2y$10$O7Zf7xMKWwsNY4mM1xSaju/TS6SpQwylc7bLU66TmwMTJcpDcA5oi','Teknisi','Medan','123',1,'2025-03-21 11:24:06','2025-03-21 11:24:06',NULL),
-(15,'teknisi4','teknisi4','$2y$10$q5jYfnQVVh2Qzz5ux.yqv.TLwLf.fZxaDM38x9zCAwm.6Utqo81g6','Teknisi','Medan','123',1,'2025-03-21 11:24:39','2025-03-21 11:24:39',NULL);
+(1,'adm1','Endra','$2y$10$UYrVzq.P/bgKfAY5aon4suc5AyZm5lQVZav3siAcAZAMMy.iWSmx2','Administrator','Kediri','082335022640',1,NULL,'2025-03-10 19:13:18',1),
+(9,'teknisi1','frank','$2y$10$cxgNE8rd5HKi7iRRupJYHeYfWcq9xzoIfNwMW2WH6CdBE75O8/37m','Teknisi','Pare','628883866931',1,'2025-02-19 11:35:41','2025-04-24 19:29:09',1),
+(12,'teknisi2','stein','$2y$10$nEiaR7bCMxEZeaNu6Jx18O350KIT3HanRxJrEdExFywhIT6Kr2SH2','Teknisi','Kebomas, Gresik','62881036554563',1,'2025-03-17 14:02:22','2025-05-16 04:23:37',NULL),
+(13,'manajer1','manajer','$2y$10$pxxV7VDE3dcrAtV/fRsLX.fW9ToJ62JHi9BqpC/LIlw8yvIC0bhXC','Manajer Teknisi','Kebomas','089612684096',1,'2025-03-18 13:29:46','2025-03-18 13:29:46',NULL);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

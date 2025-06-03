@@ -67,7 +67,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Jadwal Terbaru -->
     <div class="row mt-4">
         <div class="col-md-12">
@@ -88,26 +88,27 @@
                             </thead>
                             <tbody>
                                 @forelse($jadwalTerbaru as $jadwal)
-                                <tr>
-                                    <td>{{ $jadwal->tanggal }}</td>
-                                    <td>{{ $jadwal->mesin->nama }}</td>
-                                    <td>{{ ucfirst($jadwal->jenis) }}</td>
-                                    <td>
-                                        @if($jadwal->status == 'Terjadwal')
-                                            <span class="badge badge-warning">{{ $jadwal->status }}</span>
-                                        @elseif($jadwal->status == 'Selesai')
-                                            <span class="badge badge-success">{{ $jadwal->status }}</span>
-                                        @else
-                                            <span class="badge badge-danger">{{ $jadwal->status }}</span>
-                                        @endif
-                                    </td>
-                                </tr>
+                                    <tr>
+                                        <td>{{ $jadwal->tanggal }}</td>
+                                        <td>{{ $jadwal->mesin->nama }}</td>
+                                        <td>{{ ucfirst($jadwal->jenis) }}</td>
+                                        <td>
+                                            @if ($jadwal->status == 'Terjadwal')
+                                                <span class="badge badge-warning">{{ $jadwal->status }}</span>
+                                            @elseif($jadwal->status == 'Selesai')
+                                                <span class="badge badge-success">{{ $jadwal->status }}</span>
+                                            @else
+                                                <span class="badge badge-danger">{{ $jadwal->status }}</span>
+                                            @endif
+                                        </td>
+                                    </tr>
                                 @empty
-                                <tr>
-                                    <td colspan="4" class="text-center">Tidak ada jadwal pemeliharaan</td>
-                                </tr>
+                                    <tr>
+                                        <td colspan="4" class="text-center">Tidak ada jadwal pemeliharaan</td>
+                                    </tr>
                                 @endforelse
                             </tbody>
+
                         </table>
                     </div>
                 </div>

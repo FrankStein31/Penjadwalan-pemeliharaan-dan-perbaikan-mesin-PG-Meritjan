@@ -15,7 +15,8 @@ use App\Http\Controllers\{
     ScreeningController,
     StationController,
     LaporanIncidentalController,
-    PascaGilingController
+    PascaGilingController,
+    RequestPartController
 };
 use Illuminate\Routing\RouteUrlGenerator;
 
@@ -85,6 +86,12 @@ Route::put('laporan-insidental/edit/{id}', [LaporanIncidentalController::class, 
 Route::delete('laporan-insidental/hapus/{id}', [LaporanIncidentalController::class, 'destroy'])->name('laporan-insidental.destroy');
 Route::get('laporan-insidental/show/{id}', [LaporanIncidentalController::class, 'show'])->name('laporan-insidental.show');
 Route::get('/teknisi/getMesinByStation/{station_id}', [MesinController::class, 'getMesinByStation']);
+// Route untuk approve / reject / selesai
+Route::put('laporan-insidental/{id}/approve', [LaporanIncidentalController::class, 'approve'])->name('laporan-insidental.approve');
+Route::put('laporan-insidental/{id}/reject', [LaporanIncidentalController::class, 'reject'])->name('laporan-insidental.reject');
+Route::put('laporan-insidental/{id}/selesai', [LaporanIncidentalController::class, 'selesai'])->name('laporan-insidental.selesai');
+Route::patch('/laporan-insidental/{id}/update-status', [LaporanIncidentalController::class, 'updateStatus'])->name('laporan-insidental.updateStatus');
+
 
 //Pasca Giling Routes
 Route::get('pasca-giling', [PascaGilingController::class, 'index'])->name('pasca-giling.index');
@@ -108,6 +115,7 @@ Route::get('/screening/create/{jadwal_id}', [ScreeningController::class, 'create
 Route::post('/screening/store', [ScreeningController::class, 'store'])->name('screening.store');
 Route::get('/screening/{jadwal_id}', [ScreeningController::class, 'show'])->name('screening.show');
 Route::get('/screening/jawaban/{id}', [ScreeningController::class, 'jawaban'])->name('screening.jawaban');
+Route::get('/admin/pertanyaan', [ScreeningController::class, 'index'])->name('pertanyaan.index');
 
 
 
@@ -171,3 +179,24 @@ Route::middleware(['auth'])->group(function () {
 // Tambahkan route baru
 Route::get('/admin/getMesinByStation/{station_id}', [JadwalPemeliharaanController::class, 'getMesinByStation']);
 Route::get('/admin/getTeknisiByStation/{station_id}', [JadwalPemeliharaanController::class, 'getTeknisiByStation']);
+
+// Route Teknisi
+Route::prefix('teknisi')->name('teknisi.')->group(function () {
+    Route::get('/request-part', [RequestPartController::class, 'index'])->name('request-part.index');
+    Route::get('/request-part/create', [RequestPartController::class, 'create'])->name('request-part.create');
+    Route::post('/request-part', [RequestPartController::class, 'store'])->name('request-part.store');
+    Route::put('/teknisi/request-parts/{id}/cancel', [RequestPartController::class, 'cancel'])
+    ->name('teknisi.request-parts.cancel');
+
+});
+
+// Route Admin
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/request-part', [RequestPartController::class, 'index'])->name('request-part.index');
+    Route::put('/request-part/{id}/approve', [RequestPartController::class, 'approve'])->name('request-part.approve');
+    Route::put('/request-part/{id}/reject', [RequestPartController::class, 'reject'])->name('request-part.reject');
+});
+
+
+
+

@@ -72,14 +72,19 @@
                     </a>
                 </li>
 
+                <li class="nav-item {{ request()->routeIs('teknisi.request-part.*') ? 'active' : '' }}">
+                    <a href="{{ route('teknisi.request-part.index') }}">
+                        <i class="fas fa-cube"></i>
+                        <p>Request Suku Cadang</p>
+                    </a>
+                </li>
+
                 <li class="nav-section">
                     <span class="sidebar-mini-icon">
                         <i class="fa fa-ellipsis-h"></i>
                     </span>
                     <h4 class="text-section">Laporan Screening</h4>
                 </li>
-
-
 
                 {{-- <li class="nav-item {{ request()->routeIs('screenings.index') ? 'active' : '' }}">
                     <a href="{{ route('screenings.indexteknisi') }}">

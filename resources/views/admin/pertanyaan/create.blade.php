@@ -9,44 +9,75 @@
         </div>
         <div class="card-body">
             <form action="{{ route('screening.store') }}" method="POST">
-            @csrf
-<input type="hidden" name="jadwal_pemeliharaan_id" value="{{ $jadwal->id }}">
+                @csrf
+                <input type="hidden" name="jadwal_pemeliharaan_id" value="{{ $jadwal->id }}">
 
-            {{-- Pertanyaan Screening --}}
-            @php
-                $pertanyaan = [
-                    'getaran' => 'Apakah ada getaran berlebih?',
-                    'suara' => 'Apakah ada suara asing dari dalam mesin?',
-                    'pelumasan' => 'Apakah oli dan stempet sudah dicek dan diganti?',
-                    'bocor' => 'Apakah ada kebocoran?',
-                    'kerusakan' => 'Apakah ada kerusakan lainnya?'
-                ];
-            @endphp
+                {{-- Pertanyaan Screening --}}
+                @php
+                    $pertanyaan = [
+                        'getaran' => 'Apakah ada getaran berlebih?',
+                        'suara' => 'Apakah ada suara asing dari dalam mesin?',
+                        'pelumasan' => 'Apakah oli dan stempet sudah dicek dan diganti?',
+                        'bocor' => 'Apakah ada kebocoran?',
+                        'kerusakan' => 'Apakah ada kerusakan lainnya?',
+                    ];
+                @endphp
 
-            @foreach($pertanyaan as $key => $label)
+                @foreach ($pertanyaan as $key => $label)
+                    <div class="form-group">
+                        <label for="{{ $key }}">{{ $label }}</label>
+                        <select name="{{ $key }}" id="{{ $key }}" class="form-control" required>
+                            <option value="Ya">Iya</option>
+                            <option value="Tidak">Tidak</option>
+                        </select>
+                    </div>
+                @endforeach
+
+                {{-- Tindakan Rekomendasi --}}
                 <div class="form-group">
-                    <label for="{{ $key }}">{{ $label }}</label>
-                    <select name="{{ $key }}" id="{{ $key }}" class="form-control" required>
-                        <option value="Ya">Ya</option>
-                        <option value="Tidak">Tidak</option>
+                    <label for="tindakan">Tindakan Rekomendasi</label>
+                    <select name="tindakan" id="tindakan" class="form-control" required>
+                        <option value="">Pilih Tindakan</option>
+                        <option value="Lanjut Operasi">Lanjut Operasi</option>
+                        <option value="Perbaikan">Perbaikan</option>
+                        <option value="Pergantian Komponen">Pergantian Komponen</option>
                     </select>
                 </div>
-            @endforeach
 
-            {{-- Tindakan Rekomendasi --}}
+                {{-- Dropdown Komponen (muncul jika tindakan = Pergantian Komponen) --}}
+                <div class="form-group" id="komponen-wrapper" style="display: none;">
+                    <label for="komponen">Pilih Komponen</label>
+                    <select name="komponen" id="komponen" class="form-control">
+                        <option value="">Pilih Komponen</option>
+                        @foreach ($spareParts as $sparePart)
+                            <option value="{{ $sparePart->id }}">{{ $sparePart->nama }} ({{ $sparePart->kode_part }})
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
 
-            <div class="form-group">
-                <label for="tindakan">Tindakan Rekomendasi</label>
-                <select name="tindakan" id="tindakan" class="form-control" required>
-                    <option value="">-- Pilih Tindakan --</option>
-                    <option value="Lanjut Operasi">Lanjut Operasi</option>
-                    <option value="Perbaikan">Perbaikan</option>
-                    <option value="Pergantian Komponen">Pergantian Komponen</option>
-                </select>
-            </div>
-
-            <button type="submit" class="btn btn-primary">Simpan Screening</button>
-        </form>
+                <div>
+                    <button type="submit" class="btn btn-primary">Simpan Screening</button>
+                    <a href="{{ url()->previous() }}" class="btn btn-secondary">Batal</a>
+                </div>
+            </form>
         </div>
     </div>
+
+    {{-- JavaScript: Tampilkan Dropdown Komponen Jika Diperlukan --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tindakanSelect = document.getElementById('tindakan');
+            const komponenWrapper = document.getElementById('komponen-wrapper');
+
+            tindakanSelect.addEventListener('change', function() {
+                if (this.value === 'Pergantian Komponen') {
+                    komponenWrapper.style.display = 'block';
+                } else {
+                    komponenWrapper.style.display = 'none';
+                    document.getElementById('komponen').value = '';
+                }
+            });
+        });
+    </script>
 @endsection

@@ -12,8 +12,8 @@
                 </a>
             @endif
         </div>
-        <div class="card-body">
 
+        <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-bordered table-hover border-0" id="dataTable" width="100%" cellspacing="0">
                     <thead class="thead-dark text-center">
@@ -25,6 +25,7 @@
                             <th>Foto Bukti</th>
                             <th>Pengajuan Suku Cadang</th>
                             <th>Tanggal Laporan</th>
+                            <th>Status</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -47,48 +48,109 @@
                                 </td>
                                 <td class="text-center">
                                     @if ($item->requires_spare_part == 1)
-                                        {{-- <span class="badge badge-warning">Ya</span> --}}
                                         <span class="badge badge-warning">Iya</span>
                                     @else
                                         <span class="badge badge-secondary">Tidak</span>
                                     @endif
                                 </td>
                                 <td class="text-center">{{ $item->created_at->format('d M Y') }}</td>
+
+                                <!-- Status -->
                                 <td class="text-center">
-                                    @if (Auth::user()->level === 'Administrator')
+                                    <span
+                                        class="badge
+                                @if ($item->status == 'Dalam Peninjauan') badge-warning
+                                @elseif($item->status == 'Setuju') badge-success
+                                @elseif($item->status == 'Tolak') badge-danger
+                                @elseif($item->status == 'Selesai') badge-primary
+                                @else badge-secondary @endif">
+                                        {{ $item->status }}
+                                    </span>
+                                </td>
+
+                                <!-- Aksi -->
+                                <td class="text-center">
                                     <a href="{{ route('laporan-insidental.show', $item->id) }}"
                                         class="btn btn-info btn-sm btn-circle" data-toggle="tooltip" title="Detail">
                                         <i class="fas fa-eye"></i>
                                     </a>
 
+                                    @if (Auth::user()->level === 'Manajer Teknisi')
+                                        <!-- Tombol Manajer: Setuju, Peninjauan, Tolak -->
+                                        <form action="{{ route('laporan-insidental.updateStatus', $item->id) }}"
+                                            method="POST" style="display:inline;">
+                                            @csrf
+                                            @method('PATCH')
+                                            <input type="hidden" name="status" value="Setuju">
+                                            <button type="submit" class="btn btn-success btn-sm btn-circle"
+                                                data-toggle="tooltip" title="Setujui"
+                                                onclick="return confirm('Setujui laporan ini?');">
+                                                <i class="fas fa-check"></i>
+                                            </button>
+                                        </form>
+
+                                        <form action="{{ route('laporan-insidental.updateStatus', $item->id) }}"
+                                            method="POST" style="display:inline;">
+                                            @csrf
+                                            @method('PATCH')
+                                            <input type="hidden" name="status" value="Dalam Peninjauan">
+                                            <button type="submit" class="btn btn-warning btn-sm btn-circle"
+                                                data-toggle="tooltip" title="Peninjauan"
+                                                onclick="return confirm('Tandai sebagai dalam peninjauan?');">
+                                                <i class="fas fa-search"></i>
+                                            </button>
+                                        </form>
+
+                                        <form action="{{ route('laporan-insidental.updateStatus', $item->id) }}"
+                                            method="POST" style="display:inline;">
+                                            @csrf
+                                            @method('PATCH')
+                                            <input type="hidden" name="status" value="Tolak">
+                                            <button type="submit" class="btn btn-danger btn-sm btn-circle"
+                                                data-toggle="tooltip" title="Tolak"
+                                                onclick="return confirm('Tolak laporan ini?');">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </form>
                                     @endif
-                                    @if(Auth::user()->level === 'Teknisi')
-                                    <a href="{{ route('laporan-insidental.show', $item->id) }}"
-                                        class="btn btn-info btn-sm btn-circle" data-toggle="tooltip" title="Detail">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    <a href="{{ route('laporan-insidental.edit', $item->id) }}"
-                                        class="btn btn-warning btn-sm btn-circle" data-toggle="tooltip" title="Edit">
-                                        <i class="fas fa-pencil-alt"></i>
-                                    </a>
-                                    <form action="{{ route('laporan-insidental.destroy', $item->id) }}" method="POST"
-                                        style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm btn-circle"
-                                            data-toggle="tooltip" title="Hapus"
-                                            onclick="return confirm('Yakin ingin menghapus laporan ini?');">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
+
+                                    @if (Auth::user()->level === 'Teknisi')
+                                        <!-- Tombol Selesai untuk teknisi jika statusnya "Setuju" -->
+                                        @if ($item->status == 'Setuju')
+                                            <form action="{{ route('laporan-insidental.selesai', $item->id) }}"
+                                                method="POST" style="display:inline;">
+                                                @csrf
+                                                @method('PUT')
+                                                <button type="submit" class="btn btn-primary btn-sm btn-circle"
+                                                    data-toggle="tooltip" title="Selesai"
+                                                    onclick="return confirm('Tandai laporan ini sebagai selesai?');">
+                                                    <i class="fas fa-check-double"></i>
+                                                </button>
+                                            </form>
+                                        @endif
+
+                                        <!-- Edit & Hapus -->
+                                        <a href="{{ route('laporan-insidental.edit', $item->id) }}"
+                                            class="btn btn-warning btn-sm btn-circle" data-toggle="tooltip" title="Edit">
+                                            <i class="fas fa-pencil-alt"></i>
+                                        </a>
+                                        <form action="{{ route('laporan-insidental.destroy', $item->id) }}" method="POST"
+                                            style="display:inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm btn-circle"
+                                                data-toggle="tooltip" title="Hapus"
+                                                onclick="return confirm('Yakin ingin menghapus laporan ini?');">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    @endif
                                 </td>
-                                @endif
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
-
         </div>
     </div>
 @endsection

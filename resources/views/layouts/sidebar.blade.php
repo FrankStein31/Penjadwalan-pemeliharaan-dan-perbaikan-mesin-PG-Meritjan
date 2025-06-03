@@ -131,6 +131,12 @@
                         <p>Data Suku Cadang</p>
                     </a>
                 </li>
+                <li class="nav-item {{ request()->routeIs('spare_part') ? 'active' : '' }}">
+                    <a href="{{ route('admin.request-part.index') }}">
+                        <i class="fas fa-wrench"></i>
+                        <p>Request Suku Cadang</p>
+                    </a>
+                </li>
                 <li class="nav-item {{ request()->routeIs('teknisi_mesin.index') ? 'active' : '' }}">
                     <a href="{{ route('teknisi_mesin.index') }}">
                         <i class="fas fa-hard-hat"></i>
@@ -148,6 +154,21 @@
                         <i class="fas fa-calendar-alt"></i>
                         <p>Jadwal Pasca Giling</p>
                     </a>
+
+                @endif
+                <li class="nav-section">
+                    <span class="sidebar-mini-icon">
+                        <i class="fa fa-ellipsis-h"></i>
+                    </span>
+                    <h4 class="text-section">Manajemen Laporan</h4>
+                </li>
+                <li class="nav-item {{ request()->routeIs('admin.riwayat.index') ? 'active' : '' }}">
+                    <a href="{{ route('admin.riwayat.index') }}">
+                        <i class="fas fa-history"></i>
+                        <p>Riwayat Perbaikan</p>
+                    </a>
+                </li>
+
                 <li class="nav-section">
                     <span class="sidebar-mini-icon">
                         <i class="fa fa-ellipsis-h"></i>
@@ -160,23 +181,11 @@
                         <p>Pertanyaan Screening</p>
                     </a>
                 </li> --}}
+
                 <li class="nav-item {{ request()->routeIs('screenings.index') ? 'active' : '' }}">
                     <a href="{{ route('laporan-insidental.index') }}">
                         <i class="fas fa-bug"></i>
                         <p>Laporan Incidental</p>
-                    </a>
-                </li>
-                @endif
-                <li class="nav-section">
-                    <span class="sidebar-mini-icon">
-                        <i class="fa fa-ellipsis-h"></i>
-                    </span>
-                    <h4 class="text-section">Manajemen Laporan</h4>
-                </li>
-                <li class="nav-item {{ request()->routeIs('admin.riwayat.index') ? 'active' : '' }}">
-                    <a href="{{ route('admin.riwayat.index') }}">
-                        <i class="fas fa-history"></i>
-                        <p>Riwayat Perbaikan</p>
                     </a>
                 </li>
 

@@ -13,7 +13,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('teknisi_id'); // Jika ada teknisi_id
 
             // Definisi Foreign Key
-            $table->foreign('mesin_id')->references('id')->on('mesin')->onDelete('cascade');
+            $table->foreign('mesin_id')->references('id')->on('mesins')->onDelete('cascade');
             $table->foreign('teknisi_id')->references('id')->on('users')->onDelete('cascade');
 
             $table->timestamps();

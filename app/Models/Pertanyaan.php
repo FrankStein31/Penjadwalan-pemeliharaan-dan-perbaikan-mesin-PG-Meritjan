@@ -17,6 +17,7 @@ class Pertanyaan extends Model
         'bocor',
         'kerusakan',
         'tindakan',
+        'komponen',
     ];
 
     // Relasi ke Jadwal Perbaikan

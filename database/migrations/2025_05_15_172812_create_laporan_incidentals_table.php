@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('LaporanIncidental', function (Blueprint $table) {
             $table->id();
             $table->foreignId('mesin_id')->constrained('mesins')->onDelete('cascade');
-            $table->foreignId('station_id')->constrained()->onDelete('cascade');
+            $table->foreignId('station_id')->constrained('stations')->onDelete('cascade');
             $table->text('description');
             $table->string('photo_path')->nullable();
             $table->boolean('requires_spare_part')->default(false);

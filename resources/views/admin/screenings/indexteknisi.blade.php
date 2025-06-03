@@ -6,10 +6,10 @@
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
             <h4 class="m-0 font-weight-bold text-white">DATA SCREENING MESIN</h4>
-            
+
         </div>
         <div class="card-body">
-            @if(session('success'))
+            @if (session('success'))
                 <div class="alert alert-success">{{ session('success') }}</div>
             @endif
 
@@ -36,19 +36,20 @@
                                 <td>{{ $screening->teknisi->nama }}</td>
                                 <td>{{ $screening->admin->nama }}</td>
                                 <td class="text-center">
-                                    <span class="badge badge-{{ $screening->status_operasional == 'Normal' ? 'success' : 'danger' }}">
+                                    <span
+                                        class="badge badge-{{ $screening->status_operasional == 'Normal' ? 'success' : 'danger' }}">
                                         {{ $screening->status_operasional }}
                                     </span>
                                 </td>
                                 <td class="text-center">{{ $screening->tindakan_rekomendasi }}</td>
                                 <td>{{ $screening->catatan }}</td>
-<td>{{ $screening->jawaban }}</td>
+                                <td>{{ $screening->jawaban }}</td>
                                 <td class="text-center">
                                     <a href="{{ route('screenings.show', $screening->id) }}"
                                         class="btn btn-info btn-sm btn-circle" data-toggle="tooltip" title="Detail">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    <a href="{{ route('screenings.editteknisi',$screening->id)}}"
+                                    <a href="{{ route('screenings.editteknisi', $screening->id) }}"
                                         class="btn btn-warning btn-sm btn-circle" data-toggle="tooltip" title="Edit">
                                         <i class="fas fa-pencil-alt"></i>
                                     </a>

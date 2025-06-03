@@ -36,7 +36,7 @@
                 <div class="form-group">
                     <label for="tindakan">Tindakan Rekomendasi</label>
                     <select name="tindakan" id="tindakan" class="form-control" required>
-                        <option value="">-- Pilih Tindakan --</option>
+                        <option value="">Pilih Tindakan</option>
                         <option value="Lanjut Operasi">Lanjut Operasi</option>
                         <option value="Perbaikan">Perbaikan</option>
                         <option value="Pergantian Komponen">Pergantian Komponen</option>

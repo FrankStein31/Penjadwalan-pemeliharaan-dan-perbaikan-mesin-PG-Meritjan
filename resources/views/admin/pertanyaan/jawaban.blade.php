@@ -30,6 +30,15 @@
                             <li class="list-group-item">
                                 <strong>Tindakan:</strong> {{ $item->tindakan }}
                             </li>
+
+                            @if ($item->tindakan === 'Pergantian Komponen')
+                                <li class="list-group-item">
+                                    <strong>Komponen yang Diganti:</strong>
+                                    {{ $item->komponen && $item->komponen !== '' ? $item->komponen : '-' }}
+                                </li>
+                            @endif
+
+
                         </ul>
                     </div>
                 </div>
