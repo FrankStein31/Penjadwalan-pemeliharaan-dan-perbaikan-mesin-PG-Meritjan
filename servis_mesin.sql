@@ -236,7 +236,7 @@ DROP TABLE IF EXISTS `pasca_gilings`;
 CREATE TABLE `pasca_gilings` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `station_id` bigint unsigned NOT NULL,
-  `mesin_id` bigint unsigned NOT NULL,
+  `mesin_id` bigint DEFAULT NULL,
   `tanggal_mulai` date NOT NULL,
   `tanggal_selesai` date DEFAULT NULL,
   `deskripsi` text COLLATE utf8mb4_unicode_ci,
@@ -246,14 +246,17 @@ CREATE TABLE `pasca_gilings` (
   PRIMARY KEY (`id`),
   KEY `pasca_gilings_station_id_foreign` (`station_id`),
   KEY `pasca_gilings_mesin_id_foreign` (`mesin_id`),
-  CONSTRAINT `pasca_gilings_mesin_id_foreign` FOREIGN KEY (`mesin_id`) REFERENCES `mesins` (`id`) ON DELETE CASCADE,
   CONSTRAINT `pasca_gilings_station_id_foreign` FOREIGN KEY (`station_id`) REFERENCES `stations` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `pasca_gilings` */
 
 insert  into `pasca_gilings`(`id`,`station_id`,`mesin_id`,`tanggal_mulai`,`tanggal_selesai`,`deskripsi`,`status`,`created_at`,`updated_at`) values 
-(2,1,3,'2025-05-16','2025-05-30','Giling','Terjadwal','2025-05-16 04:08:52','2025-05-16 04:08:52');
+(2,1,3,'2025-05-16','2025-05-30','Giling','Terjadwal','2025-05-16 04:08:52','2025-05-16 04:08:52'),
+(3,1,NULL,'2025-06-03',NULL,'Baru','Terjadwal','2025-06-03 21:32:52','2025-06-03 21:32:52'),
+(4,1,NULL,'2025-06-03','2025-06-13','Penjadwalan','Terjadwal','2025-06-03 21:34:49','2025-06-03 21:34:49'),
+(5,2,NULL,'2025-06-03',NULL,'Baru','Terjadwal','2025-06-03 21:35:23','2025-06-03 21:35:23'),
+(6,2,NULL,'2025-06-03',NULL,'Baru','Terjadwal','2025-06-03 21:36:51','2025-06-03 21:36:51');
 
 /*Table structure for table `personal_access_tokens` */
 
@@ -470,8 +473,8 @@ CREATE TABLE `teknisi_mesin` (
 /*Data for the table `teknisi_mesin` */
 
 insert  into `teknisi_mesin`(`id`,`user_id`,`mesin_id`,`created_at`,`updated_at`) values 
-(2,9,3,'2025-03-17 14:02:37','2025-03-17 14:02:37'),
-(3,12,10,'2025-03-17 14:02:47','2025-03-17 14:02:47');
+(2,9,3,'2025-03-17 14:02:37','2025-06-03 21:23:12'),
+(3,12,3,'2025-03-17 14:02:47','2025-06-03 21:20:39');
 
 /*Table structure for table `tugas_perbaikan` */
 
@@ -519,9 +522,9 @@ CREATE TABLE `users` (
 /*Data for the table `users` */
 
 insert  into `users`(`id`,`user_id`,`nama`,`password`,`level`,`alamat`,`telp`,`status`,`created_at`,`updated_at`,`station_id`) values 
-(1,'adm1','Endra','$2y$10$UYrVzq.P/bgKfAY5aon4suc5AyZm5lQVZav3siAcAZAMMy.iWSmx2','Administrator','Kediri','082335022640',1,NULL,'2025-03-10 19:13:18',1),
-(9,'teknisi1','frank','$2y$10$cxgNE8rd5HKi7iRRupJYHeYfWcq9xzoIfNwMW2WH6CdBE75O8/37m','Teknisi','Pare','628883866931',1,'2025-02-19 11:35:41','2025-04-24 19:29:09',1),
-(12,'teknisi2','stein','$2y$10$nEiaR7bCMxEZeaNu6Jx18O350KIT3HanRxJrEdExFywhIT6Kr2SH2','Teknisi','Kebomas, Gresik','62881036554563',1,'2025-03-17 14:02:22','2025-05-16 04:23:37',NULL),
+(1,'adm1','Endra','$2y$10$UYrVzq.P/bgKfAY5aon4suc5AyZm5lQVZav3siAcAZAMMy.iWSmx2','Administrator','Kediri','082335022640',1,NULL,'2025-03-10 19:13:18',NULL),
+(9,'teknisi1','frank','$2y$10$cxgNE8rd5HKi7iRRupJYHeYfWcq9xzoIfNwMW2WH6CdBE75O8/37m','Teknisi','Pare','628883866931',1,'2025-02-19 11:35:41','2025-06-03 21:19:53',2),
+(12,'teknisi2','Hafidz','$2y$10$nEiaR7bCMxEZeaNu6Jx18O350KIT3HanRxJrEdExFywhIT6Kr2SH2','Teknisi','Kebomas, Gresik','62881036554563',1,'2025-03-17 14:02:22','2025-05-16 04:23:37',NULL),
 (13,'manajer1','manajer','$2y$10$pxxV7VDE3dcrAtV/fRsLX.fW9ToJ62JHi9BqpC/LIlw8yvIC0bhXC','Manajer Teknisi','Kebomas','089612684096',1,'2025-03-18 13:29:46','2025-03-18 13:29:46',NULL);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

@@ -47,15 +47,27 @@ class AuthController extends Controller
             'password' => 'required'
         ])->validate();
 
-        if (!Auth::attempt($request->only('user_id', 'password'), $request->boolean('remember'))) {
+        // Cari user berdasarkan NIP
+        $user = User::where('user_id', $request->user_id)->first();
+
+        // Cek apakah user ada dan password cocok
+        if (!$user || !Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([
-                'email' => trans('auth.failed')
+                'user_id' => trans('auth.failed'),
+            ]);
+        }
+
+        // Cek status user (harus 1 = aktif)
+        if ($user->status != 1) {
+            throw ValidationException::withMessages([
+                'user_id' => 'Akun Anda tidak aktif. Hubungi admin untuk aktivasi.',
             ]);
         }
 
         $request->session()->regenerate();
         return redirect()->route('dashboard');
     }
+
     public function logout(Request $request)
     {
         Auth::guard('web')->logout();

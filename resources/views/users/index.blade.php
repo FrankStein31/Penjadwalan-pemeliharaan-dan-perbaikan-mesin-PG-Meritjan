@@ -48,6 +48,8 @@
                                         {{ $row->status == 1 ? 'Aktif' : 'Nonaktif' }}
                                     </span>
                                 </td>
+
+
                                 <td class="text-center">
                                     <a href="{{ route('users.edit', $row->id) }}" class="btn btn-warning btn-sm btn-circle"
                                         data-toggle="tooltip" title="Edit">

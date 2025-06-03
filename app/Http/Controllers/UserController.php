@@ -74,7 +74,7 @@ class UserController extends Controller
             'level' => 'required',
             'alamat' => 'required',
             'telp' => 'required',
-            'status' => 'required',
+            'status' => 'required|in:0,1', // validasi tambahan biar aman
             'station_id' => 'nullable|exists:stations,id',
         ]);
 
@@ -85,6 +85,7 @@ class UserController extends Controller
         $user->level = $request->level;
         $user->alamat = $request->alamat;
         $user->telp = $request->telp;
+        $user->status = $request->status; // <- ini penting!
         $user->station_id = $request->station_id;
 
         if ($request->filled('password')) {

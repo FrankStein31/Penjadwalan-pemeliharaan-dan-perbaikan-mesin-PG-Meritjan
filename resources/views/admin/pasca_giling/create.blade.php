@@ -21,12 +21,12 @@
                     </select>
                 </div>
 
-                <div class="form-group">
+                {{-- <div class="form-group">
                     <label for="mesin_id">Pilih Mesin</label>
                     <select id="mesin_id" name="mesin_id" class="form-control" required disabled>
                         <option value="">Pilih Mesin</option>
                     </select>
-                </div>
+                </div> --}}
 
                 <div class="form-group">
                     <label for="tanggal_mulai">Tanggal Mulai</label>

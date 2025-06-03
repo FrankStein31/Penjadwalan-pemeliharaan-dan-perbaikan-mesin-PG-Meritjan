@@ -137,12 +137,12 @@
                         <p>Request Suku Cadang</p>
                     </a>
                 </li>
-                <li class="nav-item {{ request()->routeIs('teknisi_mesin.index') ? 'active' : '' }}">
+                {{-- <li class="nav-item {{ request()->routeIs('teknisi_mesin.index') ? 'active' : '' }}">
                     <a href="{{ route('teknisi_mesin.index') }}">
                         <i class="fas fa-hard-hat"></i>
                         <p>Data Teknisi</p>
                     </a>
-                </li>
+                </li> --}}
                 <li class="nav-item {{ request()->routeIs('admin.jadwal.index') ? 'active' : '' }}">
                     <a href="{{ route('admin.jadwal.index') }}">
                         <i class="fas fa-tools"></i>

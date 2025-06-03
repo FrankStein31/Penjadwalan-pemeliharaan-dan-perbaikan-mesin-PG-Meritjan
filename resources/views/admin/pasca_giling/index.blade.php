@@ -18,7 +18,7 @@
                         <tr>
                             <th>No.</th>
                             <th>Station</th>
-                            <th>Mesin</th>
+                            {{-- <th>Mesin</th> --}}
                             <th>Tanggal Mulai</th>
                             <th>Tanggal Selesai</th>
                             <th>Deskripsi</th>
@@ -31,7 +31,7 @@
                             <tr>
                                 <td class="text-center">{{ $loop->iteration }}</td>
                                 <td class="text-center">{{ $item->station->nama_station ?? 'Tidak ada Station' }}</td>
-                                <td class="text-center">{{ $item->mesin->nama ?? 'Tidak ada Mesin' }}</td>
+                                {{-- <td class="text-center">{{ $item->mesin->nama ?? 'Tidak ada Mesin' }}</td> --}}
                                 <td class="text-center">{{ \Carbon\Carbon::parse($item->tanggal_mulai)->format('d M Y') }}
                                 </td>
                                 <td class="text-center">

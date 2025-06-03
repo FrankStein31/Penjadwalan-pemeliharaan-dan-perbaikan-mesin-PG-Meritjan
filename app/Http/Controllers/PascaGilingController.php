@@ -30,7 +30,7 @@ class PascaGilingController extends Controller
         // Validasi input
         $request->validate([
             'station_id' => 'required|exists:stations,id',
-            'mesin_id' => 'required|exists:mesins,id',
+            'mesin_id' => 'nullable|exists:mesins,id',
             'tanggal_mulai' => 'required|date',
             'tanggal_selesai' => 'nullable|date|after_or_equal:tanggal_mulai',
             'deskripsi' => 'nullable|string',
@@ -54,13 +54,12 @@ class PascaGilingController extends Controller
                 $hariSisa = \Carbon\Carbon::now()->diffInDays($request->tanggal_mulai, false);
                 $pengingat = $hariSisa > 0
                     ? "$hariSisa hari lagi anda ada jadwal pasca giling di mesin {$pascaGiling->mesin->nama}. Jangan lupa ya!"
-                    : "Segera lakukan jadwal pasca giling di mesin {$pascaGiling->mesin->nama}!";
+                    : "Segera lakukan jadwal pasca giling";
 
                 $pesan = "🛠️ *Jadwal Pasca Giling Baru!*\n\n"
                     . "👤 Nama: {$teknisi->nama}\n"
                     . "📅 Tanggal: $tanggalFormatted\n"
                     . "📍 Station: {$station->nama_station}\n"
-                    . "🔧 Mesin: {$pascaGiling->mesin->nama}\n"
                     . "📝 Deskripsi: " . ($request->deskripsi ?? '-') . "\n\n"
                     . "📣 *Pengingat:* $pengingat";
 

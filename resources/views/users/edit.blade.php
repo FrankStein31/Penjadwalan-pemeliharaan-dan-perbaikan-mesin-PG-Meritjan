@@ -3,7 +3,7 @@
 @section('title', 'Edit User')
 
 @section('contents')
-    <form action="{{ route('users.tambah.update', ['id' => $user->id]) }}" method="POST">
+    <form action="{{ route('users.update', ['id' => $user->id]) }}" method="POST">
         @csrf
         @method('PUT')
 
@@ -35,6 +35,7 @@
                             <input type="password" class="form-control" id="password" name="password">
                             <small class="form-text text-muted">Kosongkan jika tidak ingin mengubah password.</small>
                         </div>
+
                         <div class="form-group">
                             <label for="level">Level</label>
                             <select class="form-control" id="level" name="level" required>
@@ -63,6 +64,20 @@
                         <label for="rincian_pekerjaan">Rincian Pekerjaan</label>
                         <input type="text" class="form-control" id="rincian_pekerjaan" name="rincian_pekerjaan" value="{{ old('rincian_pekerjaan', $users->rincian_pekerjaan) }}" required>
                     </div> --}}
+                        <div class="form-group">
+                            <label for="station_id">Station</label>
+                            <select name="station_id" id="station_id" class="form-control" required>
+                                <option value="">-- Pilih Station --</option>
+                                @foreach ($stations as $station)
+                                    <option value="{{ $station->id }}"
+                                        {{ old('station_id', $user->station_id) == $station->id ? 'selected' : '' }}>
+                                        {{ $station->nama_station }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+
                         <div class="form-group">
                             <label for="status">Status</label>
                             <select class="form-control" id="status" name="status" required>

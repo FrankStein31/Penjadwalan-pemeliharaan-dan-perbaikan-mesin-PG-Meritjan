@@ -141,11 +141,12 @@ Route::middleware(['auth'])->group(function () {
     Route::controller(UserController::class)->prefix('users')->group(function () {
         Route::get('', 'index')->name('users');
         Route::get('tambah', 'tambah')->name('users.tambah');
-        Route::post('tambah', 'simpan')->name('users.tambah.simpan');
+        Route::post('tambah', 'simpan')->name('users.simpan');
         Route::get('edit/{id}', 'edit')->name('users.edit');
-        Route::put('edit/{id}', 'update')->name('users.tambah.update');
+        Route::put('edit/{id}', 'update')->name('users.update'); // <- Ini lebih tepat
         Route::get('hapus/{id}', 'hapus')->name('users.hapus');
     });
+
 
     //Jadwal Pemeliharaan Routes
     Route::prefix('jadwal-pemeliharaan')->group(function () {
@@ -186,8 +187,7 @@ Route::prefix('teknisi')->name('teknisi.')->group(function () {
     Route::get('/request-part/create', [RequestPartController::class, 'create'])->name('request-part.create');
     Route::post('/request-part', [RequestPartController::class, 'store'])->name('request-part.store');
     Route::put('/teknisi/request-parts/{id}/cancel', [RequestPartController::class, 'cancel'])
-    ->name('teknisi.request-parts.cancel');
-
+        ->name('teknisi.request-parts.cancel');
 });
 
 // Route Admin
@@ -196,7 +196,3 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::put('/request-part/{id}/approve', [RequestPartController::class, 'approve'])->name('request-part.approve');
     Route::put('/request-part/{id}/reject', [RequestPartController::class, 'reject'])->name('request-part.reject');
 });
-
-
-
-
