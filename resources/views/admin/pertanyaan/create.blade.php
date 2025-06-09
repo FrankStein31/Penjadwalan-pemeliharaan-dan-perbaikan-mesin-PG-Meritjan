@@ -50,10 +50,16 @@
                     <select name="komponen" id="komponen" class="form-control">
                         <option value="">Pilih Komponen</option>
                         @foreach ($spareParts as $sparePart)
-                            <option value="{{ $sparePart->id }}">{{ $sparePart->nama }} ({{ $sparePart->kode_part }})
+                            <option value="{{ $sparePart->id }}" data-stok="{{ $sparePart->stok }}">
+                                {{ $sparePart->nama }} ({{ $sparePart->kode_part }})
                             </option>
                         @endforeach
                     </select>
+                </div>
+
+                <div class="form-group" id="stok-info" style="display: none;">
+                    <label>Stok Tersisa:</label>
+                    <p id="stok-value" class="font-weight-bold"></p>
                 </div>
 
                 <div>
@@ -69,15 +75,41 @@
         document.addEventListener('DOMContentLoaded', function() {
             const tindakanSelect = document.getElementById('tindakan');
             const komponenWrapper = document.getElementById('komponen-wrapper');
+            const komponenSelect = document.getElementById('komponen');
+            const stokInfo = document.getElementById('stok-info');
+            const stokValue = document.getElementById('stok-value');
 
-            tindakanSelect.addEventListener('change', function() {
-                if (this.value === 'Pergantian Komponen') {
+            function updateKomponenVisibility() {
+                const selectedTindakan = tindakanSelect.value;
+                if (selectedTindakan === 'Pergantian Komponen') {
                     komponenWrapper.style.display = 'block';
                 } else {
                     komponenWrapper.style.display = 'none';
-                    document.getElementById('komponen').value = '';
+                    komponenSelect.value = '';
+                    stokInfo.style.display = 'none';
+                    stokValue.textContent = '';
                 }
-            });
+            }
+
+            function updateStokInfo() {
+                const selectedOption = komponenSelect.options[komponenSelect.selectedIndex];
+                const stok = selectedOption.getAttribute('data-stok');
+                if (komponenSelect.value && stok !== null) {
+                    stokValue.textContent = stok + ' unit';
+                    stokInfo.style.display = 'block';
+                } else {
+                    stokInfo.style.display = 'none';
+                    stokValue.textContent = '';
+                }
+            }
+
+            // Event listeners
+            tindakanSelect.addEventListener('change', updateKomponenVisibility);
+            komponenSelect.addEventListener('change', updateStokInfo);
+
+            // Inisialisasi saat load halaman
+            updateKomponenVisibility();
+            updateStokInfo();
         });
     </script>
 @endsection

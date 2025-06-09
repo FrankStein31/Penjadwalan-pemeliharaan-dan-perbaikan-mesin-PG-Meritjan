@@ -133,16 +133,16 @@
                 </li>
                 <li class="nav-item {{ request()->routeIs('spare_part') ? 'active' : '' }}">
                     <a href="{{ route('admin.request-part.index') }}">
-                        <i class="fas fa-wrench"></i>
+                        <i class="fas fa-cube"></i>
                         <p>Request Suku Cadang</p>
                     </a>
                 </li>
-                {{-- <li class="nav-item {{ request()->routeIs('teknisi_mesin.index') ? 'active' : '' }}">
+                <li class="nav-item {{ request()->routeIs('teknisi_mesin.index') ? 'active' : '' }}">
                     <a href="{{ route('teknisi_mesin.index') }}">
                         <i class="fas fa-hard-hat"></i>
                         <p>Data Teknisi</p>
                     </a>
-                </li> --}}
+                </li>
                 <li class="nav-item {{ request()->routeIs('admin.jadwal.index') ? 'active' : '' }}">
                     <a href="{{ route('admin.jadwal.index') }}">
                         <i class="fas fa-tools"></i>

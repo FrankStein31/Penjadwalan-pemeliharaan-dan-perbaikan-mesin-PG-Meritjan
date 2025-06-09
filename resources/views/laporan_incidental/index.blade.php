@@ -26,11 +26,15 @@
                             <th>Pengajuan Suku Cadang</th>
                             <th>Tanggal Laporan</th>
                             <th>Status</th>
+                            <th>Cetak</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($laporans as $item)
+                            @php
+                                $statusDisplay = $item->status === 'Dalam Peninjauan' ? 'Peninjauan' : $item->status;
+                            @endphp
                             <tr>
                                 <td class="text-center">{{ $loop->iteration }}</td>
                                 <td class="text-center">{{ $item->mesin->nama ?? 'Mesin tidak ditemukan' }}</td>
@@ -54,21 +58,28 @@
                                     @endif
                                 </td>
                                 <td class="text-center">{{ $item->created_at->format('d M Y') }}</td>
-
-                                <!-- Status -->
                                 <td class="text-center">
-                                    <span
-                                        class="badge
-                                @if ($item->status == 'Dalam Peninjauan') badge-warning
-                                @elseif($item->status == 'Setuju') badge-success
-                                @elseif($item->status == 'Tolak') badge-danger
-                                @elseif($item->status == 'Selesai') badge-primary
-                                @else badge-secondary @endif">
-                                        {{ $item->status }}
+                                    <span class="badge
+                                        @if ($item->status == 'Dalam Peninjauan') badge-warning
+                                        @elseif($item->status == 'Setuju') badge-success
+                                        @elseif($item->status == 'Tolak') badge-danger
+                                        @elseif($item->status == 'Selesai') badge-primary
+                                        @else badge-secondary
+                                        @endif">
+                                        {{ $statusDisplay }}
                                     </span>
                                 </td>
-
-                                <!-- Aksi -->
+                                <td class="text-center">
+                                    @if (Auth::user()->level === 'Manajer Teknisi' && $item->status === 'Selesai')
+                                        <a href="{{ route('laporan-insidental.export-pdf', $item->id) }}" target="_blank"
+                                            class="btn btn-secondary btn-sm btn-circle" data-toggle="tooltip"
+                                            title="Export PDF">
+                                            <i class="fas fa-file-pdf"></i>
+                                        </a>
+                                    @else
+                                        <span>-</span>
+                                    @endif
+                                </td>
                                 <td class="text-center">
                                     <a href="{{ route('laporan-insidental.show', $item->id) }}"
                                         class="btn btn-info btn-sm btn-circle" data-toggle="tooltip" title="Detail">
@@ -76,7 +87,6 @@
                                     </a>
 
                                     @if (Auth::user()->level === 'Manajer Teknisi')
-                                        <!-- Tombol Manajer: Setuju, Peninjauan, Tolak -->
                                         <form action="{{ route('laporan-insidental.updateStatus', $item->id) }}"
                                             method="POST" style="display:inline;">
                                             @csrf
@@ -96,7 +106,7 @@
                                             <input type="hidden" name="status" value="Dalam Peninjauan">
                                             <button type="submit" class="btn btn-warning btn-sm btn-circle"
                                                 data-toggle="tooltip" title="Peninjauan"
-                                                onclick="return confirm('Tandai sebagai dalam peninjauan?');">
+                                                onclick="return confirm('Tandai sebagai peninjauan?');">
                                                 <i class="fas fa-search"></i>
                                             </button>
                                         </form>
@@ -115,7 +125,6 @@
                                     @endif
 
                                     @if (Auth::user()->level === 'Teknisi')
-                                        <!-- Tombol Selesai untuk teknisi jika statusnya "Setuju" -->
                                         @if ($item->status == 'Setuju')
                                             <form action="{{ route('laporan-insidental.selesai', $item->id) }}"
                                                 method="POST" style="display:inline;">
@@ -129,7 +138,6 @@
                                             </form>
                                         @endif
 
-                                        <!-- Edit & Hapus -->
                                         <a href="{{ route('laporan-insidental.edit', $item->id) }}"
                                             class="btn btn-warning btn-sm btn-circle" data-toggle="tooltip" title="Edit">
                                             <i class="fas fa-pencil-alt"></i>

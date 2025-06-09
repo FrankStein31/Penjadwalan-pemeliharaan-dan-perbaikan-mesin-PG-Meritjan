@@ -8,9 +8,18 @@ use App\Models\SparePart;
 class SparePartController extends Controller
 {
     // Menampilkan semua spare part
-    public function index()
+    public function index(Request $request)
     {
-        $spareParts = SparePart::all();
+        // Optional: fitur pencarian berdasarkan nama/kode part
+        $keyword = $request->input('q');
+
+        $spareParts = SparePart::when($keyword, function ($query) use ($keyword) {
+            $query->where('nama', 'like', "%{$keyword}%")
+                ->orWhere('kode_part', 'like', "%{$keyword}%");
+        })
+            ->orderBy('nama')
+            ->paginate(10); // tampil 10 per halaman
+
         return view('admin.spare_part.index', compact('spareParts'));
     }
 

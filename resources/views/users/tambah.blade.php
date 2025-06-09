@@ -3,7 +3,7 @@
 @section('title', 'Form Data User')
 
 @section('contents')
-    <form action="{{ route('users.tambah.simpan') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('users.tambah') }}" method="POST" enctype="multipart/form-data">
         @csrf
         @if (session('success'))
             <div class="alert alert-success">
@@ -55,7 +55,7 @@
                         <div class="form-group">
                             <label for="station_id">Station</label>
                             <select name="station_id" id="station_id" class="form-control" required>
-                                <option value="">-- Pilih Station --</option>
+                                <option value="">Pilih Station</option>
                                 @foreach ($stations as $station)
                                     <option value="{{ $station->id }}"
                                         {{ old('station_id') == $station->id ? 'selected' : '' }}>

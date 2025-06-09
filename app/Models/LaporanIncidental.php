@@ -15,6 +15,7 @@ class LaporanIncidental extends Model
         'description',
         'photo_path',
         'requires_spare_part',
+        'spare_part_id',
         'status'
     ];
 
@@ -30,6 +31,6 @@ class LaporanIncidental extends Model
 
     public function sparePart()
     {
-        return $this->belongsTo(SparePart::class);
+        return $this->belongsTo(SparePart::class, 'spare_part_id');
     }
 }

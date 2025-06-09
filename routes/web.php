@@ -92,6 +92,12 @@ Route::put('laporan-insidental/{id}/reject', [LaporanIncidentalController::class
 Route::put('laporan-insidental/{id}/selesai', [LaporanIncidentalController::class, 'selesai'])->name('laporan-insidental.selesai');
 Route::patch('/laporan-insidental/{id}/update-status', [LaporanIncidentalController::class, 'updateStatus'])->name('laporan-insidental.updateStatus');
 
+Route::get('/laporan-insidental/{id}/cetak', [LaporanIncidentalController::class, 'cetak'])->name('laporan-insidental.cetak');
+Route::get('/laporan-insidental/{id}/export-pdf', [LaporanIncidentalController::class, 'exportPDF'])->name('laporan-insidental.export-pdf');
+Route::get('/laporan/export/{id}', [LaporanIncidentalController::class, 'exportPDF'])->name('laporan.exportPDF');
+
+
+
 
 //Pasca Giling Routes
 Route::get('pasca-giling', [PascaGilingController::class, 'index'])->name('pasca-giling.index');

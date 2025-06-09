@@ -4,13 +4,15 @@
 
 @section('contents')
     <div class="mt-2 mb-4">
-        <h2 class="text-white pb-2">Selamat Datang Kembali, {{ auth()->user()->nama }} !</h2>
+        <h2 class="text-white pb-2">Selamat Datang Kembali, {{ auth()->user()->nama }}!</h2>
         <h5 class="text-white op-7 mb-4">Dashboard Monitoring Pemeliharaan Mesin</h5>
     </div>
+
+    {{-- Statistik utama --}}
     <div class="row">
         <div class="col-sm-6 col-md-4">
             <div class="card card-stats card-round border border-white">
-                <div class="card-body ">
+                <div class="card-body">
                     <div class="row">
                         <div class="col-3">
                             <div class="icon-big text-center">
@@ -29,7 +31,7 @@
         </div>
         <div class="col-sm-6 col-md-4">
             <div class="card card-stats card-round border border-white">
-                <div class="card-body ">
+                <div class="card-body">
                     <div class="row">
                         <div class="col-3">
                             <div class="icon-big text-center">
@@ -48,7 +50,7 @@
         </div>
         <div class="col-sm-6 col-md-4">
             <div class="card card-stats card-round border border-white">
-                <div class="card-body ">
+                <div class="card-body">
                     <div class="row">
                         <div class="col-3">
                             <div class="icon-big text-center">
@@ -68,19 +70,29 @@
     </div>
 
     <div class="row mt-4">
-        <div class="col-md-12">
+        <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
-                    <div class="card-title">Grafik Penjadwalan dan Laporan</div>
+                    <div class="card-title">Grafik Kinerja Teknisi</div>
                 </div>
                 <div class="card-body">
-                    <canvas id="grafikJadwal"></canvas>
+                    <canvas id="grafikKetepatan" style="height: 300px;"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Grafik Jumlah Pemeliharaan Rutin & Incidental</div>
+                </div>
+                <div class="card-body">
+                    <canvas id="grafikJadwal" style="height: 300px;"></canvas>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Jadwal Terbaru -->
     <div class="row mt-4">
         <div class="col-md-12">
             <div class="card">
@@ -89,9 +101,10 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
+                        <table class="table table-bordered table-hover border-0" id="jadwalTable" width="100%"
+                            cellspacing="0">
+                            <thead class="thead-dark">
+                                <tr class="text-center">
                                     <th>Tanggal</th>
                                     <th>Mesin</th>
                                     <th>Teknisi</th>
@@ -101,24 +114,27 @@
                             </thead>
                             <tbody>
                                 @forelse($jadwalTerbaru as $jadwal)
-                                    <tr>
-                                        <td>{{ $jadwal->tanggal }}</td>
+                                    <tr class="text-center">
+                                        <td>{{ \Carbon\Carbon::parse($jadwal->tanggal)->format('d M Y') }}</td>
                                         <td>{{ $jadwal->mesin->nama }}</td>
                                         <td>{{ $jadwal->user->nama }}</td>
-                                        <td>{{ ucfirst($jadwal->jenis) }}</td>
+                                        <td class="text-capitalize">{{ $jadwal->jenis }}</td>
                                         <td>
                                             @if ($jadwal->status == 'Terjadwal')
-                                                <span class="badge badge-warning">{{ $jadwal->status }}</span>
+                                                <span class="badge badge-warning px-3 py-2"
+                                                    style="font-size: 0.85rem;">{{ $jadwal->status }}</span>
                                             @elseif($jadwal->status == 'Selesai')
-                                                <span class="badge badge-success">{{ $jadwal->status }}</span>
+                                                <span class="badge badge-success px-3 py-2"
+                                                    style="font-size: 0.85rem;">{{ $jadwal->status }}</span>
                                             @else
-                                                <span class="badge badge-danger">{{ $jadwal->status }}</span>
+                                                <span class="badge badge-danger px-3 py-2"
+                                                    style="font-size: 0.85rem;">{{ $jadwal->status }}</span>
                                             @endif
                                         </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="5" class="text-center">Tidak ada jadwal pemeliharaan</td>
+                                        <td colspan="5" class="text-center">Tidak ada jadwal pemeliharaan.</td>
                                     </tr>
                                 @endforelse
                             </tbody>
@@ -130,4 +146,113 @@
     </div>
 @endsection
 
+@push('scripts')
+    {{-- Load Chart.js --}}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+    <script>
+        // Grafik Perbandingan Pemeliharaan Rutin & Incidental
+        const ctxJadwal = document.getElementById('grafikJadwal').getContext('2d');
+        new Chart(ctxJadwal, {
+            type: 'bar',
+            data: {
+                labels: ['Rutin', 'Incidental'],
+                datasets: [{
+                    label: 'Jumlah Pemeliharaan',
+                    data: [{{ $jumlahRutin ?? 0 }}, {{ $jumlahIncidental ?? 0 }}],
+                    backgroundColor: ['#4e73df', '#e74a3b'],
+                    borderRadius: 6,
+                    barThickness: 40
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': ' + context.raw;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Jenis Pemeliharaan'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Jumlah Jadwal'
+                        },
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                }
+            }
+        });
+
+        // Grafik Ketepatan Penyelesaian Per Teknisi (%)
+        const ctxKetepatan = document.getElementById('grafikKetepatan').getContext('2d');
+        const labelsTeknisi = @json($labelsTeknisi ?? []);
+        const dataKetepatan = @json($dataKetepatan ?? []);
+
+        new Chart(ctxKetepatan, {
+            type: 'bar',
+            data: {
+                labels: labelsTeknisi,
+                datasets: [{
+                    label: 'Persentase Tepat Waktu (%)',
+                    data: dataKetepatan,
+                    backgroundColor: '#1cc88a',
+                    borderRadius: 6,
+                    barThickness: 30
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': ' + context.raw + '%';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Nama Teknisi'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        title: {
+                            display: true,
+                            text: 'Persentase (%)'
+                        },
+                        ticks: {
+                            stepSize: 10
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+@endpush

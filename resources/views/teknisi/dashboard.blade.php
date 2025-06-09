@@ -77,9 +77,10 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
+                        <table class="table table-bordered table-hover border-0" id="jadwalTable" width="100%"
+                            cellspacing="0">
+                            <thead class="thead-dark">
+                                <tr class="text-center">
                                     <th>Tanggal</th>
                                     <th>Mesin</th>
                                     <th>Jenis</th>
@@ -88,17 +89,20 @@
                             </thead>
                             <tbody>
                                 @forelse($jadwalTerbaru as $jadwal)
-                                    <tr>
-                                        <td>{{ $jadwal->tanggal }}</td>
+                                    <tr class="text-center">
+                                        <td>{{ \Carbon\Carbon::parse($jadwal->tanggal)->format('d M Y') }}</td>
                                         <td>{{ $jadwal->mesin->nama }}</td>
-                                        <td>{{ ucfirst($jadwal->jenis) }}</td>
+                                        <td class="text-capitalize">{{ $jadwal->jenis }}</td>
                                         <td>
                                             @if ($jadwal->status == 'Terjadwal')
-                                                <span class="badge badge-warning">{{ $jadwal->status }}</span>
+                                                <span class="badge badge-warning px-3 py-2"
+                                                    style="font-size: 0.85rem;">{{ $jadwal->status }}</span>
                                             @elseif($jadwal->status == 'Selesai')
-                                                <span class="badge badge-success">{{ $jadwal->status }}</span>
+                                                <span class="badge badge-success px-3 py-2"
+                                                    style="font-size: 0.85rem;">{{ $jadwal->status }}</span>
                                             @else
-                                                <span class="badge badge-danger">{{ $jadwal->status }}</span>
+                                                <span class="badge badge-danger px-3 py-2"
+                                                    style="font-size: 0.85rem;">{{ $jadwal->status }}</span>
                                             @endif
                                         </td>
                                     </tr>
@@ -108,7 +112,6 @@
                                     </tr>
                                 @endforelse
                             </tbody>
-
                         </table>
                     </div>
                 </div>
