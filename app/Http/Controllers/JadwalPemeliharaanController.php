@@ -20,7 +20,7 @@ class JadwalPemeliharaanController extends Controller
 
         $pertanyaan = Pertanyaan::all();
 
-        return view('admin.pemeliharaan.index', compact('jadwal','pertanyaan'));
+        return view('admin.pemeliharaan.index', compact('jadwal', 'pertanyaan'));
     }
 
     public function indexteknisi()
@@ -88,9 +88,6 @@ class JadwalPemeliharaanController extends Controller
         // Simpan ke database
         $jadwal = JadwalPemeliharaan::create($request->all());
 
-        // Simpan ke database
-        $jadwal = JadwalPemeliharaan::create($request->all());
-
         // Ambil data teknisi berdasarkan user_id yang dikirim
         $teknisi = User::find($request->user_id);
 
@@ -103,13 +100,13 @@ class JadwalPemeliharaanController extends Controller
             $hariSisa = \Carbon\Carbon::now()->diffInDays($request->tanggal, false);
             $pengingat = $hariSisa > 0 ? "$hariSisa hari lagi anda ada perbaikan mesin, tolong segera diselesaikan." : "Segera lakukan perbaikan mesin sesuai jadwal.";
 
-            $data = "🔧 *Jadwal Pemeliharaan Baru!!!*\n\n"
+            $data = "🔧 Jadwal Pemeliharaan Baru!!!\n\n"
                 . "👤 Nama: {$teknisi->nama}\n"
                 . "📅 Tanggal: $tanggalFormatted\n"
                 . "📍 Mesin: " . $jadwal->mesin->nama . "\n"
                 . "📝 Jenis: " . ucfirst($jadwal->jenis) . "\n"
                 . "🧾 Deskripsi: " . ($request->deskripsi ?? '-') . "\n\n"
-                . "📣 *Pengingat:* $pengingat";
+                . "📣 Pengingat: $pengingat";
 
             // Kirim melalui Fonnte
             $curl = curl_init();
