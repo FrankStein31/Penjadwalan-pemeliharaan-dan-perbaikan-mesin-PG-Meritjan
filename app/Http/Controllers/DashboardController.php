@@ -12,51 +12,74 @@ use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        if (Auth::user()->level === 'Administrator' || Auth::user()->level === 'Manajer Teknisi') {
-            $jumlahUser = User::count();
+        $user = Auth::user();
+
+        if (!$user) {
+            return redirect('/login');
+        }
+
+        if ($user->level === 'Administrator' || $user->level === 'Manajer Teknisi') {
+            // Statistik umum
+            $jumlahUser = User::where('level', 'Teknisi')->count();
             $jumlahMesin = Mesin::count();
             $totalPemeliharaanTerjadwal = JadwalPemeliharaan::where('status', 'Terjadwal')->count();
-            $jadwalTerbaru = JadwalPemeliharaan::with(['mesin', 'user'])
-                ->orderBy('created_at', 'desc')
-                ->take(5)
-                ->get();
 
-            // Jumlah berdasarkan jenis pemeliharaan
+            // Ambil filter tanggal dari request
+            $tanggalAwal = $request->input('tanggal_awal');
+            $tanggalAkhir = $request->input('tanggal_akhir');
+
+            // Format tanggal jika ada
+            if ($tanggalAwal && $tanggalAkhir) {
+                $tanggalAwal = Carbon::parse($tanggalAwal)->startOfDay();
+                $tanggalAkhir = Carbon::parse($tanggalAkhir)->endOfDay();
+            }
+
+            // Ambil jadwal terbaru (dengan filter)
+            $jadwalQuery = JadwalPemeliharaan::with(['mesin', 'user']);
+
+            if ($tanggalAwal && $tanggalAkhir) {
+                $jadwalQuery->whereBetween('tanggal', [$tanggalAwal, $tanggalAkhir]);
+            }
+
+            $jadwalTerbaru = $jadwalQuery->orderByDesc('created_at')->take(5)->get();
+
+            // Statistik jenis pemeliharaan (tetap total semua data)
             $jumlahRutin = JadwalPemeliharaan::where('jenis', 'rutin')->count();
             $jumlahIncidental = JadwalPemeliharaan::where('jenis', 'incidental')->count();
 
-            // --- Hitung ketepatan teknisi ---
-            $teknisi = User::where('level', 'Teknisi')->get();
-
+            // Statistik ketepatan teknisi (dengan filter tanggal selesai)
+            $teknisiList = User::where('level', 'Teknisi')->get();
             $labelsTeknisi = [];
             $dataKetepatan = [];
 
-            foreach ($teknisi as $user) {
-                $pemeliharaanSelesai = JadwalPemeliharaan::where('user_id', $user->id)
-                    ->where('status', 'Selesai')
-                    ->get();
+            foreach ($teknisiList as $teknisi) {
+                $pemeliharaanSelesaiQuery = JadwalPemeliharaan::where('user_id', $teknisi->id)
+                    ->where('status', 'Selesai');
 
-                $totalTugas = $pemeliharaanSelesai->count();
-
-                if ($totalTugas == 0) {
-                    $persen = 0;
-                } else {
-                    $tepatWaktuCount = 0;
-                    foreach ($pemeliharaanSelesai as $p) {
-                        $tanggalTarget = Carbon::parse($p->tanggal);
-                        $tanggalSelesai = Carbon::parse($p->updated_at);
-
-                        if ($tanggalSelesai->lessThanOrEqualTo($tanggalTarget)) {
-                            $tepatWaktuCount++;
-                        }
-                    }
-                    $persen = round(($tepatWaktuCount / $totalTugas) * 100, 2);
+                if ($tanggalAwal && $tanggalAkhir) {
+                    $pemeliharaanSelesaiQuery->whereBetween('updated_at', [$tanggalAwal, $tanggalAkhir]);
                 }
 
-                $labelsTeknisi[] = $user->nama;
-                $dataKetepatan[] = $persen;
+                $pemeliharaanSelesai = $pemeliharaanSelesaiQuery->get();
+
+                $total = $pemeliharaanSelesai->count();
+                $tepatWaktu = 0;
+
+                foreach ($pemeliharaanSelesai as $jadwal) {
+                    $targetDate = Carbon::parse($jadwal->tanggal);
+                    $selesaiDate = Carbon::parse($jadwal->updated_at);
+
+                    if ($selesaiDate->lessThanOrEqualTo($targetDate)) {
+                        $tepatWaktu++;
+                    }
+                }
+
+                $persentase = $total > 0 ? round(($tepatWaktu / $total) * 100, 2) : 0;
+
+                $labelsTeknisi[] = $teknisi->nama;
+                $dataKetepatan[] = $persentase;
             }
 
             return view('dashboard', compact(
@@ -67,13 +90,17 @@ class DashboardController extends Controller
                 'jumlahRutin',
                 'jumlahIncidental',
                 'labelsTeknisi',
-                'dataKetepatan'
+                'dataKetepatan',
+                'tanggalAwal',
+                'tanggalAkhir'
             ));
-        } elseif (Auth::user()->level === 'Teknisi') {
-            $userId = Auth::id();
+        }
+
+        // Jika user adalah Teknisi
+        if ($user->level === 'Teknisi') {
+            $userId = $user->id;
 
             $mesinTeknisi = TeknisiMesin::where('user_id', $userId)->count();
-
             $jadwalTeknisi = JadwalPemeliharaan::where('user_id', $userId)->count();
             $jadwalTerjadwal = JadwalPemeliharaan::where('user_id', $userId)
                 ->where('status', 'Terjadwal')
@@ -81,7 +108,7 @@ class DashboardController extends Controller
 
             $jadwalTerbaru = JadwalPemeliharaan::with('mesin')
                 ->where('user_id', $userId)
-                ->orderBy('created_at', 'desc')
+                ->orderByDesc('created_at')
                 ->take(5)
                 ->get();
 
@@ -91,8 +118,8 @@ class DashboardController extends Controller
                 'jadwalTerjadwal',
                 'jadwalTerbaru'
             ));
-        } else {
-            return redirect('/unauthorized');
         }
+
+        return redirect('/unauthorized');
     }
 }

@@ -4,53 +4,80 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\JadwalPemeliharaan;
+use App\Models\Mesin;
+use Illuminate\Support\Facades\Auth;
 use Dompdf\Dompdf;
 use Dompdf\Options;
- // Perbaikan alias Pdf
 
 class RiwayatLaporanController extends Controller
 {
-    public function index()
+    /**
+     * Menampilkan riwayat pemeliharaan untuk admin dan manajer.
+     */
+    public function index(Request $request)
     {
-        $jadwal = JadwalPemeliharaan::with(['mesin', 'user'])
-            ->where('status', 'Selesai')
-            ->get();
+        $user = Auth::user();
+        $query = JadwalPemeliharaan::with(['mesin', 'user'])
+            ->where('status', 'Selesai');
+
+        // Filter berdasarkan mesin (jika ada)
+        if ($request->filled('mesin_id')) {
+            $query->where('mesin_id', $request->mesin_id);
+        }
+
+        $jadwal = $query->get();
+        $mesinList = Mesin::all(); // Untuk dropdown filter mesin
+
+        return view('admin.riwayat.index', compact('jadwal', 'mesinList'));
+    }
+
+    /**
+     * Menampilkan riwayat teknisi sendiri.
+     */
+    public function indexteknisi(Request $request)
+    {
+        $query = JadwalPemeliharaan::with(['mesin', 'user'])
+            ->where('user_id', auth()->id())
+            ->where('status', 'Selesai');
+
+        // Filter mesin jika ada (opsional untuk teknisi juga)
+        if ($request->filled('mesin_id')) {
+            $query->where('mesin_id', $request->mesin_id);
+        }
+
+        $jadwal = $query->get();
 
         return view('admin.riwayat.index', compact('jadwal'));
     }
-    public function indexteknisi()
+
+    /**
+     * Export PDF untuk admin/manajer.
+     */
+    public function exportPDF(Request $request)
     {
-        $jadwal = JadwalPemeliharaan::with(['mesin', 'user'])
-        ->where('user_id', auth()->id())
-        ->where('status', 'Selesai')
-        ->get();
+        $query = JadwalPemeliharaan::with(['mesin', 'user'])
+            ->where('status', 'Selesai');
 
+        // Tambahkan filter mesin jika ada
+        if ($request->filled('mesin_id')) {
+            $query->where('mesin_id', $request->mesin_id);
+        }
 
-        return view('admin.riwayat.index', compact('jadwal'));
-    }
+        $jadwal = $query->get();
 
-    public function exportPDF()
-    {
-        $jadwal = JadwalPemeliharaan::with(['mesin', 'user'])
-            ->where('status', 'Selesai')
-            ->get();
-
-        // Ambil tampilan HTML dari Blade
+        // Render HTML ke PDF
         $html = view('admin.riwayat.pdf', compact('jadwal'))->render();
 
-        // Konfigurasi Dompdf
         $options = new Options();
         $options->set('defaultFont', 'Helvetica');
         $options->set('isHtml5ParserEnabled', true);
-        $options->set('isRemoteEnabled', true); // Jika ada gambar dari URL
+        $options->set('isRemoteEnabled', true);
 
-        // Buat instance Dompdf
         $dompdf = new Dompdf($options);
         $dompdf->loadHtml($html);
         $dompdf->setPaper('A4', 'landscape');
         $dompdf->render();
 
-        // Unduh file PDF
         return response($dompdf->output(), 200)
             ->header('Content-Type', 'application/pdf')
             ->header('Content-Disposition', 'attachment; filename="riwayat_pemeliharaan.pdf"');
