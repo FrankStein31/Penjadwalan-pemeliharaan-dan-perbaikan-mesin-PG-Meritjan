@@ -48,10 +48,10 @@
                                     @endif
                                 </td>
                                 <td class="text-center">
-                                    <a href="{{ route('pasca-giling.edit', $item->id) }}"
+                                    <!-- <a href="{{ route('pasca-giling.edit', $item->id) }}"
                                         class="btn btn-warning btn-sm btn-circle" title="Edit">
                                         <i class="fas fa-pencil-alt"></i>
-                                    </a>
+                                    </a> -->
 
                                     <form action="{{ route('pasca-giling.destroy', $item->id) }}" method="POST"
                                         style="display:inline-block;">

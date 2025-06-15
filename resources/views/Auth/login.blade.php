@@ -280,7 +280,7 @@
                             <input type="checkbox" class="custom-control-input" id="rememberme">
                             <label class="custom-control-label" for="rememberme">Ingat Saya</label>
                         </div>
-                        <a href="#" class="text-create-account small">Lupa Password?</a>
+                        <!-- <a href="#" class="text-create-account small">Lupa Password?</a> -->
                     </div>
 
                     <div class="form-group">
@@ -292,10 +292,10 @@
                 </form>
             </div>
 
-            <div class="login-footer">
+            <!-- <div class="login-footer">
                 <p>Belum memiliki akun? <a class="text-create-account" href="{{ route('register') }}">Daftar
                         Sekarang</a></p>
-            </div>
+            </div> -->
         </div>
     </div>
 

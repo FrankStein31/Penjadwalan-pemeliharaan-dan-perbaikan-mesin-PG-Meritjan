@@ -46,7 +46,7 @@ class PascaGilingController extends Controller
 
         foreach ($teknisiList as $teknisi) {
             if ($teknisi && $teknisi->telp) {
-                $token = "RWQHVXjZJS2nuH698t7C";
+                $token = "RQCD2A7WMdZHJfEYDTDK";
                 $target = $teknisi->telp;
                 $tanggalFormatted = \Carbon\Carbon::parse($request->tanggal_mulai)->format('d-m-Y H:i');
 

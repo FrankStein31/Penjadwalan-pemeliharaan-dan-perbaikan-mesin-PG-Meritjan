@@ -15,7 +15,6 @@ class JadwalPemeliharaanController extends Controller
     public function index()
     {
         $jadwal = JadwalPemeliharaan::with(['mesin', 'user', 'screening'])
-            ->whereNot('status', 'Selesai')
             ->get();
 
         $pertanyaan = Pertanyaan::all();
@@ -27,7 +26,6 @@ class JadwalPemeliharaanController extends Controller
     {
         $jadwal = JadwalPemeliharaan::with(['mesin', 'user'])
             ->where('user_id', auth()->id()) // Filter hanya untuk user yang sedang login
-            ->whereNot('status', 'Selesai')
             ->get();
 
         return view('admin.pemeliharaan.index', compact('jadwal'));
@@ -92,7 +90,7 @@ class JadwalPemeliharaanController extends Controller
         $teknisi = User::find($request->user_id);
 
         if ($teknisi) {
-            $token = "RWQHVXjZJS2nuH698t7C"; // Token API Fonnte
+            $token = "RQCD2A7WMdZHJfEYDTDK"; // Token API Fonnte
             $target = $teknisi->telp; // Pastikan nomor dalam format internasional
             $tanggalFormatted = \Carbon\Carbon::parse($request->tanggal)->format('d-m-Y H:i');
 
