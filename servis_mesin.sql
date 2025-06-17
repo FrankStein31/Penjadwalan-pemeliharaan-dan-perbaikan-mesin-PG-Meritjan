@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 09 Jun 2025 pada 12.53
+-- Waktu pembuatan: 17 Jun 2025 pada 17.02
 -- Versi server: 10.4.28-MariaDB
 -- Versi PHP: 8.2.4
 
@@ -61,17 +61,24 @@ CREATE TABLE `jadwal_pemeliharaan` (
 --
 
 INSERT INTO `jadwal_pemeliharaan` (`id`, `mesin_id`, `user_id`, `jenis`, `tanggal`, `deskripsi`, `status`, `pertanyaan`, `created_at`, `updated_at`) VALUES
-(8, 3, 9, 'incidental', '2025-03-19', 'Rusak Gear', 'Selesai', '', '2025-03-18 11:38:21', '2025-03-19 15:09:55'),
-(9, 10, 12, 'rutin', '2025-03-20', 'Rusak Total', 'Selesai', '', '2025-03-19 15:01:37', '2025-03-19 15:15:24'),
-(10, 10, 12, 'incidental', '2025-03-20', 'Rusak Gear', 'Selesai', '', '2025-03-19 15:19:29', '2025-03-19 15:46:42'),
-(11, 10, 12, 'rutin', '2025-03-20', 'Rusak Sebagian', 'Selesai', '', '2025-03-19 15:19:59', '2025-03-19 15:36:05'),
-(12, 10, 12, 'rutin', '2025-03-20', 'Rusak', 'Selesai', '', '2025-03-19 15:50:17', '2025-03-19 15:50:33'),
-(13, 10, 12, 'rutin', '2025-03-20', 'Rusak', 'Selesai', '', '2025-03-19 22:56:37', '2025-03-19 22:56:48'),
-(23, 3, 9, 'rutin', '2025-04-30', 'Perbaikan rutin', 'Selesai', '', '2025-04-24 12:29:33', '2025-04-24 13:02:19'),
-(38, 3, 9, 'rutin', '2025-05-25', 'Rusak Gearr', 'Selesai', '', '2025-05-22 14:00:21', '2025-06-07 12:10:56'),
-(39, 3, 9, 'rutin', '2025-05-25', 'Rusak', 'Terjadwal', '', '2025-05-22 14:08:12', '2025-05-22 14:08:12'),
+(8, 3, 9, 'incidental', '2025-06-19', 'Rusak Gear', 'Terjadwal', '', '2025-03-18 11:38:21', '2025-06-16 04:56:08'),
+(9, 10, 12, 'rutin', '2025-06-20', 'Rusak Total', 'Terjadwal', '', '2025-03-19 15:01:37', '2025-06-16 04:56:09'),
+(10, 10, 12, 'incidental', '2025-06-20', 'Rusak Gear', 'Terjadwal', '', '2025-03-19 15:19:29', '2025-06-16 04:56:09'),
+(11, 10, 12, 'rutin', '2025-06-20', 'Rusak Sebagian', 'Terjadwal', '', '2025-03-19 15:19:59', '2025-06-16 04:56:10'),
+(12, 10, 12, 'rutin', '2025-06-20', 'Rusak', 'Terjadwal', '', '2025-03-19 15:50:17', '2025-06-16 04:56:10'),
+(13, 10, 12, 'rutin', '2025-06-20', 'Rusak', 'Terjadwal', '', '2025-03-19 22:56:37', '2025-06-16 04:56:11'),
+(23, 3, 9, 'rutin', '2025-06-30', 'Perbaikan rutin', 'Terjadwal', '', '2025-04-24 12:29:33', '2025-06-16 04:56:11'),
+(38, 3, 9, 'rutin', '2025-06-25', 'Rusak Gearr', 'Terjadwal', '', '2025-05-22 14:00:21', '2025-06-16 04:56:12'),
+(39, 3, 9, 'rutin', '2025-06-25', 'Rusak', 'Terjadwal', '', '2025-05-22 14:08:12', '2025-06-16 04:56:12'),
 (41, 3, 12, 'incidental', '2025-06-07', 'Perbaikan incidental', 'Selesai', 'Apakah ada getaran berlebih?', '2025-06-07 12:20:15', '2025-06-07 12:28:56'),
-(43, 10, 9, 'incidental', '2025-06-07', 'Perbaikan', 'Selesai', 'Apakah ada getaran berlebih?', '2025-06-07 12:23:31', '2025-06-07 12:28:32');
+(43, 10, 9, 'incidental', '2025-06-07', 'Perbaikan', 'Selesai', 'Apakah ada getaran berlebih?', '2025-06-07 12:23:31', '2025-06-07 12:28:32'),
+(47, 3, 12, 'rutin', '2025-06-11', 'Rusak', 'Selesai', 'Apakah ada getaran berlebih?', '2025-06-11 15:47:00', '2025-06-12 15:23:34'),
+(48, 3, 12, 'rutin', '2025-06-11', 'Rusak', 'Selesai', 'Apakah ada getaran berlebih?', '2025-06-12 15:26:29', '2025-06-12 15:26:45'),
+(49, 10, 9, 'rutin', '2025-06-11', 'Rusak', 'Selesai', 'Apakah ada getaran berlebih?', '2025-06-12 15:31:33', '2025-06-12 15:31:49'),
+(50, 10, 9, 'rutin', '2025-06-12', 'Rusak', 'Selesai', 'Apakah ada getaran berlebih?', '2025-06-12 15:32:37', '2025-06-12 15:32:53'),
+(51, 10, 9, 'rutin', '2025-06-18', 'Rusak', 'Selesai', 'Apakah ada getaran berlebih?', '2025-06-12 15:35:38', '2025-06-12 15:35:54'),
+(52, 10, 9, 'rutin', '2025-06-18', 'Rusak', 'Selesai', 'Apakah ada getaran berlebih?', '2025-06-16 04:52:08', '2025-06-16 04:55:13'),
+(53, 10, 9, 'rutin', '2025-06-15', 'wasd', 'Terjadwal', 'Apakah ada getaran berlebih?', '2025-06-16 05:06:54', '2025-06-16 05:07:29');
 
 -- --------------------------------------------------------
 
@@ -81,6 +88,7 @@ INSERT INTO `jadwal_pemeliharaan` (`id`, `mesin_id`, `user_id`, `jenis`, `tangga
 
 CREATE TABLE `laporanincidental` (
   `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED DEFAULT NULL,
   `mesin_id` bigint(20) UNSIGNED NOT NULL,
   `station_id` bigint(20) UNSIGNED NOT NULL,
   `description` text NOT NULL,
@@ -96,10 +104,9 @@ CREATE TABLE `laporanincidental` (
 -- Dumping data untuk tabel `laporanincidental`
 --
 
-INSERT INTO `laporanincidental` (`id`, `mesin_id`, `station_id`, `description`, `photo_path`, `requires_spare_part`, `status`, `spare_part_id`, `created_at`, `updated_at`) VALUES
-(7, 11, 2, 'Rusak Gear', 'laporan-insidental/5rvXsRQqYCNe4sVV5wZ9ZAv3aLB4AEVtPgt0bmE5.jpg', 1, 'Selesai', NULL, '2025-05-15 17:35:32', '2025-06-02 16:33:13'),
-(8, 3, 1, 'Rusak Berat', 'laporan-insidental/1r4eDDiqB9UjxG23Wr1ZPL5N2XfuRW9cKJLvO0sC.png', 0, 'Dalam Peninjauan', NULL, '2025-06-02 16:13:15', '2025-06-09 10:43:01'),
-(12, 10, 2, 'Rusak  Total', 'laporan-insidental/HDBPI0PMbmbhg2GVFnHxreCbwddcBQcnPwTYIXFe.jpg', 1, 'Selesai', 3, '2025-06-09 09:45:20', '2025-06-09 10:34:36');
+INSERT INTO `laporanincidental` (`id`, `user_id`, `mesin_id`, `station_id`, `description`, `photo_path`, `requires_spare_part`, `status`, `spare_part_id`, `created_at`, `updated_at`) VALUES
+(13, 9, 10, 2, 'Rusak total', 'laporan-insidental/uWJxWtkNfl1QEiEnlvos1vnUPJ6Jm9qxfpsgg1e7.jpg', 1, 'Selesai', 3, '2025-06-17 04:55:02', '2025-06-17 05:05:50'),
+(14, 12, 3, 1, 'Rusak gear', 'laporan-insidental/W3MJsWMdVVRCSthGWZM4teeZze0YFAGFZmGgmPdQ.jpg', 1, 'Selesai', 3, '2025-06-17 05:10:10', '2025-06-17 05:11:34');
 
 -- --------------------------------------------------------
 
@@ -298,7 +305,8 @@ CREATE TABLE `pertanyaan` (
 --
 
 INSERT INTO `pertanyaan` (`id`, `jadwal_pemeliharaan_id`, `getaran`, `suara`, `pelumasan`, `bocor`, `kerusakan`, `tindakan`, `komponen`, `created_at`, `updated_at`) VALUES
-(8, 39, 'Ya', 'Ya', 'Ya', 'Ya', 'Ya', 'Pergantian Komponen', 'Roll gilingan (001)', '2025-06-08 17:44:49', '2025-06-08 17:44:49');
+(8, 39, 'Ya', 'Ya', 'Ya', 'Ya', 'Ya', 'Pergantian Komponen', 'Roll gilingan (001)', '2025-06-08 17:44:49', '2025-06-08 17:44:49'),
+(9, 8, 'Ya', 'Ya', 'Ya', 'Ya', 'Ya', 'Pergantian Komponen', 'Roll gilingan (001)', '2025-06-17 10:29:48', '2025-06-17 10:29:48');
 
 -- --------------------------------------------------------
 
@@ -416,7 +424,7 @@ CREATE TABLE `spare_parts` (
 --
 
 INSERT INTO `spare_parts` (`id`, `kode_part`, `nama`, `jenis`, `stok`, `deskripsi`, `created_at`, `updated_at`) VALUES
-(3, '001', 'Roll gilingan', 'mekanik', 6, 'Komponen utama yang menghancurkan tebu.', '2025-03-18 09:06:52', '2025-06-08 17:44:49');
+(3, '001', 'Roll gilingan', 'mekanik', 5, 'Komponen utama yang menghancurkan tebu.', '2025-03-18 09:06:52', '2025-06-17 10:29:48');
 
 -- --------------------------------------------------------
 
@@ -533,7 +541,8 @@ ALTER TABLE `laporanincidental`
   ADD PRIMARY KEY (`id`),
   ADD KEY `laporanincidental_mesin_id_foreign` (`mesin_id`),
   ADD KEY `laporanincidental_station_id_foreign` (`station_id`),
-  ADD KEY `laporanincidental_spare_part_id_foreign` (`spare_part_id`);
+  ADD KEY `laporanincidental_spare_part_id_foreign` (`spare_part_id`),
+  ADD KEY `fk_user_laporan` (`user_id`);
 
 --
 -- Indeks untuk tabel `machines`
@@ -683,13 +692,13 @@ ALTER TABLE `damage_reports`
 -- AUTO_INCREMENT untuk tabel `jadwal_pemeliharaan`
 --
 ALTER TABLE `jadwal_pemeliharaan`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
 
 --
 -- AUTO_INCREMENT untuk tabel `laporanincidental`
 --
 ALTER TABLE `laporanincidental`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT untuk tabel `machines`
@@ -743,7 +752,7 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT untuk tabel `pertanyaan`
 --
 ALTER TABLE `pertanyaan`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT untuk tabel `repairs`
@@ -814,6 +823,7 @@ ALTER TABLE `damage_reports`
 -- Ketidakleluasaan untuk tabel `laporanincidental`
 --
 ALTER TABLE `laporanincidental`
+  ADD CONSTRAINT `fk_user_laporan` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `laporanincidental_mesin_id_foreign` FOREIGN KEY (`mesin_id`) REFERENCES `mesins` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `laporanincidental_spare_part_id_foreign` FOREIGN KEY (`spare_part_id`) REFERENCES `spare_parts` (`id`) ON DELETE SET NULL,
   ADD CONSTRAINT `laporanincidental_station_id_foreign` FOREIGN KEY (`station_id`) REFERENCES `stations` (`id`) ON DELETE CASCADE;

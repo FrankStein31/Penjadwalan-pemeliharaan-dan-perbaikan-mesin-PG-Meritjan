@@ -7,18 +7,22 @@ use App\Models\Mesin;
 use App\Models\SparePart;
 use App\Models\Station;
 use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
-use Barryvdh\DomPDF\PDF as DomPDFPDF;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Dompdf\Dompdf;
 use Dompdf\Options;
-use PDF; // Pastikan Anda telah menginstal package dompdf/dompdf dan barryvdh/laravel-dompdf
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class LaporanIncidentalController extends Controller
 {
     public function index()
     {
-        $laporans = LaporanIncidental::with(['mesin', 'station', 'sparePart'])->paginate(10);
+        $query = LaporanIncidental::with(['mesin', 'station', 'sparePart', 'user']);
+
+        if (auth()->user()->level === 'Teknisi') {
+            $query->where('user_id', auth()->id());
+        }
+
+        $laporans = $query->paginate(10);
         return view('laporan_incidental.index', compact('laporans'));
     }
 
@@ -46,6 +50,7 @@ class LaporanIncidentalController extends Controller
             : null;
 
         LaporanIncidental::create([
+            'user_id' => auth()->id(),
             'mesin_id' => $request->mesin_id,
             'station_id' => $request->station_id,
             'description' => $request->description,
@@ -59,16 +64,16 @@ class LaporanIncidentalController extends Controller
 
     public function show($id)
     {
-        $laporan = LaporanIncidental::with(['mesin', 'station', 'sparePart'])->findOrFail($id);
+        $laporan = LaporanIncidental::with(['mesin', 'station', 'sparePart', 'user'])->findOrFail($id);
         return view('laporan_incidental.show', compact('laporan'));
     }
 
     public function edit($id)
     {
         $laporan = LaporanIncidental::with(['mesin', 'station', 'sparePart'])->findOrFail($id);
-        $stations = Station::all();
-        $mesins = Mesin::all();
-        $spareParts = SparePart::all();
+        $stations = Station::all(['id', 'nama_station']);
+        $mesins = Mesin::all(['id', 'nama']);
+        $spareParts = SparePart::all(['id', 'nama', 'kode_part']);
 
         return view('laporan_incidental.edit', compact('laporan', 'stations', 'mesins', 'spareParts'));
     }

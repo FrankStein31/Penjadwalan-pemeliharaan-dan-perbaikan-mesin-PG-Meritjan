@@ -101,7 +101,7 @@ class KirimPengingatPemeliharaan implements ShouldQueue
         $target = $teknisi->telp;
 
         $tanggalFormatted = $tanggalJadwal->format('d-m-Y H:i');
-        
+
         if ($isResetSchedule) {
             // Pesan khusus untuk jadwal yang direset dari Selesai/Dibatalkan
             $pengingat = "Jadwal pemeliharaan telah dibuat untuk bulan ini";
@@ -121,7 +121,7 @@ class KirimPengingatPemeliharaan implements ShouldQueue
 
         $pesan = "$emoji *$header*\n\n"
             . "Halo *{$teknisi->nama}*,\n";
-            
+
         if ($isResetSchedule) {
             $pesan .= "Jadwal pemeliharaan untuk bulan ini telah dibuat otomatis karena jadwal sebelumnya sudah selesai/dibatalkan.\n\n";
         } elseif ($isUpdatedSchedule) {
@@ -129,19 +129,19 @@ class KirimPengingatPemeliharaan implements ShouldQueue
         } else {
             $pesan .= "Ini adalah pengingat bahwa Anda memiliki jadwal pemeliharaan mesin dalam waktu dekat.\n\n";
         }
-        
+
         $pesan .= "🔧 *Detail Jadwal:*\n"
             . "📅 Tanggal: $tanggalFormatted\n"
             . "🛠️ Mesin: {$jadwal->mesin->nama}\n"
             . "📂 Jenis: " . ucfirst($jadwal->jenis) . "\n\n";
-            
+
         if ($isResetSchedule || $isUpdatedSchedule) {
             $pesan .= "📌 *Jadwal baru Anda adalah $tanggalFormatted*\n"
                 . "⏳ Mohon siapkan keperluan yang dibutuhkan.\n\n";
         } else {
             $pesan .= "⏳ *$pengingat*, mohon siapkan keperluan yang dibutuhkan.\n\n";
         }
-        
+
         $pesan .= "Terima kasih atas kerja samanya.";
 
         // Kirim melalui Fonnte
@@ -158,11 +158,11 @@ class KirimPengingatPemeliharaan implements ShouldQueue
                 "Authorization: $token"
             ],
         ]);
-        
+
         $response = curl_exec($curl);
         $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
-        
+
         // Log untuk tracking
         $tipeNotif = $isResetSchedule ? 'reset' : ($isUpdatedSchedule ? 'update' : 'reminder');
         \Log::info("Notifikasi {$tipeNotif} dikirim ke {$teknisi->nama} ({$target}) untuk jadwal ID {$jadwal->id}. HTTP Code: $httpCode");
