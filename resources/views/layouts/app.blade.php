@@ -74,20 +74,22 @@
             @include('layouts.navbar')
         </div>
 
-        @if (auth()->user()->level === 'Administrator'|| auth()->user()->level === 'Manajer Teknisi')
+        @if (auth()->user()->level === 'Administrator' || auth()->user()->level === 'Manajer Teknisi')
             @include('layouts.sidebar')
         @elseif(auth()->user()->level === 'Teknisi')
             @include('layouts.sidebar-teknisi')
-        @endif
+        @elseif(auth()->user()->level === 'Operator Mesin')
+            @include('layouts.sidebar')
+            @endif
 
-        <div class="main-panel">
-            <div class="container">
-                <div class="page-inner">
-                    @yield('contents')
+            <div class="main-panel">
+                <div class="container">
+                    <div class="page-inner">
+                        @yield('contents')
+                    </div>
                 </div>
+                @include('layouts.footer')
             </div>
-            @include('layouts.footer')
-        </div>
     </div>
 
 

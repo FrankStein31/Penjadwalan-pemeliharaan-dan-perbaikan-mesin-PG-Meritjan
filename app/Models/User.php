@@ -59,4 +59,8 @@ class User extends Authenticatable
         return $this->belongsTo(Station::class);
     }
 
+    public function teknisiMesins()
+    {
+        return $this->hasMany(\App\Models\TeknisiMesin::class, 'user_id');
+    }
 }

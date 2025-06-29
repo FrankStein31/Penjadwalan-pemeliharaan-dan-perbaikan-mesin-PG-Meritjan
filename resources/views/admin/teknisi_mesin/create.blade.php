@@ -3,6 +3,70 @@
 @section('title', 'Form Tambah Teknisi & Mesin')
 
 @section('contents')
+    {{-- Select2 CSS --}}
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <style>
+        .form-control {
+            background-color: #1e2235;
+            border: 1px solid #2e344e;
+            color: #f8fafc;
+            border-radius: 12px;
+            height: 48px;
+            padding: 10px 16px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.3), inset -1px -1px 2px rgba(255, 255, 255, 0.05);
+        }
+
+        .form-control:focus {
+            border-color: #3b82f6;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+            background-color: #1f263b;
+        }
+
+        .form-control[readonly] {
+            background-color: #1e2235;
+            opacity: 0.8;
+            cursor: not-allowed;
+        }
+
+        /* ========== Button Styling ========== */
+        .btn-primary {
+            background-color: #3b82f6;
+            border-color: #3b82f6;
+            border-radius: 12px;
+            padding: 10px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #2563eb;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: #334155;
+            border-color: #334155;
+            border-radius: 12px;
+            padding: 10px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #f8fafc;
+        }
+
+        .btn-secondary:hover {
+            background-color: #475569;
+            border-color: #475569;
+            box-shadow: 0 0 0 3px rgba(100, 116, 139, 0.3);
+        }
+    </style>
+
+
     <form action="{{ route('teknisi_mesin.store') }}" method="POST">
         @csrf
 
@@ -10,15 +74,13 @@
             <div class="col-12">
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">
-                            Form Tambah Teknisi & Mesin
-                        </h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Form Tambah Teknisi & Mesin</h6>
                     </div>
                     <div class="card-body">
                         {{-- Pilih Teknisi --}}
                         <div class="form-group">
                             <label>Pilih Teknisi</label>
-                            <select name="user_id" id="user_id" class="form-control" required>
+                            <select name="user_id" id="user_id" class="form-control select2" required>
                                 <option value="">Pilih Teknisi</option>
                                 @foreach ($users as $item)
                                     <option value="{{ $item->id }}"
@@ -61,35 +123,39 @@
             </div>
         </div>
     </form>
+@endsection
 
-    {{-- Script untuk handle perubahan user dan filter mesin --}}
+@push('scripts')
+    {{-- jQuery & Select2 --}}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
     <script>
-        document.getElementById('user_id').addEventListener('change', function() {
-            const selectedUser = this.options[this.selectedIndex];
-            const stationName = selectedUser.getAttribute('data-station') || 'Belum ditentukan';
-            const stationId = selectedUser.getAttribute('data-station-id');
+        $(document).ready(function() {
+            console.log('Select2 aktif');
 
-            // Tampilkan nama station
-            document.getElementById('station_info').value = stationName;
-
-            // Filter mesin berdasarkan station teknisi
-            const mesinOptions = document.querySelectorAll('#mesin_id option');
-            mesinOptions.forEach(option => {
-                if (!option.value) {
-                    option.style.display = 'block'; // "Pilih mesin" tetap tampil
-                    return;
-                }
-
-                const mesinStationId = option.getAttribute('data-station-id');
-                if (mesinStationId === stationId) {
-                    option.style.display = 'block';
-                } else {
-                    option.style.display = 'none';
-                }
+            // Aktifkan Select2
+            $('#user_id').select2({
+                placeholder: "Pilih Teknisi",
+                allowClear: true,
+                width: '100%'
             });
 
-            // Reset pilihan mesin
-            document.getElementById('mesin_id').value = '';
+            // Saat dropdown teknisi berubah
+            $('#user_id').on('change', function() {
+                const selectedUser = this.options[this.selectedIndex];
+                const stationName = selectedUser.getAttribute('data-station') || 'Belum ditentukan';
+                const stationId = selectedUser.getAttribute('data-station-id');
+                $('#station_info').val(stationName);
+
+                $('#mesin_id option').each(function() {
+                    if (!this.value) return $(this).show();
+                    const mesinStationId = $(this).data('station-id');
+                    $(this).toggle(mesinStationId == stationId);
+                });
+
+                $('#mesin_id').val('');
+            });
         });
     </script>
-@endsection
+@endpush

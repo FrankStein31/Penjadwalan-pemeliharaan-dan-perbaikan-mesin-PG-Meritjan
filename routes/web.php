@@ -89,6 +89,13 @@ Route::get('/laporan-insidental/{id}/cetak', [LaporanIncidentalController::class
 Route::get('/laporan-insidental/{id}/export-pdf', [LaporanIncidentalController::class, 'exportPDF'])->name('laporan-insidental.export-pdf');
 Route::get('/laporan/export/{id}', [LaporanIncidentalController::class, 'exportPDF'])->name('laporan.exportPDF');
 
+Route::get('/laporan-insidental/{id}/assign', [LaporanIncidentalController::class, 'assignForm'])->name('laporan-insidental.assignForm');
+
+Route::post('/laporan-insidental/{id}/assign', [LaporanIncidentalController::class, 'assignTeknisi'])->name('laporan-insidental.assignTeknisi');
+
+
+
+
 //Pasca Giling Routes
 Route::get('pasca-giling', [PascaGilingController::class, 'index'])->name('pasca-giling.index');
 Route::get('pasca-giling/create', [PascaGilingController::class, 'create'])->name('pasca-giling.create');
@@ -130,19 +137,21 @@ Route::middleware(['auth'])->group(function () {
 
     //Jadwal Pemeliharaan Routes
     Route::prefix('jadwal-pemeliharaan')->group(function () {
-        Route::get('/', [JadwalPemeliharaanController::class, 'index'])->name('admin.jadwal.index');
-        Route::get('/jadwal-teknisi', [JadwalPemeliharaanController::class, 'indexteknisi'])->name('admin.jadwal.indexteknisi'); // Menampilkan semua jadwal
-        Route::get('/tambah', [JadwalPemeliharaanController::class, 'create'])->name('admin.jadwal.create');
-        Route::post('/', [JadwalPemeliharaanController::class, 'store'])->name('admin.jadwal.store'); // Menambah jadwal baru
-        // Route::get('/{id}', [JadwalPemeliharaanController::class, 'show'])->name('admin.jadwal.show'); // Detail jadwal
-        Route::put('/update/{id}', [JadwalPemeliharaanController::class, 'update'])->name('admin.jadwal.update');
-        Route::put('/admin/jadwal/{id}/selesai', [JadwalPemeliharaanController::class, 'markAsSelesai'])
-            ->name('admin.jadwal.selesai');
-        Route::put('/admin/jadwal/{id}/dibatalkan', [JadwalPemeliharaanController::class, 'markAsDibatakan'])
-            ->name('admin.jadwal.dibatalkan');
-        Route::get('/edit/{id}', [JadwalPemeliharaanController::class, 'edit'])->name('admin.jadwal.edit');
-        Route::delete('/hapus/{id}', [JadwalPemeliharaanController::class, 'destroy'])->name('admin.jadwal.delete'); // Hapus jadwal
-    });
+    Route::get('/', [JadwalPemeliharaanController::class, 'index'])->name('admin.jadwal.index');
+    Route::get('/jadwal-teknisi', [JadwalPemeliharaanController::class, 'indexteknisi'])->name('admin.jadwal.indexteknisi');
+    Route::get('/tambah', [JadwalPemeliharaanController::class, 'create'])->name('admin.jadwal.create');
+    Route::post('/', [JadwalPemeliharaanController::class, 'store'])->name('admin.jadwal.store');
+    Route::put('/update/{id}', [JadwalPemeliharaanController::class, 'update'])->name('admin.jadwal.update');
+    Route::put('/admin/jadwal/{id}/selesai', [JadwalPemeliharaanController::class, 'markAsSelesai'])->name('admin.jadwal.selesai');
+    Route::put('/admin/jadwal/{id}/dibatalkan', [JadwalPemeliharaanController::class, 'markAsDibatakan'])->name('admin.jadwal.dibatalkan');
+    Route::get('/edit/{id}', [JadwalPemeliharaanController::class, 'edit'])->name('admin.jadwal.edit');
+    Route::delete('/hapus/{id}', [JadwalPemeliharaanController::class, 'destroy'])->name('admin.jadwal.delete');
+
+    // ✅ Tambahan untuk Upload Bukti
+    Route::get('/{id}/upload-bukti', [JadwalPemeliharaanController::class, 'formUploadBukti'])->name('jadwal.upload-bukti');
+    Route::post('/{id}/upload-bukti', [JadwalPemeliharaanController::class, 'uploadBukti'])->name('jadwal.upload-bukti.store');
+});
+
 
     Route::get('/repair', [RepairAssignmentController::class, 'index'])->name('admin.repair.index');
     Route::get('/repair/assign', [RepairAssignmentController::class, 'create'])->name('repair.assign');

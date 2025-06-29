@@ -6,6 +6,7 @@ use App\Models\LaporanIncidental;
 use App\Models\Mesin;
 use App\Models\SparePart;
 use App\Models\Station;
+use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -18,7 +19,7 @@ class LaporanIncidentalController extends Controller
     {
         $query = LaporanIncidental::with(['mesin', 'station', 'sparePart', 'user']);
 
-        if (auth()->user()->level === 'Teknisi') {
+        if (auth()->user()->level === 'Teknisi' || auth()->user()->level === 'Operator Mesin') {
             $query->where('user_id', auth()->id());
         }
 
@@ -155,11 +156,61 @@ class LaporanIncidentalController extends Controller
             'status' => 'required|string|in:Setuju,Tolak,Selesai,Dalam Peninjauan',
         ]);
 
-        $laporan = LaporanIncidental::findOrFail($id);
+        $laporan = LaporanIncidental::with(['mesin', 'station'])->findOrFail($id);
         $laporan->status = $request->status;
         $laporan->save();
 
         return redirect()->back()->with('success', 'Status laporan berhasil diubah!');
+    }
+
+    public function assignForm($id)
+    {
+        $laporan = LaporanIncidental::with(['mesin', 'station'])->findOrFail($id);
+        $teknisis = User::where('level', 'Teknisi')
+            ->where('station_id', $laporan->station_id)
+            ->get();
+
+        return view('laporan_incidental.assign', compact('laporan', 'teknisis'));
+    }
+
+    public function assignTeknisi(Request $request, $id)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id'
+        ]);
+
+        $laporan = LaporanIncidental::findOrFail($id);
+
+        $teknisi = User::find($request->user_id);
+        if ($teknisi) {
+            $token = "RWQHVXjZJS2nuH698t7C";
+            $target = $teknisi->telp;
+
+            $data = "🔧 Laporan Insidental Telah Disetujui!\n\n"
+                . "👤 Nama Teknisi: {$teknisi->nama}\n"
+                . "📍 Mesin: {$laporan->mesin->nama}\n"
+                . "🏭 Station: {$laporan->station->nama_station}\n"
+                . "📍 Deskripsi: {$laporan->description}\n\n"
+                . "Silakan segera lakukan pengecekan dan perbaikan.";
+
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => 'https://api.fonnte.com/send',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => array(
+                    'target' => $target,
+                    'message' => $data,
+                ),
+                CURLOPT_HTTPHEADER => array(
+                    "Authorization: $token"
+                ),
+            ));
+            curl_exec($curl);
+            curl_close($curl);
+        }
+
+        return redirect()->route('laporan-insidental.index')->with('success', 'Teknisi berhasil ditugaskan dan notifikasi telah dikirim.');
     }
 
     public function cetak($id)

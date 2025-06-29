@@ -13,23 +13,23 @@ class AuthController extends Controller
 {
     public function register()
     {
-        return view('auth/register');
+        return view('auth.register');
     }
 
     public function registerSimpan(Request $request)
     {
         Validator::make($request->all(), [
-            'nip' => 'required',
+            'user_id' => 'required|unique:users,user_id',
             'nama' => 'required',
             'password' => 'required|confirmed'
-
         ])->validate();
 
         User::create([
-            'nip' => $request->nip,
+            'user_id' => $request->user_id,
             'nama' => $request->nama,
             'password' => Hash::make($request->password),
-            'level' => 'administrator'
+            'level' => 'Administrator', // bisa diganti dinamis
+            'status' => 1,
         ]);
 
         return redirect()->route('login');
@@ -37,7 +37,7 @@ class AuthController extends Controller
 
     public function login()
     {
-        return view('Auth.login');
+        return view('auth.login');
     }
 
     public function loginAksi(Request $request)
@@ -47,25 +47,36 @@ class AuthController extends Controller
             'password' => 'required'
         ])->validate();
 
-        // Cari user berdasarkan NIP
         $user = User::where('user_id', $request->user_id)->first();
 
-        // Cek apakah user ada dan password cocok
         if (!$user || !Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([
                 'user_id' => trans('auth.failed'),
             ]);
         }
 
-        // Cek status user (harus 1 = aktif)
         if ($user->status != 1) {
             throw ValidationException::withMessages([
-                'user_id' => 'Akun Anda tidak aktif. Hubungi admin untuk aktivasi.',
+                'user_id' => 'Akun Anda tidak aktif. Hubungi admin.',
             ]);
         }
+
         Auth::login($user);
         $request->session()->regenerate();
-        return redirect()->route('dashboard');
+
+        // ✅ Redirect berdasarkan level user
+        switch ($user->level) {
+            case 'Administrator':
+                return redirect()->route('dashboard');
+            case 'Teknisi':
+                return redirect()->route('dashboard'); // atau route khusus teknisi
+            case 'Manajer Teknisi':
+                return redirect()->route('dashboard'); // atau route manajer
+            case 'Operator Mesin':
+                return redirect()->route('laporan-insidental.index');
+            default:
+                return redirect()->route('dashboard');
+        }
     }
 
     public function logout(Request $request)
@@ -73,6 +84,7 @@ class AuthController extends Controller
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
         return redirect('/');
     }

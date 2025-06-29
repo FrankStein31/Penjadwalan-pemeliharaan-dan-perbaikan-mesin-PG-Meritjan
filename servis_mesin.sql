@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 17 Jun 2025 pada 17.02
+-- Waktu pembuatan: 29 Jun 2025 pada 17.42
 -- Versi server: 10.4.28-MariaDB
 -- Versi PHP: 8.2.4
 
@@ -52,6 +52,9 @@ CREATE TABLE `jadwal_pemeliharaan` (
   `deskripsi` text DEFAULT NULL,
   `status` enum('Terjadwal','Selesai','Dibatalkan') NOT NULL DEFAULT 'Terjadwal',
   `pertanyaan` varchar(255) NOT NULL,
+  `foto_sebelum` varchar(255) DEFAULT NULL,
+  `foto_sesudah` varchar(255) DEFAULT NULL,
+  `video` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -60,25 +63,25 @@ CREATE TABLE `jadwal_pemeliharaan` (
 -- Dumping data untuk tabel `jadwal_pemeliharaan`
 --
 
-INSERT INTO `jadwal_pemeliharaan` (`id`, `mesin_id`, `user_id`, `jenis`, `tanggal`, `deskripsi`, `status`, `pertanyaan`, `created_at`, `updated_at`) VALUES
-(8, 3, 9, 'incidental', '2025-06-19', 'Rusak Gear', 'Terjadwal', '', '2025-03-18 11:38:21', '2025-06-16 04:56:08'),
-(9, 10, 12, 'rutin', '2025-06-20', 'Rusak Total', 'Terjadwal', '', '2025-03-19 15:01:37', '2025-06-16 04:56:09'),
-(10, 10, 12, 'incidental', '2025-06-20', 'Rusak Gear', 'Terjadwal', '', '2025-03-19 15:19:29', '2025-06-16 04:56:09'),
-(11, 10, 12, 'rutin', '2025-06-20', 'Rusak Sebagian', 'Terjadwal', '', '2025-03-19 15:19:59', '2025-06-16 04:56:10'),
-(12, 10, 12, 'rutin', '2025-06-20', 'Rusak', 'Terjadwal', '', '2025-03-19 15:50:17', '2025-06-16 04:56:10'),
-(13, 10, 12, 'rutin', '2025-06-20', 'Rusak', 'Terjadwal', '', '2025-03-19 22:56:37', '2025-06-16 04:56:11'),
-(23, 3, 9, 'rutin', '2025-06-30', 'Perbaikan rutin', 'Terjadwal', '', '2025-04-24 12:29:33', '2025-06-16 04:56:11'),
-(38, 3, 9, 'rutin', '2025-06-25', 'Rusak Gearr', 'Terjadwal', '', '2025-05-22 14:00:21', '2025-06-16 04:56:12'),
-(39, 3, 9, 'rutin', '2025-06-25', 'Rusak', 'Terjadwal', '', '2025-05-22 14:08:12', '2025-06-16 04:56:12'),
-(41, 3, 12, 'incidental', '2025-06-07', 'Perbaikan incidental', 'Selesai', 'Apakah ada getaran berlebih?', '2025-06-07 12:20:15', '2025-06-07 12:28:56'),
-(43, 10, 9, 'incidental', '2025-06-07', 'Perbaikan', 'Selesai', 'Apakah ada getaran berlebih?', '2025-06-07 12:23:31', '2025-06-07 12:28:32'),
-(47, 3, 12, 'rutin', '2025-06-11', 'Rusak', 'Selesai', 'Apakah ada getaran berlebih?', '2025-06-11 15:47:00', '2025-06-12 15:23:34'),
-(48, 3, 12, 'rutin', '2025-06-11', 'Rusak', 'Selesai', 'Apakah ada getaran berlebih?', '2025-06-12 15:26:29', '2025-06-12 15:26:45'),
-(49, 10, 9, 'rutin', '2025-06-11', 'Rusak', 'Selesai', 'Apakah ada getaran berlebih?', '2025-06-12 15:31:33', '2025-06-12 15:31:49'),
-(50, 10, 9, 'rutin', '2025-06-12', 'Rusak', 'Selesai', 'Apakah ada getaran berlebih?', '2025-06-12 15:32:37', '2025-06-12 15:32:53'),
-(51, 10, 9, 'rutin', '2025-06-18', 'Rusak', 'Selesai', 'Apakah ada getaran berlebih?', '2025-06-12 15:35:38', '2025-06-12 15:35:54'),
-(52, 10, 9, 'rutin', '2025-06-18', 'Rusak', 'Selesai', 'Apakah ada getaran berlebih?', '2025-06-16 04:52:08', '2025-06-16 04:55:13'),
-(53, 10, 9, 'rutin', '2025-06-15', 'wasd', 'Terjadwal', 'Apakah ada getaran berlebih?', '2025-06-16 05:06:54', '2025-06-16 05:07:29');
+INSERT INTO `jadwal_pemeliharaan` (`id`, `mesin_id`, `user_id`, `jenis`, `tanggal`, `deskripsi`, `status`, `pertanyaan`, `foto_sebelum`, `foto_sesudah`, `video`, `created_at`, `updated_at`) VALUES
+(8, 3, 9, 'incidental', '2025-06-19', 'Rusak Gear', 'Terjadwal', '', NULL, NULL, NULL, '2025-03-18 11:38:21', '2025-06-16 04:56:08'),
+(9, 10, 12, 'rutin', '2025-06-20', 'Rusak Total', 'Terjadwal', '', NULL, NULL, NULL, '2025-03-19 15:01:37', '2025-06-16 04:56:09'),
+(10, 10, 12, 'incidental', '2025-06-20', 'Rusak Gear', 'Terjadwal', '', NULL, NULL, NULL, '2025-03-19 15:19:29', '2025-06-16 04:56:09'),
+(11, 10, 12, 'rutin', '2025-06-20', 'Rusak Sebagian', 'Terjadwal', '', NULL, NULL, NULL, '2025-03-19 15:19:59', '2025-06-16 04:56:10'),
+(12, 10, 12, 'rutin', '2025-06-20', 'Rusak', 'Terjadwal', '', NULL, NULL, NULL, '2025-03-19 15:50:17', '2025-06-16 04:56:10'),
+(13, 10, 12, 'rutin', '2025-06-20', 'Rusak', 'Terjadwal', '', NULL, NULL, NULL, '2025-03-19 22:56:37', '2025-06-16 04:56:11'),
+(23, 3, 9, 'rutin', '2025-06-30', 'Perbaikan rutin', 'Terjadwal', '', NULL, NULL, NULL, '2025-04-24 12:29:33', '2025-06-16 04:56:11'),
+(38, 3, 9, 'rutin', '2025-06-25', 'Rusak Gearr', 'Terjadwal', '', NULL, NULL, NULL, '2025-05-22 14:00:21', '2025-06-16 04:56:12'),
+(39, 3, 9, 'rutin', '2025-06-25', 'Rusak', 'Terjadwal', '', NULL, NULL, NULL, '2025-05-22 14:08:12', '2025-06-16 04:56:12'),
+(41, 3, 12, 'incidental', '2025-06-07', 'Perbaikan incidental', 'Selesai', 'Apakah ada getaran berlebih?', NULL, NULL, NULL, '2025-06-07 12:20:15', '2025-06-07 12:28:56'),
+(43, 10, 9, 'incidental', '2025-06-07', 'Perbaikan', 'Selesai', 'Apakah ada getaran berlebih?', NULL, NULL, NULL, '2025-06-07 12:23:31', '2025-06-07 12:28:32'),
+(47, 3, 12, 'rutin', '2025-06-11', 'Rusak', 'Selesai', 'Apakah ada getaran berlebih?', NULL, NULL, NULL, '2025-06-11 15:47:00', '2025-06-12 15:23:34'),
+(48, 3, 12, 'rutin', '2025-06-11', 'Rusak', 'Selesai', 'Apakah ada getaran berlebih?', NULL, NULL, NULL, '2025-06-12 15:26:29', '2025-06-12 15:26:45'),
+(49, 10, 9, 'rutin', '2025-06-11', 'Rusak', 'Selesai', 'Apakah ada getaran berlebih?', NULL, NULL, NULL, '2025-06-12 15:31:33', '2025-06-12 15:31:49'),
+(50, 10, 9, 'rutin', '2025-06-12', 'Rusak', 'Selesai', 'Apakah ada getaran berlebih?', NULL, NULL, NULL, '2025-06-12 15:32:37', '2025-06-12 15:32:53'),
+(51, 10, 9, 'rutin', '2025-06-18', 'Rusak', 'Selesai', 'Apakah ada getaran berlebih?', NULL, NULL, NULL, '2025-06-12 15:35:38', '2025-06-12 15:35:54'),
+(52, 10, 9, 'rutin', '2025-06-18', 'Rusak', 'Selesai', 'Apakah ada getaran berlebih?', NULL, NULL, NULL, '2025-06-16 04:52:08', '2025-06-16 04:55:13'),
+(53, 10, 9, 'rutin', '2025-06-15', 'wasd', 'Terjadwal', 'Apakah ada getaran berlebih?', 'bukti/sebelum/v3Q6z1CcRWsU5VFAUPNDkB0mVaKtoht9ulFHj6j6.png', 'bukti/sesudah/yW9rfEaHlosTG7t56YsJEU0tD1w7HBRAvydF0Kbs.jpg', NULL, '2025-06-16 05:06:54', '2025-06-29 09:02:32');
 
 -- --------------------------------------------------------
 
@@ -105,8 +108,10 @@ CREATE TABLE `laporanincidental` (
 --
 
 INSERT INTO `laporanincidental` (`id`, `user_id`, `mesin_id`, `station_id`, `description`, `photo_path`, `requires_spare_part`, `status`, `spare_part_id`, `created_at`, `updated_at`) VALUES
-(13, 9, 10, 2, 'Rusak total', 'laporan-insidental/uWJxWtkNfl1QEiEnlvos1vnUPJ6Jm9qxfpsgg1e7.jpg', 1, 'Selesai', 3, '2025-06-17 04:55:02', '2025-06-17 05:05:50'),
-(14, 12, 3, 1, 'Rusak gear', 'laporan-insidental/W3MJsWMdVVRCSthGWZM4teeZze0YFAGFZmGgmPdQ.jpg', 1, 'Selesai', 3, '2025-06-17 05:10:10', '2025-06-17 05:11:34');
+(14, 12, 3, 1, 'Rusak gear', 'laporan-insidental/W3MJsWMdVVRCSthGWZM4teeZze0YFAGFZmGgmPdQ.jpg', 1, 'Selesai', 3, '2025-06-17 05:10:10', '2025-06-17 05:11:34'),
+(15, 16, 3, 1, 'Rusak Abies', 'laporan-insidental/vMPmk9b5lkoG03cgFKMizWDAvAMNkMMLppURifCV.png', 0, 'Selesai', NULL, '2025-06-29 14:25:19', '2025-06-29 14:31:00'),
+(16, 9, 10, 2, 'Rusak Kih', 'laporan-insidental/OyYopOzRSfyOBt5yWYZcvP2F4bqeLIpKBak3GmEs.jpg', 0, 'Setuju', NULL, '2025-06-29 14:26:52', '2025-06-29 14:27:02'),
+(19, 16, 3, 1, 'Rusak Parah', 'laporan-insidental/JgHkbu5NzfQACVvWOeBTofOsLBYDG4Y53W9nUYIK.jpg', 0, 'Selesai', NULL, '2025-06-29 15:07:30', '2025-06-29 15:28:32');
 
 -- --------------------------------------------------------
 
@@ -512,9 +517,10 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `user_id`, `nama`, `password`, `level`, `alamat`, `telp`, `status`, `created_at`, `updated_at`, `station_id`) VALUES
 (1, 'adm1', 'Endra', '$2y$10$UYrVzq.P/bgKfAY5aon4suc5AyZm5lQVZav3siAcAZAMMy.iWSmx2', 'Administrator', 'Kediri', '082335022640', 1, NULL, '2025-03-10 12:13:18', NULL),
-(9, 'teknisi1', 'Frengki', '$2y$10$cxgNE8rd5HKi7iRRupJYHeYfWcq9xzoIfNwMW2WH6CdBE75O8/37m', 'Teknisi', 'Pare', '628883866931', 1, '2025-02-19 04:35:41', '2025-06-03 14:19:53', 2),
-(12, 'teknisi2', 'Hafidz', '$2y$10$nEiaR7bCMxEZeaNu6Jx18O350KIT3HanRxJrEdExFywhIT6Kr2SH2', 'Teknisi', 'Kebomas, Gresik', '62881036554563', 1, '2025-03-17 07:02:22', '2025-06-04 06:51:13', 1),
-(13, 'manajer1', 'manajer', '$2y$10$pxxV7VDE3dcrAtV/fRsLX.fW9ToJ62JHi9BqpC/LIlw8yvIC0bhXC', 'Manajer Teknisi', 'Kebomas', '089612684096', 1, '2025-03-18 06:29:46', '2025-03-18 06:29:46', NULL);
+(9, 'teknisi1', 'Frengki', '$2y$10$cxgNE8rd5HKi7iRRupJYHeYfWcq9xzoIfNwMW2WH6CdBE75O8/37m', 'Teknisi', 'Pare', '6289612684096', 1, '2025-02-19 04:35:41', '2025-06-03 14:19:53', 2),
+(12, 'teknisi2', 'Hafidz', '$2y$10$nEiaR7bCMxEZeaNu6Jx18O350KIT3HanRxJrEdExFywhIT6Kr2SH2', 'Teknisi', 'Kebomas, Gresik', '628883866931', 1, '2025-03-17 07:02:22', '2025-06-04 06:51:13', 1),
+(13, 'manajer1', 'manajer', '$2y$10$pxxV7VDE3dcrAtV/fRsLX.fW9ToJ62JHi9BqpC/LIlw8yvIC0bhXC', 'Manajer Teknisi', 'Kebomas', '089612684096', 1, '2025-03-18 06:29:46', '2025-03-18 06:29:46', NULL),
+(16, 'operator1', 'Operator Mesin 1', '$2a$12$KFCGhoahPa5uokP4cMniMO3ydqozhcnY3ljiL.YmQTj5orBuerc12', 'Operator Mesin', 'Jakarta', '081234567890', 1, '2025-06-29 13:49:54', '2025-06-29 13:49:54', NULL);
 
 --
 -- Indexes for dumped tables
@@ -698,7 +704,7 @@ ALTER TABLE `jadwal_pemeliharaan`
 -- AUTO_INCREMENT untuk tabel `laporanincidental`
 --
 ALTER TABLE `laporanincidental`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT untuk tabel `machines`
@@ -794,7 +800,7 @@ ALTER TABLE `stations`
 -- AUTO_INCREMENT untuk tabel `teknisi_mesin`
 --
 ALTER TABLE `teknisi_mesin`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT untuk tabel `tugas_perbaikan`
@@ -806,7 +812,7 @@ ALTER TABLE `tugas_perbaikan`
 -- AUTO_INCREMENT untuk tabel `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)

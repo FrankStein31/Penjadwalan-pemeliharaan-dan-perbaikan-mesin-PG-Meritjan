@@ -13,7 +13,6 @@
             @endif
         </div>
         <div class="card-body">
-
             <div class="table-responsive">
                 <table class="table table-bordered table-hover border-0" id="dataTable" width="100%" cellspacing="0">
                     <thead class="thead-dark">
@@ -38,31 +37,23 @@
                                 <td class="text-center">{{ \Carbon\Carbon::parse($item->tanggal)->format('d M Y') }}</td>
                                 <td class="text-center">{{ $item->deskripsi ?? '-' }}</td>
                                 <td class="text-center">
-                                    <span
-                                        class="badge
-                    @if ($item->status == 'Terjadwal') badge-primary
-                    @elseif($item->status == 'Selesai') badge-success
-                    @else badge-danger @endif">
+                                    <span class="badge
+                                        @if ($item->status == 'Terjadwal') badge-primary
+                                        @elseif($item->status == 'Selesai') badge-success
+                                        @else badge-danger @endif">
                                         {{ $item->status }}
                                     </span>
                                 </td>
-
-                                {{-- Kolom Aksi --}}
                                 <td class="text-center">
-                                    {{-- @if ($item->screening)
-                                        <a href="{{ route('screening.show', $item->screening->id) }}"
-                                            class="btn btn-sm btn-info">
-                                            Lihat Screening
-                                        </a>
-                                    @else
-                                        <a href="{{ route('screening.create', $item->id) }}" class="btn btn-sm btn-primary">
-                                            Tambah Screening
-                                        </a>
-                                    @endif --}}
                                     @if (auth()->user()->level === 'Teknisi')
-                                        <a href="{{ route('screening.create', $item->id) }}" class="btn btn-sm btn-primary">
-                                            Jawab Screening
-                                        </a>
+                                        <a href="{{ route('screening.create', $item->id) }}"
+                                            class="btn btn-sm btn-primary">Jawab Screening</a>
+
+                                        @if ($item->status === 'Terjadwal')
+                                            <a href="{{ route('jadwal.upload-bukti', $item->id) }}"
+                                                class="btn btn-sm btn-secondary">Upload Bukti</a>
+                                        @endif
+
                                         <form action="{{ route('admin.jadwal.selesai', $item->id) }}" method="POST"
                                             style="display: inline;">
                                             @csrf
@@ -72,6 +63,7 @@
                                                 Selesai
                                             </button>
                                         </form>
+
                                         <form action="{{ route('admin.jadwal.dibatalkan', $item->id) }}" method="POST"
                                             style="display: inline;">
                                             @csrf
@@ -84,10 +76,68 @@
                                     @endif
 
                                     @if (auth()->user()->level === 'Administrator')
-                                        <a href="{{ route('screening.jawaban', $item->id) }}" class="btn btn-sm btn-info">
-                                            Lihat Screening
-                                        </a>
+                                        <a href="{{ route('screening.jawaban', $item->id) }}"
+                                            class="btn btn-sm btn-info">Lihat Screening</a>
 
+                                        @if ($item->foto_sebelum || $item->foto_sesudah || $item->video)
+                                            <a href="#" class="btn btn-sm btn-success" data-toggle="modal"
+                                                data-target="#buktiModal{{ $item->id }}">
+                                                Lihat Bukti
+                                            </a>
+
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="buktiModal{{ $item->id }}" tabindex="-1"
+                                                role="dialog" aria-labelledby="buktiModalLabel{{ $item->id }}"
+                                                aria-hidden="true">
+                                                <div class="modal-dialog modal-lg" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header bg-primary text-white">
+                                                            <h5 class="modal-title" id="buktiModalLabel{{ $item->id }}">
+                                                                Bukti Pemeliharaan
+                                                            </h5>
+                                                            <button type="button" class="close text-white"
+                                                                data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body text-center">
+                                                            @if ($item->foto_sebelum)
+                                                                <p class="font-weight-bold">Foto Sebelum:</p>
+                                                                <img src="{{ asset('storage/' . $item->foto_sebelum) }}"
+                                                                    class="img-fluid rounded shadow mb-4"
+                                                                    alt="Foto Sebelum" style="max-height: 300px;">
+                                                            @else
+                                                                <p class="text-muted">Tidak ada foto sebelum.</p>
+                                                            @endif
+
+                                                            <hr>
+
+                                                            @if ($item->foto_sesudah)
+                                                                <p class="font-weight-bold">Foto Sesudah:</p>
+                                                                <img src="{{ asset('storage/' . $item->foto_sesudah) }}"
+                                                                    class="img-fluid rounded shadow mb-4"
+                                                                    alt="Foto Sesudah" style="max-height: 300px;">
+                                                            @else
+                                                                <p class="text-muted">Tidak ada foto sesudah.</p>
+                                                            @endif
+
+                                                            <hr>
+
+                                                            @if ($item->video)
+                                                                <p class="font-weight-bold">Video Pemeliharaan:</p>
+                                                                <video controls class="w-100 rounded shadow mb-3">
+                                                                    <source src="{{ asset('storage/' . $item->video) }}"
+                                                                        type="video/mp4">
+                                                                    Browser Anda tidak mendukung video tag.
+                                                                </video>
+                                                            @else
+                                                                <p class="text-muted">Tidak ada video pemeliharaan.</p>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
 
                                         <a href="{{ route('admin.jadwal.edit', $item->id) }}"
                                             class="btn btn-warning btn-sm btn-circle" data-toggle="tooltip" title="Edit">
@@ -108,12 +158,10 @@
                             </tr>
                         @endforeach
                     </tbody>
-
                 </table>
             </div>
         </div>
     </div>
-
 @endsection
 
 @push('styles')
@@ -142,7 +190,6 @@
                 }
             });
 
-            // Initialize tooltips
             $('[data-toggle="tooltip"]').tooltip();
         });
     </script>

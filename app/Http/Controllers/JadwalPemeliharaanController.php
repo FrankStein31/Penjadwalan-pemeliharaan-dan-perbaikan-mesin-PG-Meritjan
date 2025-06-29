@@ -11,25 +11,22 @@ use Illuminate\Http\Request;
 
 class JadwalPemeliharaanController extends Controller
 {
-    // Tampilkan semua jadwal pemeliharaan
     public function index()
     {
-        $jadwal = JadwalPemeliharaan::with(['mesin', 'user', 'screening'])
-            ->get();
-
+        $jadwal = JadwalPemeliharaan::with(['mesin', 'user', 'screening'])->get();
         $pertanyaan = Pertanyaan::all();
-
         return view('admin.pemeliharaan.index', compact('jadwal', 'pertanyaan'));
     }
 
     public function indexteknisi()
     {
         $jadwal = JadwalPemeliharaan::with(['mesin', 'user'])
-            ->where('user_id', auth()->id()) // Filter hanya untuk user yang sedang login
+            ->where('user_id', auth()->id())
             ->get();
 
         return view('admin.pemeliharaan.index', compact('jadwal'));
     }
+
     public function markAsSelesai($id)
     {
         $jadwal = JadwalPemeliharaan::findOrFail($id);
@@ -40,17 +37,17 @@ class JadwalPemeliharaanController extends Controller
 
         return redirect()->back()->with('success', 'Jadwal berhasil diselesaikan.');
     }
+
     public function markAsDibatakan($id)
     {
         $jadwal = JadwalPemeliharaan::findOrFail($id);
         $jadwal->update([
             'status' => 'Dibatalkan',
-            'updated_at' => now() // Memperbarui timestamp ke waktu saat ini
+            'updated_at' => now()
         ]);
         return redirect()->back()->with('success', 'Jadwal berhasil dibatalkan.');
     }
 
-    // Tampilkan form tambah jadwal pemeliharaan
     public function create()
     {
         $mesins = Mesin::all();
@@ -69,10 +66,8 @@ class JadwalPemeliharaanController extends Controller
         return response()->json($teknisi);
     }
 
-    // Simpan jadwal pemeliharaan baru
     public function store(Request $request)
     {
-        // Validasi input
         $request->validate([
             'mesin_id' => 'required|exists:mesins,id',
             'user_id' => 'required|exists:users,id',
@@ -83,18 +78,13 @@ class JadwalPemeliharaanController extends Controller
             'pertanyaan' => 'required|string',
         ]);
 
-        // Simpan ke database
         $jadwal = JadwalPemeliharaan::create($request->all());
 
-        // Ambil data teknisi berdasarkan user_id yang dikirim
         $teknisi = User::find($request->user_id);
-
         if ($teknisi) {
-            $token = "RQCD2A7WMdZHJfEYDTDK"; // Token API Fonnte
-            $target = $teknisi->telp; // Pastikan nomor dalam format internasional
+            $token = "RQCD2A7WMdZHJfEYDTDK";
+            $target = $teknisi->telp;
             $tanggalFormatted = \Carbon\Carbon::parse($request->tanggal)->format('d-m-Y H:i');
-
-            // Hitung selisih hari dari sekarang ke tanggal perbaikan
             $hariSisa = \Carbon\Carbon::now()->diffInDays($request->tanggal, false);
             $pengingat = $hariSisa > 0 ? "$hariSisa hari lagi anda ada perbaikan mesin, tolong segera diselesaikan." : "Segera lakukan perbaikan mesin sesuai jadwal.";
 
@@ -106,7 +96,6 @@ class JadwalPemeliharaanController extends Controller
                 . "🧾 Deskripsi: " . ($request->deskripsi ?? '-') . "\n\n"
                 . "📣 Pengingat: $pengingat";
 
-            // Kirim melalui Fonnte
             $curl = curl_init();
             curl_setopt_array($curl, array(
                 CURLOPT_URL => 'https://api.fonnte.com/send',
@@ -127,7 +116,6 @@ class JadwalPemeliharaanController extends Controller
         return redirect()->route('admin.jadwal.index')->with('success', 'Jadwal pemeliharaan berhasil ditambahkan dan notifikasi dikirim!');
     }
 
-    // Tampilkan form edit jadwal pemeliharaan
     public function edit($id)
     {
         $jadwal = JadwalPemeliharaan::findOrFail($id);
@@ -137,7 +125,6 @@ class JadwalPemeliharaanController extends Controller
         return view('admin.pemeliharaan.edit', compact('jadwal', 'mesins', 'teknisis', 'stations'));
     }
 
-    // Update jadwal pemeliharaan
     public function update(Request $request, $id)
     {
         $jadwal = JadwalPemeliharaan::findOrFail($id);
@@ -156,7 +143,6 @@ class JadwalPemeliharaanController extends Controller
         return redirect()->route('admin.jadwal.index')->with('success', 'Jadwal pemeliharaan berhasil diperbarui!');
     }
 
-    // Hapus jadwal pemeliharaan
     public function destroy($id)
     {
         $jadwal = JadwalPemeliharaan::findOrFail($id);
@@ -165,7 +151,6 @@ class JadwalPemeliharaanController extends Controller
         return redirect()->route('admin.jadwal.index')->with('success', 'Jadwal pemeliharaan berhasil dihapus!');
     }
 
-    // Tambahkan method baru
     public function getMesinByStation($station_id)
     {
         $mesins = Mesin::where('station_id', $station_id)->get();
@@ -178,5 +163,40 @@ class JadwalPemeliharaanController extends Controller
             ->where('station_id', $station_id)
             ->get();
         return response()->json($teknisis);
+    }
+
+    // ✅ Tambahan Baru: Form Upload Bukti
+    public function formUploadBukti($id)
+    {
+        $jadwal = JadwalPemeliharaan::findOrFail($id);
+        return view('admin.pemeliharaan.upload_bukti', compact('jadwal'));
+    }
+
+    // ✅ Tambahan Baru: Simpan Bukti Upload
+    public function uploadBukti(Request $request, $id)
+    {
+        $request->validate([
+            'foto_sebelum' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'foto_sesudah' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'video' => 'nullable|mimetypes:video/mp4,video/webm,video/quicktime|max:10240'
+        ]);
+
+        $jadwal = JadwalPemeliharaan::findOrFail($id);
+
+        if ($request->hasFile('foto_sebelum')) {
+            $jadwal->foto_sebelum = $request->file('foto_sebelum')->store('bukti/sebelum', 'public');
+        }
+
+        if ($request->hasFile('foto_sesudah')) {
+            $jadwal->foto_sesudah = $request->file('foto_sesudah')->store('bukti/sesudah', 'public');
+        }
+
+        if ($request->hasFile('video')) {
+            $jadwal->video = $request->file('video')->store('bukti/video', 'public');
+        }
+
+        $jadwal->save();
+
+        return redirect()->route('admin.jadwal.indexteknisi')->with('success', 'Bukti berhasil diunggah.');
     }
 }
